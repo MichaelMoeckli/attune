@@ -2,354 +2,365 @@
 
 ## Übersicht
 
-Dieses Dokument beschreibt den empfohlenen Techstack und die Systemarchitektur für **Radion 25**, einen vollautomatisierten Radio-Demonstrator. Der Stack ist auf TypeScript/Node.js ausgelegt und priorisiert Entwicklungsgeschwindigkeit, gute DX (Developer Experience) und moderate Kosten.
+Techstack und Architektur für **Radion 25**, optimiert für maximale Einfachheit und Entwicklung mit **Claude Code**. Prinzip: so wenige Dependencies und Moving Parts wie möglich — alles in einem Next.js-Projekt, kein Redis, kein Docker, kein separater Server.
 
 ---
 
 ## 1. Architektur-Überblick
 
-Das System folgt einer **Pipeline-Architektur** mit einem zentralen Orchestrator-Agenten, der die einzelnen Schritte koordiniert. Die Webapplikation kommuniziert via WebSocket mit dem Backend, um den Audio-Stream in Echtzeit auszuliefern.
+Alles läuft in einer einzigen Next.js-App. Das Frontend stellt den Player und die Einstellungen dar, die API Routes im selben Projekt übernehmen die gesamte Backend-Logik. Audio-Dateien werden als statische Dateien im `/public`-Ordner erzeugt und direkt vom Browser abgespielt — kein WebSocket, kein Streaming-Server nötig.
 
 ```mermaid
 graph TB
-    subgraph Frontend["Frontend (Next.js)"]
-        UI[Web UI — Player & Einstellungen]
-        AP[Audio Player — Web Audio API]
+    subgraph App["Next.js App (ein Projekt, ein Deployment)"]
+        subgraph FE["Frontend (React)"]
+            UI["Player UI + Einstellungen"]
+            PLAYER["HTML5 Audio Element"]
+        end
+
+        subgraph API["API Routes (Server)"]
+            GEN["/api/generate — Sendung erzeugen"]
+            PREF["/api/preferences — Profil speichern"]
+        end
+
+        subgraph Services["Service-Funktionen"]
+            NEWS["newsService.ts"]
+            WEATHER["weatherService.ts"]
+            LLM["llmService.ts (Vercel AI SDK)"]
+            TTS["ttsService.ts"]
+            MUSIC["musicService.ts"]
+        end
     end
 
-    subgraph Backend["Backend (Next.js API Routes / tRPC)"]
-        ORCH[Orchestrator-Agent]
-        QUEUE[Sendungs-Queue]
+    subgraph Extern["Externe APIs"]
+        NEWSAPI["NewsAPI / RSS"]
+        WEATHERAPI["OpenWeatherMap"]
+        CLAUDE["Claude API"]
+        ELEVEN["ElevenLabs / OpenAI TTS"]
     end
 
-    subgraph Services["Externe Dienste"]
-        NEWS[News APIs — NewsAPI / RSS]
-        WEATHER[Wetter API — OpenWeatherMap]
-        LLM[LLM — Claude API / OpenAI]
-        TTS[TTS — ElevenLabs]
-        MUSIC[Musik — Lizenzfreie Bibliothek]
-    end
-
-    subgraph Storage["Storage"]
-        CACHE[Redis / In-Memory Cache]
-        AUDIO[Audio-Dateien — temp]
-    end
-
-    UI -->|WebSocket| ORCH
-    UI --> AP
-    ORCH --> QUEUE
-    QUEUE --> NEWS
-    QUEUE --> WEATHER
-    QUEUE --> LLM
-    QUEUE --> TTS
-    QUEUE --> MUSIC
-    ORCH --> CACHE
-    TTS --> AUDIO
-    AUDIO -->|Stream| AP
+    UI -->|fetch| GEN
+    UI --> PLAYER
+    GEN --> NEWS --> NEWSAPI
+    GEN --> WEATHER --> WEATHERAPI
+    GEN --> LLM --> CLAUDE
+    GEN --> TTS --> ELEVEN
+    GEN --> MUSIC
+    GEN -->|Audio-URL zurück| PLAYER
 ```
 
 ---
 
-## 2. High-Level Datenfluss
+## 2. Datenfluss
 
-Der Ablauf einer Sendungsgenerierung folgt dieser Pipeline:
+Der Flow ist bewusst simpel: ein einziger API-Call löst die gesamte Pipeline aus und gibt eine Audio-URL zurück.
 
 ```mermaid
 sequenceDiagram
-    participant User as Nutzer (Browser)
-    participant FE as Frontend
-    participant BE as Orchestrator
-    participant News as News API
-    participant Weather as Wetter API
-    participant LLM as LLM (Claude)
-    participant TTS as TTS (ElevenLabs)
-    participant Music as Musik-Service
+    participant User as Browser
+    participant API as /api/generate
+    participant News as NewsAPI
+    participant Weather as OpenWeatherMap
+    participant LLM as Claude (Vercel AI SDK)
+    participant TTS as ElevenLabs
 
-    User->>FE: "Sendung starten" (+ Präferenzen)
-    FE->>BE: WebSocket: startShow(config)
+    User->>API: POST /api/generate (Präferenzen)
 
-    par Parallele Datenabfrage
-        BE->>News: Aktuelle Nachrichten abrufen
-        BE->>Weather: Wetterdaten abrufen
-        BE->>Music: Musiktrack auswählen
+    par Daten parallel abrufen
+        API->>News: Nachrichten holen
+        API->>Weather: Wetter holen
     end
 
-    News-->>BE: Nachrichten-Rohdaten
-    Weather-->>BE: Wetterdaten
-    Music-->>BE: Track-URL / Datei
+    News-->>API: Artikel
+    Weather-->>API: Wetterdaten
 
-    BE->>LLM: Moderationstext generieren (News + Wetter + Kontext)
-    LLM-->>BE: Generierter Radiotext
+    API->>LLM: Moderationstext generieren
+    LLM-->>API: Text
 
-    BE->>TTS: Text → Sprache (Streaming)
-    TTS-->>BE: Audio-Chunks
+    API->>TTS: Text zu Audio
+    TTS-->>API: MP3-Datei
 
-    BE-->>FE: Audio-Stream (Intro-Jingle)
-    BE-->>FE: Audio-Stream (Moderation)
-    BE-->>FE: Audio-Stream (Musik)
-    BE-->>FE: Audio-Stream (Wetter-Moderation)
-    BE-->>FE: Audio-Stream (Musik / Outro)
-
-    FE->>User: Live-Wiedergabe
+    API-->>User: { audioUrl, segments, metadata }
+    User->>User: Audio abspielen
 ```
 
 ---
 
-## 3. Techstack im Detail
+## 3. Techstack
 
-### 3.1 Frontend
+Der gesamte Stack besteht aus **5 npm-Paketen** plus Next.js.
 
-| Komponente | Technologie | Begründung |
+### Kern-Dependencies
+
+| Paket | Zweck |
+|---|---|
+| `next` (mit React, TypeScript, Tailwind) | Fullstack-Framework — `create-next-app` liefert alles |
+| `ai` + `@ai-sdk/anthropic` | Vercel AI SDK — Claude-Integration mit einer Zeile Code |
+| `elevenlabs` | TTS SDK — Text rein, MP3 raus |
+| `rss-parser` | RSS-Feeds parsen (SRF, etc.) |
+
+Das ist alles. Kein Redis, kein Socket.io, kein BullMQ, kein FFmpeg, kein tRPC, kein Zustand.
+
+### Externe APIs
+
+| Dienst | Anbieter | Kosten |
 |---|---|---|
-| **Framework** | **Next.js 15 (App Router)** | Fullstack-Fähigkeit, SSR, API-Routes, exzellentes TypeScript-Ökosystem |
-| **UI Library** | **React 19** | Komponentenbasiert, riesiges Ökosystem, gute Audio-Integration |
-| **Styling** | **Tailwind CSS** | Schnelle Entwicklung, konsistentes Design ohne separates CSS |
-| **State Management** | **Zustand** | Leichtgewichtig, TypeScript-first, perfekt für Audio-Player-State |
-| **Audio Playback** | **Web Audio API + Howler.js** | Professionelle Audio-Steuerung, Crossfading zwischen Segmenten |
-| **Echtzeit-Komm.** | **Socket.io (Client)** | Robuste WebSocket-Verbindung mit Auto-Reconnect |
+| **LLM** | Claude Sonnet (via Vercel AI SDK) | ~$3–5/Monat bei Demo-Nutzung |
+| **TTS** | ElevenLabs (Starter Plan) | $5/Monat (30k Zeichen) |
+| **News** | NewsAPI.org + RSS-Feeds (SRF) | Kostenlos |
+| **Wetter** | OpenWeatherMap | Kostenlos (1000 Calls/Tag) |
+| **Musik** | Lokale MP3s in `/public/music/` | Kostenlos (lizenzfrei) |
 
-### 3.2 Backend
+**Total: ~$8–10/Monat**
 
-| Komponente | Technologie | Begründung |
-|---|---|---|
-| **Runtime** | **Node.js 22 (LTS)** | Nativer TypeScript-Support, performant für I/O-lastige Workloads |
-| **API Layer** | **Next.js API Routes + tRPC** | Typsicherer Fullstack-Ansatz, kein separater Backend-Server nötig |
-| **Echtzeit** | **Socket.io (Server)** | Bidirektionale Kommunikation für Live-Audio-Streaming |
-| **Task Queue** | **BullMQ (Redis-basiert)** | Robuste Job-Verarbeitung, Retry-Logik, Priorisierung |
-| **Audio Processing** | **FFmpeg (via fluent-ffmpeg)** | Zusammenfügen von Audiosegmenten, Format-Konvertierung, Crossfading |
-| **Caching** | **Redis** | Caching von API-Responses (News, Wetter), Session-State |
+### Hosting
 
-### 3.3 Orchestrator / Agentisches Framework
-
-| Komponente | Technologie | Begründung |
-|---|---|---|
-| **Agent Framework** | **Eigener Orchestrator (TypeScript)** | Volle Kontrolle, kein Overhead durch generische Agent-Frameworks; für den Scope einer BSc-Arbeit ausreichend und besser nachvollziehbar |
-| **Alternative** | **Vercel AI SDK** | Falls ein leichtgewichtiges SDK für LLM-Streaming gewünscht ist — integriert sich nahtlos in Next.js |
-
-**Empfehlung:** Für eine BSc-Arbeit ist ein eigener Orchestrator (State Machine / Pipeline) empfehlenswert, da Frameworks wie LangChain oder CrewAI oft mehr Komplexität einführen als sie lösen. Ein klar strukturierter Pipeline-Controller in TypeScript ist leichter zu debuggen, zu dokumentieren und für die Thesis zu erklären. Das Vercel AI SDK kann ergänzend für das LLM-Streaming eingesetzt werden.
-
-### 3.4 Externe APIs und Dienste
-
-| Dienst | Anbieter | Kosten | Begründung |
-|---|---|---|---|
-| **LLM** | **Anthropic Claude (Sonnet)** | ~$3/1M input, ~$15/1M output tokens | Exzellente Textqualität, gutes Deutsch, schnell genug für Near-Realtime |
-| **LLM (Alternative)** | OpenAI GPT-4o-mini | ~$0.15/1M input | Günstiger, für einfachere Textsegmente |
-| **TTS** | **ElevenLabs** | Free Tier: 10k Zeichen/Monat; Starter: $5/Monat (30k) | Beste Qualität, natürliche Stimmen, Streaming-API, Deutsch-Support |
-| **TTS (Alternative)** | OpenAI TTS | $15/1M Zeichen | Gut und günstiger, etwas weniger natürlich |
-| **News** | **NewsAPI.org** | Free Tier: 100 Req/Tag | Einfache REST-API, gute Abdeckung, reicht für Demo |
-| **News (Ergänzung)** | RSS-Feeds (SRF, Tagesanzeiger) | Kostenlos | Schweizer Nachrichten, kein API-Key nötig |
-| **Wetter** | **OpenWeatherMap** | Free Tier: 1000 Calls/Tag | Zuverlässig, gute Doku, standortbezogen |
-| **Musik** | **Pixabay Music API / lokale Bibliothek** | Kostenlos | Lizenzfreie Musik, keine GEMA/SUISA-Probleme |
-
-### 3.5 Infrastruktur und Deployment
-
-| Komponente | Technologie | Begründung |
-|---|---|---|
-| **Hosting** | **Vercel (Frontend) + Railway/Fly.io (Backend)** | Vercel für Next.js-Frontend optimal; Railway/Fly.io für den Audio-Processing-Server mit WebSocket und FFmpeg |
-| **Alternative** | **Docker + beliebiger VPS** | Falls alles auf einem Server laufen soll (z.B. Hetzner, ~€5/Monat) |
-| **Cache/Queue** | **Upstash Redis** | Serverless Redis, Free Tier grosszügig, perfekt für BullMQ |
-| **Monitoring** | **Vercel Analytics + eigenes Logging** | Einfach, reicht für BSc-Scope |
+| Option | Aufwand |
+|---|---|
+| **Vercel** (empfohlen) | `vercel deploy` — fertig. Free Tier reicht für Demo. |
+| **Lokal** | `npm run dev` — für Entwicklung und Usability-Tests reicht localhost. |
 
 ---
 
-## 4. Komponentenarchitektur
+## 4. Projektstruktur
 
-```mermaid
-graph LR
-    subgraph "Next.js App"
-        direction TB
-        subgraph "Frontend (React)"
-            Pages["Pages (App Router)"]
-            PlayerComp["AudioPlayer Component"]
-            Settings["Settings Component"]
-            Status["Sendungs-Status Component"]
-        end
-
-        subgraph "API Layer"
-            TRPC["tRPC Router"]
-            WS["WebSocket Handler"]
-        end
-    end
-
-    subgraph "Orchestrator"
-        Pipeline["Pipeline Controller"]
-
-        subgraph "Pipeline Steps"
-            S1["1. Daten sammeln"]
-            S2["2. Sendungsplan erstellen"]
-            S3["3. Texte generieren"]
-            S4["4. Audio erzeugen"]
-            S5["5. Segmente zusammenfügen"]
-        end
-
-        Pipeline --> S1 --> S2 --> S3 --> S4 --> S5
-    end
-
-    subgraph "Service Layer"
-        NewsService["NewsService"]
-        WeatherService["WeatherService"]
-        LLMService["LLMService"]
-        TTSService["TTSService"]
-        MusicService["MusicService"]
-        AudioService["AudioMixerService"]
-    end
-
-    Pages --> TRPC
-    Pages --> PlayerComp
-    WS --> Pipeline
-    S1 --> NewsService
-    S1 --> WeatherService
-    S3 --> LLMService
-    S4 --> TTSService
-    S4 --> MusicService
-    S5 --> AudioService
-```
-
----
-
-## 5. Projektstruktur (Vorschlag)
+Flache, einfache Struktur — Claude Code kann das in einem Rutsch scaffolden.
 
 ```
 radion25/
 ├── src/
-│   ├── app/                      # Next.js App Router
-│   │   ├── page.tsx              # Hauptseite mit Player
-│   │   ├── settings/             # Personalisierung
-│   │   └── api/                  # API Routes
-│   │       └── trpc/             # tRPC Endpoint
+│   ├── app/
+│   │   ├── page.tsx                 # Hauptseite: Player + Steuerung
+│   │   ├── layout.tsx               # Root Layout
+│   │   └── api/
+│   │       ├── generate/
+│   │       │   └── route.ts         # POST: Sendung generieren (Hauptlogik)
+│   │       └── preferences/
+│   │           └── route.ts         # GET/POST: Nutzerpräferenzen (JSON-Datei)
 │   │
-│   ├── components/               # React-Komponenten
-│   │   ├── AudioPlayer.tsx       # Zentraler Player
-│   │   ├── ShowStatus.tsx        # Sendungsstatus
-│   │   ├── PreferencePanel.tsx   # Nutzer-Einstellungen
-│   │   └── Visualizer.tsx        # Audio-Visualisierung
+│   ├── components/
+│   │   ├── AudioPlayer.tsx          # Play/Pause, Fortschritt, Segmentanzeige
+│   │   ├── PreferenceForm.tsx       # Themen, Ort, Sprachstil wählen
+│   │   └── ShowStatus.tsx           # Ladezustand, aktuelles Segment
 │   │
-│   ├── server/                   # Backend-Logik
-│   │   ├── orchestrator/
-│   │   │   ├── pipeline.ts       # Zentrale Pipeline-Steuerung
-│   │   │   ├── scheduler.ts      # Sendungsplan (Segmentreihenfolge)
-│   │   │   └── types.ts          # Segment-Types, Show-Config
-│   │   │
-│   │   ├── services/
-│   │   │   ├── news.service.ts   # NewsAPI + RSS-Feed Integration
-│   │   │   ├── weather.service.ts
-│   │   │   ├── llm.service.ts    # Claude/OpenAI Textgenerierung
-│   │   │   ├── tts.service.ts    # ElevenLabs Sprachsynthese
-│   │   │   ├── music.service.ts  # Musik-Auswahl und -Streaming
-│   │   │   └── audio.service.ts  # FFmpeg Mixing/Stitching
-│   │   │
-│   │   ├── trpc/                 # tRPC Router-Definition
-│   │   └── websocket/            # Socket.io Server
+│   ├── services/
+│   │   ├── news.ts                  # NewsAPI + RSS abrufen und normalisieren
+│   │   ├── weather.ts               # OpenWeatherMap abrufen
+│   │   ├── llm.ts                   # Claude-Aufruf via Vercel AI SDK
+│   │   ├── tts.ts                   # ElevenLabs Text-to-Speech
+│   │   └── music.ts                 # Zufälligen Track aus /public/music wählen
 │   │
-│   ├── lib/                      # Shared Utilities
-│   │   ├── audio-utils.ts
-│   │   └── config.ts
+│   ├── lib/
+│   │   ├── orchestrator.ts          # Pipeline: Daten → Text → Audio → Playlist
+│   │   └── types.ts                 # Shared Types (Segment, ShowConfig, etc.)
 │   │
-│   └── types/                    # Gemeinsame TypeScript-Types
-│       └── index.ts
+│   └── data/
+│       └── preferences.json         # Nutzerpräferenzen (einfacher File-Store)
 │
 ├── public/
-│   └── audio/                    # Jingles, Intros (statisch)
+│   ├── audio/                       # Generierte Sendungen (MP3s)
+│   ├── music/                       # Lizenzfreie Musik-Tracks (MP3)
+│   └── jingles/                     # Intro/Outro Jingles (MP3)
 │
-├── scripts/                      # Build- und Hilfs-Skripte
-├── tests/                        # Test-Dateien
-├── .env.local                    # API-Keys (nicht committen!)
+├── .env.local                       # API-Keys
 ├── package.json
 ├── tsconfig.json
-├── next.config.ts
-└── README.md
+└── next.config.ts
+```
+
+### Warum so einfach?
+
+**Kein Redis/DB** — Präferenzen werden in einer JSON-Datei gespeichert, Audio-Dateien direkt in `/public/audio/`. Für einen Demonstrator mit 5–8 Testpersonen reicht das völlig.
+
+**Kein WebSocket** — Der `/api/generate`-Endpoint erzeugt die gesamte Sendung, speichert die Audio-Dateien und gibt eine Playlist (Array von URLs) zurück. Der Browser spielt sie nacheinander ab. Einfacher geht's nicht.
+
+**Kein State-Management-Library** — React `useState` und `useEffect` reichen für den Player-State.
+
+**Kein tRPC** — Einfache `fetch()`-Calls an die API Routes. Typsicherheit über shared Types in `lib/types.ts`.
+
+---
+
+## 5. Orchestrator (Kernlogik)
+
+Der Orchestrator ist eine einzige async-Funktion — kein Framework, kein Agent, nur eine Pipeline.
+
+```typescript
+// Pseudocode: src/lib/orchestrator.ts
+
+async function generateShow(config: ShowConfig): Promise<ShowResult> {
+  // 1. Daten parallel abrufen
+  const [news, weather] = await Promise.all([
+    fetchNews(config.topics),
+    fetchWeather(config.location),
+  ]);
+
+  // 2. Sendungsplan erstellen
+  const segments: Segment[] = [
+    { type: "jingle", file: "/jingles/intro.mp3" },
+    { type: "greeting", text: null },        // wird generiert
+    { type: "news", text: null, data: news },
+    { type: "music", file: pickRandomTrack() },
+    { type: "weather", text: null, data: weather },
+    { type: "music", file: pickRandomTrack() },
+    { type: "farewell", text: null },
+    { type: "jingle", file: "/jingles/outro.mp3" },
+  ];
+
+  // 3. Texte generieren (LLM)
+  for (const seg of segments.filter(s => s.text === null)) {
+    seg.text = await generateText(seg.type, seg.data, config);
+  }
+
+  // 4. Texte zu Audio (TTS)
+  for (const seg of segments.filter(s => s.text)) {
+    seg.file = await textToSpeech(seg.text);
+  }
+
+  // 5. Playlist zurückgeben
+  return {
+    segments: segments.map(s => ({
+      type: s.type,
+      audioUrl: s.file,
+      text: s.text,
+    })),
+  };
+}
 ```
 
 ---
 
-## 6. Latenz-Optimierung
+## 6. Latenz-Strategie
 
-Die Ziellatenz von < 30 Sekunden bis zum ersten Beitrag ist ambitioniert. Folgende Strategien helfen:
+Ziel: weniger als 30 Sekunden bis zum ersten hörbaren Beitrag.
 
-**Parallelisierung** — News, Wetter und Musikauswahl gleichzeitig abfragen (`Promise.all`), während der LLM-Aufruf vorbereitet wird.
+**Ansatz 1 (einfach):** Intro-Jingle sofort abspielen (liegt als statische Datei vor), während `/api/generate` im Hintergrund läuft. Wenn die API fertig ist, geht's nahtlos weiter.
 
-**Streaming** — Sowohl die LLM-Textgenerierung (Streaming Response) als auch die TTS-Konvertierung (ElevenLabs Streaming API) unterstützen Chunk-basiertes Streaming. Dadurch kann die Sprachsynthese beginnen, bevor der gesamte Text fertig ist.
-
-**Pre-Generation** — Ein Intro-Jingle oder eine Begrüssung kann sofort abgespielt werden, während die eigentlichen Inhalte im Hintergrund generiert werden. Dies überbrückt die Latenz.
-
-**Caching** — News und Wetterdaten ändern sich nicht sekündlich. Ein Redis-Cache mit TTL von 5–15 Minuten reduziert API-Calls und Latenz.
+**Ansatz 2 (segmentweise):** Die API generiert Segment für Segment und streamt die URLs via Server-Sent Events (SSE) zurück. Der Browser beginnt die Wiedergabe, sobald das erste Segment fertig ist.
 
 ```mermaid
 gantt
-    title Latenz-optimierter Ablauf (Ziel max 30s)
+    title Latenz-Ablauf (Ziel max 30s)
     dateFormat ss
     axisFormat %S s
 
     section Sofort
     Intro-Jingle abspielen       :a1, 00, 5s
 
-    section Parallel (t=0)
-    News API abrufen             :a2, 00, 3s
-    Wetter API abrufen           :a3, 00, 2s
-    Musik-Track laden            :a4, 00, 2s
+    section Parallel
+    News + Wetter abrufen        :a2, 00, 3s
 
     section Sequentiell
-    LLM Text generieren (Stream) :a5, after a2, 8s
-    TTS Audio erzeugen (Stream)  :a6, after a5, 10s
+    LLM Text generieren          :a3, after a2, 6s
+    TTS Audio erzeugen           :a4, after a3, 8s
 
     section Wiedergabe
-    Erster Beitrag abspielen     :milestone, after a6, 0s
+    Erster Beitrag spielbar      :milestone, after a4, 0s
 ```
+
+Empfehlung: **Starte mit Ansatz 1** (simpelster möglicher Flow). Falls die Latenz zu hoch ist, kannst du auf SSE upgraden — das ist mit Next.js API Routes in ~20 Zeilen Code gemacht.
 
 ---
 
-## 7. Sendungsstruktur (Beispiel)
-
-Ein typischer Sendungsablauf besteht aus mehreren Segmenten:
+## 7. Sendungsstruktur
 
 ```mermaid
 graph LR
-    A["🎵 Intro-Jingle<br/>(3s, vorgefertigt)"] -->
-    B["🎙️ Begrüssung<br/>+ Zeitansage<br/>(TTS, ~15s)"] -->
-    C["🎵 Musik-Übergang<br/>(Crossfade, 3s)"] -->
-    D["📰 Nachrichten<br/>(TTS, ~60–90s)"] -->
-    E["🎵 Musik-Track<br/>(30–60s)"] -->
-    F["🌤️ Wetter<br/>(TTS, ~20s)"] -->
-    G["🎵 Musik-Track<br/>(30–60s)"] -->
-    H["🎙️ Verabschiedung<br/>(TTS, ~10s)"] -->
-    I["🎵 Outro-Jingle<br/>(3s, vorgefertigt)"]
+    A["Intro-Jingle<br/>(3s, statisch)"] -->
+    B["Begrüssung<br/>+ Zeitansage<br/>(LLM + TTS)"] -->
+    C["Nachrichten<br/>(LLM + TTS)"] -->
+    D["Musik-Track<br/>(statisch)"] -->
+    E["Wetter<br/>(LLM + TTS)"] -->
+    F["Musik-Track<br/>(statisch)"] -->
+    G["Verabschiedung<br/>(LLM + TTS)"] -->
+    H["Outro-Jingle<br/>(3s, statisch)"]
 ```
 
 ---
 
-## 8. Kostenabschätzung (monatlich, Entwicklung/Demo)
+## 8. Profil-System (ohne Login)
 
-| Dienst | Nutzung (geschätzt) | Kosten |
+Kein Auth-System. Stattdessen ein simples UUID-basiertes Profil:
+
+- Beim ersten Besuch erstellt der Browser eine UUID (`crypto.randomUUID()`) und speichert sie im LocalStorage.
+- Präferenzen (Themen, Ort, Sprachstil) werden mit dieser UUID an `/api/preferences` gesendet und in einer JSON-Datei auf dem Server abgelegt.
+- Für die Usability-Studie reicht die UUID zur Zuordnung der Ergebnisse.
+
+In der Thesis kann ein Ausblick beschreiben, wie ein produktionsreifes System Auth via NextAuth.js ergänzen würde.
+
+---
+
+## 9. Claude Code Workflow
+
+So würdest du das Projekt mit Claude Code aufbauen — Schritt für Schritt:
+
+**Schritt 1 — Projekt scaffolden:**
+```
+"Erstelle ein Next.js 15 Projekt mit TypeScript, Tailwind CSS und App Router.
+Installiere: ai @ai-sdk/anthropic elevenlabs rss-parser"
+```
+
+**Schritt 2 — Services bauen (einer nach dem anderen):**
+```
+"Erstelle src/services/news.ts — eine Funktion fetchNews(topics: string[])
+die NewsAPI und SRF RSS-Feed abfragt und normalisierte Artikel zurückgibt."
+```
+```
+"Erstelle src/services/weather.ts — eine Funktion fetchWeather(city: string)
+die OpenWeatherMap abfragt."
+```
+```
+"Erstelle src/services/llm.ts — nutze das Vercel AI SDK mit Claude Sonnet.
+Eine Funktion generateRadioText(type, data, config) die Moderationstext erzeugt."
+```
+```
+"Erstelle src/services/tts.ts — nutze das ElevenLabs SDK.
+Eine Funktion textToSpeech(text) die MP3-Dateien in public/audio/ speichert."
+```
+
+**Schritt 3 — Orchestrator:**
+```
+"Erstelle src/lib/orchestrator.ts — eine Pipeline-Funktion die alle Services
+orchestriert und eine Playlist von Audio-URLs zurückgibt."
+```
+
+**Schritt 4 — API Route:**
+```
+"Erstelle src/app/api/generate/route.ts — POST-Endpoint der den Orchestrator
+aufruft und die Playlist als JSON zurückgibt."
+```
+
+**Schritt 5 — Frontend:**
+```
+"Erstelle die Hauptseite mit einem Audio-Player der die Playlist abspielt,
+einem Präferenz-Formular und einer Segmentanzeige."
+```
+
+**Schritt 6 — Iterieren:**
+Verfeinerungen (Crossfading, bessere Prompts, SSE-Streaming) können einzeln als Follow-up-Prompts in Claude Code gemacht werden.
+
+---
+
+## 10. Kostenabschätzung
+
+| Dienst | Kosten |
+|---|---|
+| Claude Sonnet API | ~$3–5/Monat |
+| ElevenLabs Starter | $5/Monat |
+| NewsAPI | $0 (Free Tier) |
+| OpenWeatherMap | $0 (Free Tier) |
+| Vercel Hosting | $0 (Free Tier) |
+| **Total** | **~$8–10/Monat** |
+
+---
+
+## 11. Was bewusst weggelassen wurde
+
+| Feature | Warum nicht | Ausblick (Thesis) |
 |---|---|---|
-| Claude Sonnet API | ~50 Sendungen à ~2000 Tokens | ~$2–5 |
-| ElevenLabs (Starter) | ~30k Zeichen/Monat | $5 |
-| NewsAPI | Free Tier (100 Req/Tag) | $0 |
-| OpenWeatherMap | Free Tier | $0 |
-| Hosting (Railway) | Hobby Plan | $5 |
-| Upstash Redis | Free Tier | $0 |
-| **Total** | | **~$12–15/Monat** |
-
----
-
-## 9. Technologie-Entscheidungen und Alternativen
-
-### Agent-Framework: Eigenbau vs. LangChain/CrewAI
-
-Für die BSc-Arbeit empfehle ich einen **eigenen Pipeline-Orchestrator**. Die Gründe: Die Pipeline ist relativ linear (Daten → Text → Audio → Abspielen), was kein komplexes Agent-Reasoning erfordert. Ein eigener Orchestrator ist einfacher zu debuggen und in der Thesis nachvollziehbar zu beschreiben. LangChain oder CrewAI würden Overhead einführen, der im 10-Wochen-Zeitrahmen schwer zu rechtfertigen ist. Falls in der Thesis trotzdem ein "agentisches Framework" gewünscht ist, kann der eigene Orchestrator als solches beschrieben und positioniert werden.
-
-### Monorepo vs. getrennte Services
-
-Ein **Next.js-Monolith** (Frontend + Backend in einem Projekt) ist für den BSc-Scope ideal. Microservices wären Over-Engineering. Falls Audio-Processing zu ressourcenintensiv wird, kann der FFmpeg-Teil als separater Worker ausgelagert werden.
-
-### ElevenLabs vs. OpenAI TTS
-
-ElevenLabs bietet die natürlichsten deutschen Stimmen und eine Streaming-API, die für das Radio-Feeling entscheidend ist. OpenAI TTS ist eine gute Fallback-Option (günstiger, einfacher), klingt aber etwas "robotischer".
-
----
-
-## 10. Nächste Schritte
-
-1. **Projekt aufsetzen:** `npx create-next-app@latest radion25 --typescript --tailwind --app`
-2. **Durchstich (AP3):** Minimaler Flow — eine News abrufen → Claude-Text → ElevenLabs-Audio → im Browser abspielen
-3. **Iterieren:** Wetter, Musik, Crossfading, Personalisierung schrittweise ergänzen
-4. **Usability-Studie:** Ab Woche 7 mit dem erweiterten Demonstrator
+| Redis / Datenbank | JSON-Datei reicht für Demo | PostgreSQL/Prisma für Produktion |
+| WebSocket / Socket.io | HTTP-Responses + HTML5 Audio reichen | SSE oder WebSocket für Echtzeit-Streaming |
+| Docker | `npm run dev` / Vercel reicht | Docker-Compose für Produktion |
+| tRPC | Einfache fetch-Calls genügen | tRPC für typsichere API bei Skalierung |
+| Auth (Login) | UUID-Profil reicht für Demo | NextAuth.js oder Clerk |
+| FFmpeg | Browser spielt einzelne Segmente ab | FFmpeg für nahtloses Audio-Stitching |
+| Agent-Framework | Eigene Pipeline-Funktion reicht | LangGraph für komplexere Orchestrierung |
