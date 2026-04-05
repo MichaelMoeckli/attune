@@ -13,6 +13,8 @@ export interface Segment {
   type: SegmentType;
   text?: string;
   audioUrl?: string;
+  spotifyUri?: string;
+  spotifyTrackName?: string;
   data?: NewsArticle[] | WeatherData;
   durationMs?: number;
 }

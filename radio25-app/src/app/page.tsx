@@ -5,11 +5,13 @@ import type { ShowConfig, ShowResult } from '@/lib/types';
 import AudioPlayer from '@/components/AudioPlayer';
 import PreferenceForm from '@/components/PreferenceForm';
 import ShowStatus from '@/components/ShowStatus';
+import SpotifyConnect from '@/components/SpotifyConnect';
 
 export default function Home() {
   const [showResult, setShowResult] = useState<ShowResult | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [spotifyConnected, setSpotifyConnected] = useState(false);
 
   const handleGenerate = async (config: ShowConfig) => {
     setIsGenerating(true);
@@ -41,11 +43,13 @@ export default function Home() {
     <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-zinc-950 p-4">
       <h1 className="text-3xl font-bold tracking-wide text-white">Radio 25</h1>
 
-      <AudioPlayer showResult={showResult} isGenerating={isGenerating} />
+      <AudioPlayer showResult={showResult} isGenerating={isGenerating} spotifyConnected={spotifyConnected} />
 
       <ShowStatus showResult={showResult} isGenerating={isGenerating} error={error} />
 
       <PreferenceForm onGenerate={handleGenerate} isGenerating={isGenerating} />
+
+      <SpotifyConnect onConnectionChange={setSpotifyConnected} />
     </div>
   );
 }

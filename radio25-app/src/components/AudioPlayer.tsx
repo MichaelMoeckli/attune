@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect, useCallback, useMemo } from 'react';
 import type { ShowResult, Segment } from '@/lib/types';
+import SpotifyPlayerComponent from './SpotifyPlayer';
 
 const SEGMENT_LABELS: Record<string, string> = {
   jingle: 'Jingle',
@@ -15,43 +16,59 @@ const SEGMENT_LABELS: Record<string, string> = {
 interface AudioPlayerProps {
   showResult: ShowResult | null;
   isGenerating: boolean;
+  spotifyConnected: boolean;
 }
 
-export default function AudioPlayer({ showResult, isGenerating }: AudioPlayerProps) {
+export default function AudioPlayer({ showResult, isGenerating, spotifyConnected }: AudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
 
   const playableSegments = useMemo(
-    () => showResult?.segments.filter((s) => s.audioUrl) || [],
+    () => showResult?.segments.filter((s) => s.audioUrl || s.spotifyUri) || [],
     [showResult],
   );
   const currentSegment: Segment | undefined = playableSegments[currentIndex];
+  const isSpotifySegment = !!(currentSegment?.spotifyUri && spotifyConnected);
 
   const playSegment = useCallback(
     (index: number) => {
-      const audio = audioRef.current;
-      if (!audio || index >= playableSegments.length) {
+      if (index >= playableSegments.length) {
         setIsPlaying(false);
         setCurrentIndex(-1);
         return;
       }
 
       const segment = playableSegments[index];
-      if (!segment.audioUrl) {
-        // Skip segments without audio
+
+      // Skip segments with neither audio source
+      if (!segment.audioUrl && !segment.spotifyUri) {
         playSegment(index + 1);
         return;
       }
 
       setCurrentIndex(index);
+      setProgress(0);
+
+      // Spotify segments are handled by SpotifyPlayerComponent
+      if (segment.spotifyUri && spotifyConnected) {
+        return;
+      }
+
+      // HTML5 audio segments
+      const audio = audioRef.current;
+      if (!audio || !segment.audioUrl) {
+        playSegment(index + 1);
+        return;
+      }
+
       audio.src = segment.audioUrl;
       audio.play().catch((err) => {
         console.warn('[AudioPlayer] Playback failed:', err);
       });
     },
-    [playableSegments],
+    [playableSegments, spotifyConnected],
   );
 
   // Start playback when show result arrives
@@ -65,6 +82,14 @@ export default function AudioPlayer({ showResult, isGenerating }: AudioPlayerPro
   const handleEnded = () => {
     playSegment(currentIndex + 1);
   };
+
+  const handleSpotifyTrackEnd = useCallback(() => {
+    playSegment(currentIndex + 1);
+  }, [currentIndex, playSegment]);
+
+  const handleSpotifyPlayingChange = useCallback((playing: boolean) => {
+    setIsPlaying(playing);
+  }, []);
 
   const handleTimeUpdate = () => {
     const audio = audioRef.current;
@@ -108,6 +133,16 @@ export default function AudioPlayer({ showResult, isGenerating }: AudioPlayerPro
         onPause={() => setIsPlaying(false)}
       />
 
+      {/* Spotify Web Playback SDK (invisible — handles Spotify segments) */}
+      {spotifyConnected && currentSegment?.spotifyUri && (
+        <SpotifyPlayerComponent
+          spotifyUri={currentSegment.spotifyUri}
+          isActive={isSpotifySegment}
+          onTrackEnd={handleSpotifyTrackEnd}
+          onPlayingChange={handleSpotifyPlayingChange}
+        />
+      )}
+
       {/* Station name */}
       <div className="mb-4 text-center">
         <h2 className="text-xl font-bold tracking-wide">Radio 25</h2>
@@ -122,7 +157,10 @@ export default function AudioPlayer({ showResult, isGenerating }: AudioPlayerPro
           <span className="inline-block rounded-full bg-zinc-700 px-3 py-1 text-xs font-medium uppercase tracking-wider">
             {SEGMENT_LABELS[currentSegment.type] || currentSegment.type}
           </span>
-          <p className="mt-2 text-sm text-zinc-300">
+          {currentSegment.spotifyTrackName && (
+            <p className="mt-1 text-sm text-amber-400">{currentSegment.spotifyTrackName}</p>
+          )}
+          <p className="mt-1 text-sm text-zinc-300">
             Segment {currentIndex + 1} von {playableSegments.length}
           </p>
         </div>

@@ -18,9 +18,9 @@ vollautomatisierten Radios**
 Zusammenfassung
 ===============
 
-Radiosendungen zählen seit Jahrzehnten zu den meistgenutzten Medienformaten. Neben Musik bieten sie redaktionelle Inhalte wie Nachrichten, Wetter und Verkehrsinformationen. Die Produktion dieser Beiträge erfordert jedoch erhebliche personelle und finanzielle Ressourcen: Redaktionsteams recherchieren, Moderatoren sprechen ein, Techniker steuern den Ablauf. Gleichzeitig existieren heute leistungsfähige KI-Technologien -- Large Language Models zur Textgenerierung, Text-to-Speech-Systeme zur Sprachsynthese und agentische Frameworks zur Workflow-Orchestrierung --, die bisher jedoch kaum integriert eingesetzt werden, um vollständige Radiosendungen automatisiert zu erzeugen. Es fehlt eine Lösung, die auf Knopfdruck ein personalisiertes, aktuelles Radioerlebnis live generiert.
+Radiosendungen zählen seit Jahrzehnten zu den meistgenutzten Medienformaten. Neben Musik bieten sie redaktionelle Inhalte wie Nachrichten, Wetter und Verkehrsinformationen. Die Produktion dieser Beiträge erfordert jedoch erhebliche personelle und finanzielle Ressourcen: Redaktionsteams recherchieren, Moderatoren sprechen ein, Techniker steuern den Ablauf. Gleichzeitig existieren heute leistungsfähige KI-Technologien -- Large Language Models zur Textgenerierung, Text-to-Speech-Systeme zur Sprachsynthese und agentische Orchestrierungsmuster zur Workflow-Steuerung --, die bisher jedoch kaum integriert eingesetzt werden, um vollständige Radiosendungen automatisiert zu erzeugen. Es fehlt eine Lösung, die auf Knopfdruck ein personalisiertes, aktuelles Radioerlebnis live generiert.
 
-Die vorliegende Disposition beschreibt die Konzeptstudie «Radion 25», in deren Rahmen ein lauffähiger Demonstrator für ein vollautomatisiertes Radio entwickelt wird. Ein agentisches Framework orchestriert dabei die Abfrage externer Datenquellen (Nachrichten, Wetter), die LLM-basierte Generierung von Moderationstexten, die Sprachsynthese mittels TTS sowie die Musikeinbindung. Das Ergebnis wird als Webapplikation bereitgestellt, über die Nutzende auf Knopfdruck eine individuelle Sendung starten und live hören können.
+Die vorliegende Disposition beschreibt die Konzeptstudie «Radio 25», in deren Rahmen ein lauffähiger Demonstrator für ein vollautomatisiertes Radio entwickelt wird. Eine agentische Pipeline orchestriert dabei die Abfrage externer Datenquellen (Nachrichten, Wetter), die LLM-basierte Generierung von Moderationstexten, die Sprachsynthese mittels TTS sowie die Musikeinbindung. Das Ergebnis wird als Webapplikation bereitgestellt, über die Nutzende auf Knopfdruck eine individuelle Sendung starten und live hören können.
 
 Die Arbeit folgt dem Design-Science-Ansatz und gliedert sich in sieben Arbeitspakete: von der Recherche und dem Architekturentwurf über einen End-to-End-Durchstich und iterative Verfeinerung bis hin zu einer Usability-Studie mit 5--8 Testpersonen, einer technischen Evaluation und der abschliessenden Dokumentation. Die Validierung erfolgt durch Performanzmessungen, einen standardisierten Usability-Fragebogen (SUS) sowie optionale Expertenbeurteilungen.
 
@@ -34,7 +34,7 @@ Inhaltsverzeichnis
 
 Radiosendungen gehören seit Jahrzehnten zu den meistgenutzten Medienformaten weltweit. Neben Musik bieten sie Moderationsbeiträge wie Kurznachrichten, Wettervorhersagen, Verkehrsinformationen und Zeitansagen. Diese Beiträge werden heute fast ausschliesslich von menschlichen Moderierenden erstellt und live eingesprochen. Dies erfordert erhebliche personelle und finanzielle Ressourcen: Redaktionsteams recherchieren Inhalte, Moderatoren bereiten Beiträge vor und sprechen diese ein, und Techniker steuern den Sendeablauf.
 
-Gleichzeitig hat die technologische Entwicklung im Bereich der künstlichen Intelligenz in den letzten Jahren grosse Fortschritte gemacht. Large Language Models (LLMs) erzeugen qualitativ hochwertige Texte, Text-to-Speech-Systeme (TTS) generieren natürlich klingende Sprachausgaben, und agentische Frameworks ermöglichen die orchestrierte Steuerung komplexer Workflows. Diese Technologien sind einzeln bereits ausgereift, werden jedoch bisher kaum integriert eingesetzt, um vollständige Radiosendungen automatisiert zu erzeugen.
+Gleichzeitig hat die technologische Entwicklung im Bereich der künstlichen Intelligenz in den letzten Jahren grosse Fortschritte gemacht. Large Language Models (LLMs) erzeugen qualitativ hochwertige Texte, Text-to-Speech-Systeme (TTS) generieren natürlich klingende Sprachausgaben, und agentische Orchestrierungsmuster ermöglichen die koordinierte Steuerung komplexer Workflows. Diese Technologien sind einzeln bereits ausgereift, werden jedoch bisher kaum integriert eingesetzt, um vollständige Radiosendungen automatisiert zu erzeugen.
 
 Bestehende Lösungen im Bereich automatisierter Audiomedien beschränken sich überwiegend auf Musik-Streaming-Dienste (z. B. Spotify, Apple Music), die zwar personalisierte Musikwiedergabe bieten, jedoch keine redaktionellen Inhalte wie Nachrichten oder Wetter integrieren. Podcast-Plattformen liefern zwar gesprochene Inhalte, diese sind jedoch vorproduziert und nicht live generiert. Ansätze wie huxe.com zeigen erste Schritte in Richtung personalisierter Audioinhalte, decken jedoch nicht das gesamte Spektrum einer klassischen Radiosendung ab.
 
@@ -43,26 +43,26 @@ Das Problem lässt sich wie folgt zusammenfassen: Es existiert derzeit keine Lö
 2. Lösungsvorschlag
 ===================
 
-Die vorliegende Arbeit entwickelt eine Konzeptstudie und einen lauffähigen Demonstrator für ein vollautomatisiertes Radio mit dem Arbeitstitel «Radio 25». Die Kernidee besteht darin, mithilfe eines agentischen Frameworks verschiedene Dienste zu orchestrieren, um eine Radiosendung vollständig automatisiert zu erzeugen und als Webapplikation live abzuspielen.
+Die vorliegende Arbeit entwickelt eine Konzeptstudie und einen lauffähigen Demonstrator für ein vollautomatisiertes Radio mit dem Arbeitstitel «Radio 25». Die Kernidee besteht darin, mithilfe einer agentischen Pipeline verschiedene Dienste zu orchestrieren, um eine Radiosendung vollständig automatisiert zu erzeugen und als Webapplikation live abzuspielen.
 
 2.1 Architektur und Komponenten
 -------------------------------
 
 Die Lösung setzt sich aus folgenden Komponenten zusammen:
 
--   **Agentisches Framework:** Ein zentraler Agent steuert den gesamten Ablauf der Sendungsgenerierung. Er koordiniert die Abfrage externer Dienste, die Textgenerierung, die Sprachsynthese und die Musikeinbindung.
+-   **Orchestrator (agentische Pipeline):** Ein zentraler Orchestrator steuert den gesamten Ablauf der Sendungsgenerierung als asynchrone Pipeline. Er koordiniert die Abfrage externer Dienste, die Textgenerierung, die Sprachsynthese und die Musikeinbindung. Konzeptionell handelt es sich um ein agentisches System, das ohne separates Agent-Framework (wie LangChain oder CrewAI) auskommt und stattdessen als schlanke Orchestrierungsfunktion innerhalb der Next.js-Applikation implementiert ist.
 
--   **Nachrichtenintegration:** Existierende Nachrichten-APIs (z. B. NewsAPI, RSS-Feeds von SRF, Reuters) werden abgefragt, um aktuelle Meldungen zu beziehen.
+-   **Nachrichtenintegration:** RSS-Feeds (SRF, NZZ) werden als Primärquelle abgefragt, um aktuelle Meldungen zu beziehen. Optional kann NewsAPI.org als zusätzliche Quelle eingebunden werden.
 
--   **Wetterdienste:** Wetter-APIs (z. B. OpenWeatherMap, MeteoSchweiz) liefern standortbezogene Vorhersagedaten.
+-   **Wetterdienste:** Die OpenWeatherMap-API liefert standortbezogene Vorhersagedaten.
 
--   **LLM-Textgenerierung:** Ein Large Language Model (z. B. GPT-4, Claude, Llama) verarbeitet die Rohdaten und erzeugt daraus natürlich klingende Moderationstexte im Radiostil.
+-   **LLM-Textgenerierung:** Claude Sonnet (Anthropic) wird über das Vercel AI SDK angebunden und verarbeitet die Rohdaten zu natürlich klingenden Moderationstexten im Radiostil.
 
--   **Text-to-Speech (TTS):** Die generierten Texte werden mittels TTS-Systemen (z. B. ElevenLabs, Google Cloud TTS, Azure Speech) in gesprochene Sprache umgewandelt.
+-   **Text-to-Speech (TTS):** Die generierten Texte werden mittels ElevenLabs (Modell: `eleven_multilingual_v2`) in gesprochene Sprache umgewandelt. Das Modell unterstützt Deutsch und liefert eine natürlich klingende Sprachausgabe.
 
--   **Musikintegration:** Zwischen den Textblöcken wird Musik eingespielt. Dies kann über lizenzfreie Musikbibliotheken oder Streaming-APIs realisiert werden.
+-   **Musikintegration:** Zwischen den Textblöcken wird Musik eingespielt. Als Primärlösung dienen lizenzfreie lokale MP3-Dateien. Optional kann Spotify über die Web API und das Playback SDK eingebunden werden (setzt einen Premium-Account des Nutzenden voraus).
 
--   **Webapplikation:** Eine browserbasierte Oberfläche ermöglicht es Nutzenden, auf Knopfdruck eine Sendung zu starten und live zu hören.
+-   **Webapplikation:** Eine browserbasierte Next.js-15-Oberfläche (React 19, TypeScript, Tailwind CSS 4) ermöglicht es Nutzenden, auf Knopfdruck eine Sendung zu starten und live zu hören.
 
 2.2 Goal und Objective
 ----------------------
@@ -89,7 +89,7 @@ Kleine und mittlere Radiostationen sowie Community-Radios können ihre Produktio
 3.3 Nutzen für die Forschung
 ----------------------------
 
-Die Arbeit leistet einen Beitrag zur angewandten Forschung im Bereich agentischer Systeme. Das entwickelte Framework und die gewonnenen Erkenntnisse zur Orchestrierung von LLM, TTS und externen APIs können auf andere Anwendungsfälle übertragen werden (z. B. automatisierte Podcasts, Sprachassistenten, Informationssysteme). Die Usability-Studie liefert zudem empirische Daten zur Nutzerakzeptanz KI-generierter Audioinhalte.
+Die Arbeit leistet einen Beitrag zur angewandten Forschung im Bereich agentischer Systeme. Die entwickelte Orchestrierungsarchitektur und die gewonnenen Erkenntnisse zur Integration von LLM, TTS und externen APIs können auf andere Anwendungsfälle übertragen werden (z. B. automatisierte Podcasts, Sprachassistenten, Informationssysteme). Die Usability-Studie liefert zudem empirische Daten zur Nutzerakzeptanz KI-generierter Audioinhalte.
 
 3.4 Qualitative Nutzenprognose
 ------------------------------
@@ -104,7 +104,7 @@ Die Entwicklung eines vollautomatisierten Radios birgt mehrere technische und ko
 4.1 Hauptfrage
 --------------
 
-*Wie kann eine Webapplikation gestaltet werden, die auf Basis eines agentischen Frameworks eine vollständige, personalisierte Radiosendung in Echtzeit generiert und abspielt?*
+*Wie kann eine Webapplikation gestaltet werden, die auf Basis einer agentischen Pipeline eine vollständige, personalisierte Radiosendung in Echtzeit generiert und abspielt?*
 
 4.2 Unterfragen
 ---------------
@@ -152,13 +152,13 @@ Als erste Iteration wird ein Durchstich (End-to-End-Prototyp) angestrebt. Dabei 
 
 Für die erfolgreiche Durchführung des Projekts sind folgende Kompetenzen und Ressourcen erforderlich:
 
--   LLM-Integration: Erfahrung mit API-basierten Sprachmodellen (Prompt Engineering, API-Management, Kontextsteuerung)
+-   LLM-Integration: Erfahrung mit API-basierten Sprachmodellen, insbesondere Claude Sonnet via Vercel AI SDK (Prompt Engineering, API-Management, Kontextsteuerung)
 
--   Text-to-Speech: Kenntnisse in der Konfiguration und Nutzung von TTS-Diensten (Stimmauswahl, Prosodie, SSML)
+-   Text-to-Speech: Kenntnisse in der Konfiguration und Nutzung von ElevenLabs (Stimmauswahl, Prosodie, mehrsprachige Modelle)
 
--   Webentwicklung: Frontend- und Backend-Entwicklung für die Webapplikation (z. B. React/Next.js, Python/FastAPI, Audio-Streaming)
+-   Webentwicklung: Fullstack-Entwicklung mit Next.js 15 (React 19, TypeScript, Tailwind CSS 4), API Routes und HTML5-Audio-Wiedergabe
 
--   Agentische Systeme: Verständnis von Agent-Frameworks (z. B. LangChain, CrewAI, AutoGen) zur Orchestrierung der Pipeline
+-   Agentische Orchestrierung: Entwurf und Implementierung einer asynchronen Pipeline zur koordinierten Steuerung von Datenabfrage, Textgenerierung, Sprachsynthese und Musikeinbindung
 
 -   UX-Research: Grundkenntnisse in der Durchführung von Usability-Studien (Testplanung, Durchführung, Auswertung)
 
@@ -206,7 +206,7 @@ Im Rahmen der Arbeit werden folgende fassbare Projektergebnisse erzeugt:
 
 6.  Usability-Bericht: Dokumentation und Auswertung der Usability-Studie mit quantitativen Ergebnissen (SUS-Score, Aufgabenerfolgsraten) und qualitativen Erkenntnissen aus den Nutzerinterviews.
 
-7.  Code-Base und Framework: Der vollständige Quellcode des Demonstrators, inklusive des agentischen Frameworks zur Orchestrierung der Pipeline. Der Code ist dokumentiert und kann als Grundlage für Weiterentwicklungen dienen.
+7.  Code-Base und Orchestrator: Der vollständige Quellcode des Demonstrators, inklusive der agentischen Pipeline zur Orchestrierung von Datenabfrage, Textgenerierung, Sprachsynthese und Musikeinbindung. Der Code ist dokumentiert und kann als Grundlage für Weiterentwicklungen dienen.
 
 8.  Systemarchitektur und Designdokumentation: Diagramme und Beschreibungen der Systemarchitektur, Komponenteninteraktionen und Datenflüsse.
 

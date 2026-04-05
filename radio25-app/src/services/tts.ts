@@ -7,7 +7,7 @@ export async function textToSpeech(text: string, segmentId: string): Promise<str
   const apiKey = process.env.ELEVENLABS_API_KEY;
   const voiceId = process.env.ELEVENLABS_VOICE_ID;
 
-  if (!apiKey || apiKey === 'your-elevenlabs-api-key-here') {
+  if (!apiKey || apiKey === 'your-elevenlabs-api-key-here' || !voiceId || voiceId === 'your-voice-id-here') {
     console.log(`[tts] Using mock audio for segment: ${segmentId}`);
     // Return empty string — AudioPlayer will skip segments without audioUrl
     // In a real mock, we could generate a silent MP3, but for now this is fine
