@@ -25,6 +25,9 @@ export default function AudioPlayer({ showResult, isGenerating, spotifyConnected
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
 
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const isBrowserTts = useRef(false);
+
   const playableSegments = useMemo(
     () => showResult?.segments.filter((s) => s.audioUrl || s.spotifyUri) || [],
     [showResult],
@@ -48,11 +51,31 @@ export default function AudioPlayer({ showResult, isGenerating, spotifyConnected
         return;
       }
 
+      // Stop any ongoing browser TTS
+      if (isBrowserTts.current) {
+        window.speechSynthesis.cancel();
+        isBrowserTts.current = false;
+      }
+
       setCurrentIndex(index);
       setProgress(0);
 
       // Spotify segments are handled by SpotifyPlayerComponent
       if (segment.spotifyUri && spotifyConnected) {
+        return;
+      }
+
+      // Browser TTS segments (mock mode)
+      if (segment.audioUrl === 'browser-tts' && segment.text) {
+        isBrowserTts.current = true;
+        const utterance = new SpeechSynthesisUtterance(segment.text);
+        utterance.lang = 'de-DE';
+        utterance.onend = () => {
+          isBrowserTts.current = false;
+          playSegment(index + 1);
+        };
+        utteranceRef.current = utterance;
+        window.speechSynthesis.speak(utterance);
         return;
       }
 
@@ -99,6 +122,17 @@ export default function AudioPlayer({ showResult, isGenerating, spotifyConnected
   };
 
   const togglePlayPause = () => {
+    if (isBrowserTts.current) {
+      if (isPlaying) {
+        window.speechSynthesis.pause();
+        setIsPlaying(false);
+      } else {
+        window.speechSynthesis.resume();
+        setIsPlaying(true);
+      }
+      return;
+    }
+
     const audio = audioRef.current;
     if (!audio) return;
 
@@ -113,12 +147,14 @@ export default function AudioPlayer({ showResult, isGenerating, spotifyConnected
 
   const skipNext = () => {
     if (currentIndex < playableSegments.length - 1) {
+      if (isBrowserTts.current) window.speechSynthesis.cancel();
       playSegment(currentIndex + 1);
     }
   };
 
   const skipPrev = () => {
     if (currentIndex > 0) {
+      if (isBrowserTts.current) window.speechSynthesis.cancel();
       playSegment(currentIndex - 1);
     }
   };

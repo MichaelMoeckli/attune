@@ -69,14 +69,6 @@ async function fetchFromRSS(topics: string[]): Promise<NewsArticle[]> {
 }
 
 export async function fetchNews(topics: string[]): Promise<NewsArticle[]> {
-  // Mock mode: no real API calls
-  const hasRealFeeds = process.env.NODE_ENV === 'production' || process.env.ENABLE_REAL_APIS === 'true';
-
-  if (!hasRealFeeds) {
-    console.log('[news] Using mock data');
-    return MOCK_ARTICLES;
-  }
-
   try {
     const articles = await fetchFromRSS(topics);
     if (articles.length > 0) return articles;
@@ -84,5 +76,6 @@ export async function fetchNews(topics: string[]): Promise<NewsArticle[]> {
     console.warn('[news] RSS fetch failed, falling back to mock:', error);
   }
 
+  console.log('[news] Using mock data');
   return MOCK_ARTICLES;
 }

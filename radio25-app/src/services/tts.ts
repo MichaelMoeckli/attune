@@ -4,13 +4,17 @@ import path from 'path';
 const AUDIO_DIR = path.join(process.cwd(), 'public', 'audio');
 
 export async function textToSpeech(text: string, segmentId: string): Promise<string> {
+  // Mock mode: skip ElevenLabs, let the browser handle TTS via Web Speech API
+  if (process.env.USE_MOCK_TTS === 'true') {
+    console.log(`[tts] Mock mode — browser TTS will be used for: ${segmentId}`);
+    return 'browser-tts';
+  }
+
   const apiKey = process.env.ELEVENLABS_API_KEY;
   const voiceId = process.env.ELEVENLABS_VOICE_ID;
 
   if (!apiKey || apiKey === 'your-elevenlabs-api-key-here' || !voiceId || voiceId === 'your-voice-id-here') {
     console.log(`[tts] Using mock audio for segment: ${segmentId}`);
-    // Return empty string — AudioPlayer will skip segments without audioUrl
-    // In a real mock, we could generate a silent MP3, but for now this is fine
     return '';
   }
 

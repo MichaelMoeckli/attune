@@ -1,11 +1,12 @@
 import { readdirSync } from 'fs';
 import path from 'path';
 import { isSpotifyConfigured, getRandomTrack, type SpotifyTrack } from './spotify';
+import { isJamendoConfigured, getRandomTrack as getRandomJamendoTrack } from './jamendo';
 
 const MUSIC_DIR = path.join(process.cwd(), 'public', 'music');
 
 export interface MusicSelection {
-  type: 'local' | 'spotify';
+  type: 'local' | 'spotify' | 'jamendo';
   audioUrl?: string;
   spotifyUri?: string;
   trackName?: string;
@@ -41,6 +42,23 @@ export async function pickTrack(): Promise<MusicSelection> {
       }
     } catch (error) {
       console.warn('[music] Spotify fetch failed, falling back to local:', error);
+    }
+  }
+
+  // Try Jamendo if configured
+  if (isJamendoConfigured()) {
+    try {
+      const track = await getRandomJamendoTrack();
+      if (track) {
+        console.log(`[music] Jamendo track selected: ${track.artist} — ${track.name}`);
+        return {
+          type: 'jamendo',
+          audioUrl: track.audioUrl,
+          trackName: `${track.artist} — ${track.name}`,
+        };
+      }
+    } catch (error) {
+      console.warn('[music] Jamendo fetch failed, falling back to local:', error);
     }
   }
 

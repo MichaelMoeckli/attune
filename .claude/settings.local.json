@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(npm install:*)",
-      "Bash(npx next:*)"
+      "Bash(npx next:*)",
+      "Bash(curl -s \"https://api.jamendo.com/v3.0/tracks/?client_id=78f000ba215283b505d18b43e7dd474a&format=json&limit=2&search=chill&order=popularity_month&audioformat=mp32\")"
     ]
   }
 }
