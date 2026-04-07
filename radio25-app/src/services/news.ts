@@ -27,18 +27,38 @@ const MOCK_ARTICLES: NewsArticle[] = [
   },
 ];
 
-const RSS_FEEDS = [
-  'https://www.srf.ch/news.rss',
-  'https://www.nzz.ch/recent.rss',
-];
+const RSS_FEEDS: Record<string, string[]> = {
+  default: [
+    'https://www.srf.ch/news/bnf/rss/1890',
+    'https://www.nzz.ch/recent.rss',
+  ],
+  international: ['https://www.nzz.ch/international.rss'],
+  sport: ['https://www.nzz.ch/sport.rss'],
+  wirtschaft: ['https://www.nzz.ch/wirtschaft.rss'],
+  finanzen: ['https://www.nzz.ch/finanzen.rss'],
+  kultur: ['https://www.nzz.ch/kultur.rss'],
+  wissenschaft: ['https://www.nzz.ch/wissenschaft.rss'],
+  technologie: ['https://www.nzz.ch/technologie.rss'],
+  panorama: ['https://www.nzz.ch/panorama.rss'],
+  zuerich: ['https://www.nzz.ch/zuerich.rss'],
+  schweiz: ['https://www.nzz.ch/schweiz.rss'],
+};
 
 async function fetchFromRSS(topics: string[]): Promise<NewsArticle[]> {
-  // Dynamic import to avoid issues with rss-parser in client bundles
   const Parser = (await import('rss-parser')).default;
   const parser = new Parser();
   const articles: NewsArticle[] = [];
 
-  for (const feedUrl of RSS_FEEDS) {
+  // Pick feeds: use category-specific feeds for matching topics, always include default
+  const feedUrls = new Set<string>(RSS_FEEDS.default);
+  for (const topic of topics) {
+    const key = topic.toLowerCase();
+    if (RSS_FEEDS[key]) {
+      RSS_FEEDS[key].forEach((url) => feedUrls.add(url));
+    }
+  }
+
+  for (const feedUrl of feedUrls) {
     try {
       const feed = await parser.parseURL(feedUrl);
       for (const item of feed.items.slice(0, 5)) {
@@ -51,21 +71,11 @@ async function fetchFromRSS(topics: string[]): Promise<NewsArticle[]> {
         });
       }
     } catch (error) {
-      console.warn(`Failed to fetch RSS feed ${feedUrl}:`, error);
+      console.warn(`[news] Failed to fetch RSS feed ${feedUrl}:`, error);
     }
   }
 
-  // Filter by topics if provided
-  if (topics.length > 0) {
-    const topicLower = topics.map((t) => t.toLowerCase());
-    const filtered = articles.filter((a) => {
-      const text = `${a.title} ${a.summary}`.toLowerCase();
-      return topicLower.some((topic) => text.includes(topic));
-    });
-    if (filtered.length > 0) return filtered.slice(0, 5);
-  }
-
-  return articles.slice(0, 5);
+  return articles.slice(0, 10);
 }
 
 export async function fetchNews(topics: string[]): Promise<NewsArticle[]> {
