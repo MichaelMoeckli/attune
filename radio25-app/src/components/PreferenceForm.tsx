@@ -5,11 +5,16 @@ import type { ShowConfig, UserPreferences } from '@/lib/types';
 
 const TOPIC_OPTIONS = [
   { id: 'politik', label: 'Politik' },
+  { id: 'international', label: 'International' },
+  { id: 'schweiz', label: 'Schweiz' },
   { id: 'wirtschaft', label: 'Wirtschaft' },
+  { id: 'finanzen', label: 'Finanzen' },
   { id: 'sport', label: 'Sport' },
   { id: 'technologie', label: 'Technologie' },
   { id: 'kultur', label: 'Kultur' },
   { id: 'wissenschaft', label: 'Wissenschaft' },
+  { id: 'panorama', label: 'Panorama' },
+  { id: 'zuerich', label: 'Zürich' },
 ];
 
 const VOICE_STYLES = [

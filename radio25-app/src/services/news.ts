@@ -32,6 +32,7 @@ const RSS_FEEDS: Record<string, string[]> = {
     'https://www.srf.ch/news/bnf/rss/1890',
     'https://www.nzz.ch/recent.rss',
   ],
+  politik: ['https://www.nzz.ch/schweiz.rss', 'https://www.nzz.ch/international.rss'],
   international: ['https://www.nzz.ch/international.rss'],
   sport: ['https://www.nzz.ch/sport.rss'],
   wirtschaft: ['https://www.nzz.ch/wirtschaft.rss'],
@@ -49,13 +50,17 @@ async function fetchFromRSS(topics: string[]): Promise<NewsArticle[]> {
   const parser = new Parser();
   const articles: NewsArticle[] = [];
 
-  // Pick feeds: use category-specific feeds for matching topics, always include default
-  const feedUrls = new Set<string>(RSS_FEEDS.default);
+  // Pick feeds: use category-specific feeds for matching topics, fall back to default
+  const feedUrls = new Set<string>();
   for (const topic of topics) {
     const key = topic.toLowerCase();
     if (RSS_FEEDS[key]) {
       RSS_FEEDS[key].forEach((url) => feedUrls.add(url));
     }
+  }
+  // Fall back to default feeds if no category-specific feeds matched
+  if (feedUrls.size === 0) {
+    RSS_FEEDS.default.forEach((url) => feedUrls.add(url));
   }
 
   for (const feedUrl of feedUrls) {
