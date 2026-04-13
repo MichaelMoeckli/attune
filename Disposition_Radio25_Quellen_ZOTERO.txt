@@ -1,0 +1,244 @@
+@article{bangor2008,
+  author    = {Bangor, Aaron and Kortum, Philip T. and Miller, James T.},
+  title     = {An Empirical Evaluation of the {System Usability Scale}},
+  journal   = {International Journal of Human--Computer Interaction},
+  volume    = {24},
+  number    = {6},
+  pages     = {574--594},
+  year      = {2008},
+  doi       = {10.1080/10447310802205776}
+}
+
+@incollection{brooke1996,
+  author    = {Brooke, John},
+  title     = {{SUS}: A `Quick and Dirty' Usability Scale},
+  booktitle = {Usability Evaluation in Industry},
+  editor    = {Jordan, Patrick W. and Thomas, Bruce and McClelland, Ian Lyall and Weerdmeester, Bernard},
+  pages     = {189--194},
+  publisher = {Taylor \& Francis},
+  year      = {1996}
+}
+
+@article{burr2020,
+  author    = {Burr, Christopher and Taddeo, Mariarosaria and Floridi, Luciano},
+  title     = {The Ethics of Digital Well-Being: A Thematic Review},
+  journal   = {Science and Engineering Ethics},
+  volume    = {26},
+  pages     = {2441--2460},
+  year      = {2020},
+  doi       = {10.1007/s11948-020-00175-8}
+}
+
+@article{peters2020,
+  author    = {Peters, Dorian and Ahmadpour, Naseem and Calvo, Rafael A.},
+  title     = {Tools for Wellbeing-Supportive Design: Features, Characteristics, and Prototypes},
+  journal   = {Multimodal Technologies and Interaction},
+  volume    = {4},
+  number    = {3},
+  pages     = {40},
+  year      = {2020},
+  doi       = {10.3390/mti4030040}
+}
+
+@incollection{fogg2003,
+  author    = {Fogg, B. J.},
+  title     = {The Functional Triad: Computers in Persuasive Roles},
+  booktitle = {Persuasive Technology: Using Computers to Change What We Think and Do},
+  chapter   = {2},
+  pages     = {23--29},
+  publisher = {Morgan Kaufmann},
+  year      = {2003},
+  doi       = {10.1016/B978-1-55860-643-2.X5000-8}
+}
+
+@article{hendry2021,
+  author    = {Hendry, David G. and Friedman, Batya and Ballard, Stephanie},
+  title     = {Value Sensitive Design as a Formative Framework},
+  journal   = {Ethics and Information Technology},
+  volume    = {23},
+  number    = {1},
+  pages     = {39--44},
+  year      = {2021},
+  doi       = {10.1007/s10676-021-09579-x}
+}
+
+@article{geschke2019,
+  author    = {Geschke, Daniel and Lorenz, Jan and Holtz, Peter},
+  title     = {The Triple-Filter Bubble: Using Agent-Based Modelling to Test a Meta-Theoretical Framework for the Emergence of Filter Bubbles and Echo Chambers},
+  journal   = {British Journal of Social Psychology},
+  volume    = {58},
+  number    = {1},
+  pages     = {129--149},
+  year      = {2019},
+  doi       = {10.1111/bjso.12286}
+}
+
+@article{hevner2007,
+  author    = {Hevner, Alan R.},
+  title     = {A Three Cycle View of Design Science Research},
+  journal   = {Scandinavian Journal of Information Systems},
+  volume    = {19},
+  number    = {2},
+  pages     = {87--92},
+  year      = {2007}
+}
+
+@article{hevner2004,
+  author    = {Hevner, Alan R. and March, Salvatore T. and Park, Jinsoo and Ram, Sudha},
+  title     = {Design Science in Information Systems Research},
+  journal   = {MIS Quarterly},
+  volume    = {28},
+  number    = {1},
+  pages     = {75--105},
+  year      = {2004},
+  doi       = {10.2307/25148625}
+}
+
+@article{milano2020,
+  author    = {Milano, Silvia and Taddeo, Mariarosaria and Floridi, Luciano},
+  title     = {Recommender Systems and Their Ethical Challenges},
+  journal   = {AI \& Society},
+  volume    = {35},
+  pages     = {957--967},
+  year      = {2020},
+  doi       = {10.1007/s00146-020-00950-y}
+}
+
+@article{montag2023,
+  author    = {Montag, Christian and Elhai, Jon D.},
+  title     = {On Social Media Design, (Online-)Time Well-Spent and Addictive Behaviors in the Age of Surveillance Capitalism},
+  journal   = {Current Addiction Reports},
+  volume    = {10},
+  number    = {4},
+  pages     = {384--395},
+  year      = {2023},
+  doi       = {10.1007/s40429-023-00494-3}
+}
+
+@article{montag2019,
+  author    = {Montag, Christian and Lachmann, Bernd and Herrlich, Marc and Zweig, Katharina},
+  title     = {Addictive Features of Social Media/Messenger Platforms and Freemium Games Against the Background of Psychological and Economic Theories},
+  journal   = {International Journal of Environmental Research and Public Health},
+  volume    = {16},
+  number    = {14},
+  pages     = {2612},
+  year      = {2019},
+  doi       = {10.3390/ijerph16142612}
+}
+
+@inproceedings{nguyen2014,
+  author    = {Nguyen, Tien T. and Hui, Pik-Mai and Harper, F. Maxwell and Terveen, Loren and Konstan, Joseph A.},
+  title     = {Exploring the Filter Bubble: The Effect of Using Recommender Systems on Content Diversity},
+  booktitle = {Proceedings of the 23rd International Conference on World Wide Web},
+  pages     = {677--686},
+  publisher = {ACM},
+  year      = {2014},
+  doi       = {10.1145/2566486.2568012}
+}
+
+@article{orben2020,
+  author    = {Orben, Amy},
+  title     = {Teenagers, Screens and Social Media: A Narrative Review of Reviews and Key Studies},
+  journal   = {Social Psychiatry and Psychiatric Epidemiology},
+  volume    = {55},
+  number    = {4},
+  pages     = {407--414},
+  year      = {2020},
+  doi       = {10.1007/s00127-019-01825-4}
+}
+
+@article{peffers2007,
+  author    = {Peffers, Ken and Tuunanen, Tuure and Rothenberger, Marcus A. and Chatterjee, Samir},
+  title     = {A Design Science Research Methodology for Information Systems Research},
+  journal   = {Journal of Management Information Systems},
+  volume    = {24},
+  number    = {3},
+  pages     = {45--77},
+  year      = {2007},
+  doi       = {10.2753/MIS0742-1222240302}
+}
+
+@article{peters2018,
+  author    = {Peters, Dorian and Calvo, Rafael A. and Ryan, Richard M.},
+  title     = {Designing for Motivation, Engagement and Wellbeing in Digital Experience},
+  journal   = {Frontiers in Psychology},
+  volume    = {9},
+  pages     = {797},
+  year      = {2018},
+  doi       = {10.3389/fpsyg.2018.00797}
+}
+
+@article{reviglio2020,
+  author    = {Reviglio, Urbano and Agosti, Claudio},
+  title     = {Thinking Outside the Black-Box: The Case for ``Algorithmic Sovereignty'' in Social Media},
+  journal   = {Social Media + Society},
+  volume    = {6},
+  number    = {2},
+  pages     = {1--12},
+  year      = {2020},
+  doi       = {10.1177/2056305120915613}
+}
+
+@article{ryan2000,
+  author    = {Ryan, Richard M. and Deci, Edward L.},
+  title     = {Self-Determination Theory and the Facilitation of Intrinsic Motivation, Social Development, and Well-Being},
+  journal   = {American Psychologist},
+  volume    = {55},
+  number    = {1},
+  pages     = {68--78},
+  year      = {2000},
+  doi       = {10.1037/0003-066X.55.1.68}
+}
+
+@incollection{sunstein2017,
+  author    = {Sunstein, Cass R.},
+  title     = {Polarization},
+  booktitle = {\#Republic: Divided Democracy in the Age of Social Media},
+  chapter   = {3},
+  pages     = {59--97},
+  publisher = {Princeton University Press},
+  year      = {2017}
+}
+
+@article{vandenAbeele2021,
+  author    = {Vanden Abeele, Mariek M. P.},
+  title     = {Digital Wellbeing as a Dynamic Construct},
+  journal   = {Communication Theory},
+  volume    = {31},
+  number    = {4},
+  pages     = {932--955},
+  year      = {2021},
+  doi       = {10.1093/ct/qtaa024}
+}
+
+@article{verduyn2015,
+  author    = {Verduyn, Philippe and Lee, David Seungjae and Park, Jiyoung and Shablack, Holly and Orvell, Ariana and Bayer, Joseph and Ybarra, Oscar and Jonides, John and Kross, Ethan},
+  title     = {Passive {Facebook} Usage Undermines Affective Well-Being: Experimental and Longitudinal Evidence},
+  journal   = {Journal of Experimental Psychology: General},
+  volume    = {144},
+  number    = {2},
+  pages     = {480--488},
+  year      = {2015},
+  doi       = {10.1037/xge0000057}
+}
+
+@article{weinmann2016,
+  author    = {Weinmann, Markus and Schneider, Christoph and vom Brocke, Jan},
+  title     = {Digital Nudging},
+  journal   = {Business \& Information Systems Engineering},
+  volume    = {58},
+  number    = {6},
+  pages     = {433--436},
+  year      = {2016},
+  doi       = {10.1007/s12599-016-0453-3}
+}
+
+@incollection{zuboff2019,
+  author    = {Zuboff, Shoshana},
+  title     = {The Discovery of Behavioral Surplus},
+  booktitle = {The Age of Surveillance Capitalism: The Fight for a Human Future at the New Frontier of Power},
+  chapter   = {3},
+  pages     = {63--97},
+  publisher = {PublicAffairs},
+  year      = {2019}
+}
