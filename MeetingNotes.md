@@ -1,4 +1,75 @@
 # Meetingprotokoll – Radio25
+
+
+---
+
+**Datum:** 16. April 2026
+
+---
+
+## Feedback zur Storyline
+
+### WHY
+Der Konsum von Medien hängt von verschiedenen Faktoren ab:
+
+- Eigenschaften/Motivationen der User
+- Eigenschaften/Motivationen der Anbieter
+- ...?
+
+Zur Zeit scheint es ein allgemeines Thema zu sein, dass insbesondere soziale Medien in ein Ungleichgewicht geraten sind, und die Motivationen der Anbieter stärker erfüllt werden, als die Bedürfnisse der User berücksichtigt werden. *(Quellen?)*
+
+### BACKGROUND
+Allgemein gibt es folgende Eigenschaften/Bedürfnisse auf beiden Seiten:
+
+**Anbieter:**
+- Business-Modelle
+- Werbung, Revenue
+- ...
+
+**User:**
+- Interessen (Ontologien)
+- Suchen
+- Empfehlungen
+- ...
+
+Diese manifestieren/zeigen sich in folgenden Mechanismen: Klassifizierungen, Suchmechanismen, Empfehlungen, Sharing, ...
+
+**Beurteilungsgrundlagen:**
+- Value-Sensitive Design
+- Self-Determination Theory
+- ...
+
+→ Gegenüberstellung von Angeboten (Mechanismen) und Beurteilungsgrundlagen → Was ist gut/schlecht/Chancen/Gefahren?
+
+---
+
+## Feedback zur Recherche
+
+### Literature Review
+
+- Digital Wellbeing in Social Media in Swisscovery/Google Scholar
+- Digital Wellbeing in Social Media in Claude → Query Expansion, Theorien → Weitere Suchen
+- Prompt → 2 Quellen gefunden
+
+### Vorgehensweise für Einführung Background/Related Work
+
+> „Wir haben einen Literaturreview gemacht, folgende Tools eingesetzt, diese Tools wie folgt benutzt (Eingaben) und dabei folgendes erhalten (Anzahl Quellen/Textantworten/...)"
+
+- **NotebookLM** benutzen mit allen Quellen, Text validieren
+
+---
+
+## Forschungsfrage
+
+Fokus auf Präferenzangaben seitens User, was Bedürfnisse der User optimiert:
+
+- Was wäre gut für den Benutzer?
+- Wie kann der Benutzer seine Bedürfnisse angeben?
+
+**Vorgehensweise:** Am Beispiel einer digitalen Radiostation (Vorteil: vereinigt unterschiedliche Medienarten) gestalten wir Antworten auf diese Frage, entwickeln diese prototypisch und lassen diese beurteilen.
+
+---
+
 **Datum:** 9. April 2026
 
 ---
