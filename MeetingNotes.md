@@ -1,6 +1,19 @@
 # Meetingprotokoll – Radio25
 
+---
 
+**Datum:** 23. April 2026
+
+---
+- notes
+- ftp zuganag zu informaniak
+
+- erggäzugn hintergurnd und storyline: fazit finden zu radio 25 und was man alle verbessern könnte
+- features hinzufügen basierend auf konzepte
+- experimient 3 personen für den moment -> verbesserung finden
+- nacher längeres experiment
+- metrix für experiment: - usability (iso norm finden) - akzeptanz (wie könnte man sich vorellen das zu benutzen) - wirkung (zusammenhang mit background kapitel, mit features die ich mache, hat es die wirkugn die ich erhoffe)
+  
 ---
 
 **Datum:** 16. April 2026
