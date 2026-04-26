@@ -24,6 +24,7 @@ export default function AudioPlayer({ showResult, isGenerating, spotifyConnected
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [hasPlayedOnce, setHasPlayedOnce] = useState(false);
 
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const isBrowserTts = useRef(false);
@@ -42,6 +43,8 @@ export default function AudioPlayer({ showResult, isGenerating, spotifyConnected
         setCurrentIndex(-1);
         return;
       }
+
+      setHasPlayedOnce(true);
 
       const segment = playableSegments[index];
 
@@ -94,13 +97,18 @@ export default function AudioPlayer({ showResult, isGenerating, spotifyConnected
     [playableSegments, spotifyConnected],
   );
 
+  // Reset play-once flag when a new show arrives
+  useEffect(() => {
+    setHasPlayedOnce(false);
+  }, [showResult?.showId]);
+
   // Start playback when show result arrives
   useEffect(() => {
-    if (showResult && playableSegments.length > 0 && currentIndex === -1) {
+    if (showResult && playableSegments.length > 0 && currentIndex === -1 && !hasPlayedOnce) {
       playSegment(0);
       setIsPlaying(true);
     }
-  }, [showResult, playableSegments.length, currentIndex, playSegment]);
+  }, [showResult, playableSegments.length, currentIndex, playSegment, hasPlayedOnce]);
 
   const handleEnded = () => {
     playSegment(currentIndex + 1);
@@ -256,6 +264,14 @@ export default function AudioPlayer({ showResult, isGenerating, spotifyConnected
       {currentSegment?.text && (
         <div className="mt-4 max-h-24 overflow-y-auto rounded-lg bg-zinc-800 p-3">
           <p className="text-xs leading-relaxed text-zinc-400">{currentSegment.text}</p>
+        </div>
+      )}
+
+      {/* Post-show wellbeing nudge */}
+      {showResult && hasPlayedOnce && currentIndex === -1 && (
+        <div className="mt-4 rounded-lg bg-zinc-800/60 p-4 text-center">
+          <p className="text-sm font-medium text-zinc-200">Sendung beendet — bis morgen!</p>
+          <p className="mt-1 text-xs text-zinc-400">Du hast die ganze Sendung gehört.</p>
         </div>
       )}
     </div>

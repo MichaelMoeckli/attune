@@ -23,6 +23,12 @@ const VOICE_STYLES = [
   { id: 'energetic' as const, label: 'Energisch', description: 'Mit viel Begeisterung' },
 ];
 
+const LENGTH_OPTIONS = [
+  { id: 5 as const, label: '5 Min', description: 'Kurz' },
+  { id: 10 as const, label: '10 Min', description: 'Standard' },
+  { id: 15 as const, label: '15 Min', description: 'Ausführlich' },
+];
+
 interface PreferenceFormProps {
   onGenerate: (config: ShowConfig) => void;
   isGenerating: boolean;
@@ -42,6 +48,7 @@ export default function PreferenceForm({ onGenerate, isGenerating }: PreferenceF
   const [topics, setTopics] = useState<string[]>(['politik', 'wirtschaft', 'sport']);
   const [location, setLocation] = useState('Zürich');
   const [voiceStyle, setVoiceStyle] = useState<ShowConfig['voiceStyle']>('casual');
+  const [targetLengthMin, setTargetLengthMin] = useState<ShowConfig['targetLengthMin']>(10);
   const [loaded, setLoaded] = useState(false);
 
   // Load saved preferences
@@ -56,6 +63,7 @@ export default function PreferenceForm({ onGenerate, isGenerating }: PreferenceF
           setTopics(prefs.topics);
           setLocation(prefs.location);
           setVoiceStyle(prefs.voiceStyle);
+          if (prefs.targetLengthMin) setTargetLengthMin(prefs.targetLengthMin);
         }
         setLoaded(true);
       })
@@ -78,6 +86,7 @@ export default function PreferenceForm({ onGenerate, isGenerating }: PreferenceF
       location,
       voiceStyle,
       language: 'de',
+      targetLengthMin,
     };
 
     // Save preferences
@@ -149,6 +158,29 @@ export default function PreferenceForm({ onGenerate, isGenerating }: PreferenceF
             >
               <div className="text-sm font-medium">{style.label}</div>
               <div className="text-xs opacity-70">{style.description}</div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Show Length */}
+      <div>
+        <label className="mb-2 block text-sm font-medium text-zinc-300">
+          Sendelänge
+        </label>
+        <div className="grid grid-cols-3 gap-2">
+          {LENGTH_OPTIONS.map((opt) => (
+            <button
+              key={opt.id}
+              onClick={() => setTargetLengthMin(opt.id)}
+              className={`rounded-lg p-2 text-center transition ${
+                targetLengthMin === opt.id
+                  ? 'bg-amber-500 text-zinc-900'
+                  : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'
+              }`}
+            >
+              <div className="text-sm font-medium">{opt.label}</div>
+              <div className="text-xs opacity-70">{opt.description}</div>
             </button>
           ))}
         </div>

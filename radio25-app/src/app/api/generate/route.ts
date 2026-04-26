@@ -15,6 +15,7 @@ export async function POST(request: Request) {
       location: body.location || 'Zürich',
       voiceStyle: body.voiceStyle || 'casual',
       language: body.language || 'de',
+      targetLengthMin: body.targetLengthMin || 10,
     };
 
     if (!Array.isArray(config.topics) || config.topics.length === 0) {

@@ -53,6 +53,7 @@ export async function POST(request: Request) {
       location: body.location || 'Zürich',
       voiceStyle: body.voiceStyle || 'casual',
       language: body.language || 'de',
+      targetLengthMin: body.targetLengthMin || 10,
       createdAt: prefs[body.userId]?.createdAt || now,
       updatedAt: now,
     };

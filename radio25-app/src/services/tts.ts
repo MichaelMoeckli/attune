@@ -2,6 +2,17 @@ import { writeFile } from 'fs/promises';
 import path from 'path';
 
 const AUDIO_DIR = path.join(process.cwd(), 'public', 'audio');
+const DEFAULT_VOICE_ID = 'pNInz6obpgDQGcFmaJgB';
+
+export function getTtsVoiceId(): string {
+  if (process.env.USE_MOCK_TTS === 'true') return 'browser-tts';
+  const apiKey = process.env.ELEVENLABS_API_KEY;
+  const voiceId = process.env.ELEVENLABS_VOICE_ID;
+  if (!apiKey || apiKey === 'your-elevenlabs-api-key-here' || !voiceId || voiceId === 'your-voice-id-here') {
+    return 'mock';
+  }
+  return voiceId;
+}
 
 export async function textToSpeech(text: string, segmentId: string): Promise<string> {
   // Mock mode: skip ElevenLabs, let the browser handle TTS via Web Speech API
@@ -23,7 +34,7 @@ export async function textToSpeech(text: string, segmentId: string): Promise<str
 
     const client = new ElevenLabsClient({ apiKey });
     const audioStream = await client.textToSpeech.convert(
-      voiceId || 'pNInz6obpgDQGcFmaJgB', // Default: "Adam" multilingual voice
+      voiceId || DEFAULT_VOICE_ID,
       {
         text,
         model_id: 'eleven_multilingual_v2',

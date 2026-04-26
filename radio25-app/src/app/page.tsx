@@ -5,6 +5,7 @@ import type { ShowConfig, ShowResult } from '@/lib/types';
 import AudioPlayer from '@/components/AudioPlayer';
 import PreferenceForm from '@/components/PreferenceForm';
 import ShowStatus from '@/components/ShowStatus';
+import ShowDetails from '@/components/ShowDetails';
 import SpotifyConnect from '@/components/SpotifyConnect';
 
 export default function Home() {
@@ -12,11 +13,13 @@ export default function Home() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [spotifyConnected, setSpotifyConnected] = useState(false);
+  const [lastConfig, setLastConfig] = useState<ShowConfig | null>(null);
 
   const handleGenerate = async (config: ShowConfig) => {
     setIsGenerating(true);
     setError(null);
     setShowResult(null);
+    setLastConfig(config);
 
     try {
       const res = await fetch('/api/generate', {
@@ -45,7 +48,14 @@ export default function Home() {
 
       <AudioPlayer showResult={showResult} isGenerating={isGenerating} spotifyConnected={spotifyConnected} />
 
-      <ShowStatus showResult={showResult} isGenerating={isGenerating} error={error} />
+      <ShowDetails showResult={showResult} />
+
+      <ShowStatus
+        showResult={showResult}
+        isGenerating={isGenerating}
+        error={error}
+        targetLengthMin={lastConfig?.targetLengthMin}
+      />
 
       <PreferenceForm onGenerate={handleGenerate} isGenerating={isGenerating} />
 

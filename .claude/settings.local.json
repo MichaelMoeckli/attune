@@ -5,7 +5,13 @@
       "Bash(npx next:*)",
       "Bash(curl -s \"https://api.jamendo.com/v3.0/tracks/?client_id=78f000ba215283b505d18b43e7dd474a&format=json&limit=2&search=chill&order=popularity_month&audioformat=mp32\")",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://www.srf.ch/news/bnf/rss/1890\")",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://www.srf.ch/news.rss\")"
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://www.srf.ch/news.rss\")",
+      "Bash(npx tsc *)",
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code} in %{time_total}s\\\\n\" http://localhost:3000/)",
+      "Read(//d/TEMP/claude/E--Projects-Radio25/3cc9f730-08a9-4293-b312-63822aedf798/tasks/**)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(netstat -ano)"
     ]
   }
 }

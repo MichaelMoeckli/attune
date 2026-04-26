@@ -27,6 +27,13 @@ export interface ShowConfig {
   location: string;
   voiceStyle: 'formal' | 'casual' | 'energetic';
   language: 'de' | 'en';
+  targetLengthMin: 5 | 10 | 15;
+}
+
+export interface PipelineStep {
+  step: string;
+  durationMs: number;
+  detail?: string;
 }
 
 export interface ShowResult {
@@ -34,6 +41,13 @@ export interface ShowResult {
   segments: Segment[];
   generatedAt: string;
   totalDurationMs: number;
+  model: string;
+  ttsVoiceId: string;
+  topicsUsed: string[];
+  locationUsed: string;
+  voiceStyleUsed: 'formal' | 'casual' | 'energetic';
+  targetLengthMin: number;
+  pipelineSteps: PipelineStep[];
 }
 
 // --- News Types ---

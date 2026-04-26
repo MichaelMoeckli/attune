@@ -1,26 +1,43 @@
-import type { Segment, ShowConfig, ShowResult } from './types';
+import type { PipelineStep, Segment, ShowConfig, ShowResult } from './types';
 import { fetchNews } from '@/services/news';
 import { fetchWeather } from '@/services/weather';
-import { generateRadioText } from '@/services/llm';
-import { textToSpeech } from '@/services/tts';
+import { generateRadioText, LLM_MODEL } from '@/services/llm';
+import { getTtsVoiceId, textToSpeech } from '@/services/tts';
 import { pickTrack } from '@/services/music';
+
+const NEWS_ARTICLE_COUNT: Record<number, number> = { 5: 3, 10: 5, 15: 8 };
+const MAX_TOKENS_BY_LENGTH: Record<number, number> = { 5: 250, 10: 500, 15: 750 };
 
 export async function generateShow(config: ShowConfig): Promise<ShowResult> {
   const showId = crypto.randomUUID();
   const startTime = Date.now();
+  const pipelineSteps: PipelineStep[] = [];
+
+  const recordStep = (step: string, stepStart: number, detail?: string) => {
+    const durationMs = Date.now() - stepStart;
+    pipelineSteps.push({ step, durationMs, detail });
+    console.log(`[orchestrator] ${step}: ${durationMs}ms${detail ? ` (${detail})` : ''}`);
+  };
 
   console.log(`[orchestrator] Starting show generation: ${showId}`);
 
+  const targetLength = config.targetLengthMin ?? 10;
+  const maxArticles = NEWS_ARTICLE_COUNT[targetLength] ?? 5;
+  const maxTokens = MAX_TOKENS_BY_LENGTH[targetLength] ?? 500;
+
   // 1. Fetch news and weather in parallel
-  console.log('[orchestrator] Fetching news and weather...');
+  const fetchStart = Date.now();
   const [news, weather] = await Promise.all([
-    fetchNews(config.topics),
+    fetchNews(config.topics, maxArticles),
     fetchWeather(config.location),
   ]);
-  console.log(`[orchestrator] Data fetched in ${Date.now() - startTime}ms`);
+  recordStep('fetch-news', fetchStart, `${news.length} Artikel`);
+  recordStep('fetch-weather', fetchStart, config.location);
 
-  // 2. Pick music tracks (may involve Spotify API calls)
+  // 2. Pick music tracks
+  const musicStart = Date.now();
   const [music1, music2] = await Promise.all([pickTrack(), pickTrack()]);
+  recordStep('pick-music', musicStart, `2 Tracks`);
 
   // 3. Build segment plan
   const segments: Segment[] = [
@@ -46,28 +63,26 @@ export async function generateShow(config: ShowConfig): Promise<ShowResult> {
     { id: crypto.randomUUID(), type: 'jingle', audioUrl: '/jingles/outro.mp3' },
   ];
 
-  // 4. Generate text for segments that need it (greeting, news, weather, farewell)
+  // 4. Generate text for segments that need it
   const textSegments = segments.filter(
     (s) => s.type === 'greeting' || s.type === 'news' || s.type === 'weather' || s.type === 'farewell',
   );
 
-  console.log(`[orchestrator] Generating text for ${textSegments.length} segments...`);
   for (const segment of textSegments) {
-    const textStart = Date.now();
-    segment.text = await generateRadioText(segment.type, segment.data, config);
-    console.log(`[orchestrator] Text for ${segment.type}: ${Date.now() - textStart}ms`);
+    const stepStart = Date.now();
+    segment.text = await generateRadioText(segment.type, segment.data, config, maxTokens);
+    recordStep(`llm-${segment.type}`, stepStart);
   }
 
   // 5. Convert text to audio via TTS
-  console.log('[orchestrator] Converting text to speech...');
   for (const segment of textSegments) {
     if (segment.text) {
-      const ttsStart = Date.now();
+      const stepStart = Date.now();
       const audioUrl = await textToSpeech(segment.text, segment.id);
       if (audioUrl) {
         segment.audioUrl = audioUrl;
       }
-      console.log(`[orchestrator] TTS for ${segment.type}: ${Date.now() - ttsStart}ms`);
+      recordStep(`tts-${segment.type}`, stepStart);
     }
   }
 
@@ -79,5 +94,12 @@ export async function generateShow(config: ShowConfig): Promise<ShowResult> {
     segments,
     generatedAt: new Date().toISOString(),
     totalDurationMs,
+    model: LLM_MODEL,
+    ttsVoiceId: getTtsVoiceId(),
+    topicsUsed: config.topics,
+    locationUsed: config.location,
+    voiceStyleUsed: config.voiceStyle,
+    targetLengthMin: targetLength,
+    pipelineSteps,
   };
 }

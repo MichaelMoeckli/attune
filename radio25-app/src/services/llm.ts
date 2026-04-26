@@ -1,6 +1,8 @@
 import type { NewsArticle, SegmentType, ShowConfig, WeatherData } from '@/lib/types';
 import { RADIO_SYSTEM_PROMPT, buildSegmentPrompt } from '@/lib/prompts';
 
+export const LLM_MODEL = 'claude-sonnet-4-20250514';
+
 const MOCK_TEXTS: Record<string, string> = {
   greeting:
     'Guten Tag und herzlich willkommen bei Radio 25! Schön, dass Sie eingeschaltet haben. Wir haben heute wieder ein tolles Programm für Sie vorbereitet — aktuelle Nachrichten, das Wetter und natürlich gute Musik. Bleiben Sie dran!',
@@ -15,6 +17,7 @@ export async function generateRadioText(
   segmentType: SegmentType,
   data: NewsArticle[] | WeatherData | undefined,
   config: ShowConfig,
+  maxTokens: number = 500,
 ): Promise<string> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
 
@@ -28,10 +31,10 @@ export async function generateRadioText(
     const { anthropic } = await import('@ai-sdk/anthropic');
 
     const { text } = await generateText({
-      model: anthropic('claude-sonnet-4-20250514'),
+      model: anthropic(LLM_MODEL),
       system: RADIO_SYSTEM_PROMPT,
       prompt: buildSegmentPrompt(segmentType, data, config),
-      maxTokens: 500,
+      maxTokens,
       temperature: 0.7,
     });
 

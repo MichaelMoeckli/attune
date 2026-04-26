@@ -45,7 +45,7 @@ const RSS_FEEDS: Record<string, string[]> = {
   schweiz: ['https://www.nzz.ch/schweiz.rss'],
 };
 
-async function fetchFromRSS(topics: string[]): Promise<NewsArticle[]> {
+async function fetchFromRSS(topics: string[], maxArticles: number): Promise<NewsArticle[]> {
   const Parser = (await import('rss-parser')).default;
   const parser = new Parser();
   const articles: NewsArticle[] = [];
@@ -80,17 +80,17 @@ async function fetchFromRSS(topics: string[]): Promise<NewsArticle[]> {
     }
   }
 
-  return articles.slice(0, 10);
+  return articles.slice(0, maxArticles);
 }
 
-export async function fetchNews(topics: string[]): Promise<NewsArticle[]> {
+export async function fetchNews(topics: string[], maxArticles: number = 10): Promise<NewsArticle[]> {
   try {
-    const articles = await fetchFromRSS(topics);
+    const articles = await fetchFromRSS(topics, maxArticles);
     if (articles.length > 0) return articles;
   } catch (error) {
     console.warn('[news] RSS fetch failed, falling back to mock:', error);
   }
 
   console.log('[news] Using mock data');
-  return MOCK_ARTICLES;
+  return MOCK_ARTICLES.slice(0, maxArticles);
 }
