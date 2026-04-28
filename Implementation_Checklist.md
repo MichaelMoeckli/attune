@@ -1,10 +1,10 @@
 # Implementation Checklist Radio 25
 
-Status: April 26, 2026 (code audit against `radio25-app/`)
+Status: April 28, 2026 (updated after design system implementation)
 Sources: `Hauptdokument.docx` (Ch. 3.3, 3.4, 3.5), `Hauptdokument_Gliederung.md` (Ch. 6, 7, 8), `techstack_architektur_radion25.md`
 Status legend: ✅ done · 🟡 partial · ⬜ open
 
-> **Audit summary**: Pipeline and player are in place; transparency UI and curation logic are the largest open construction sites. Overview at the end of this document.
+> **Audit summary (Apr 28)**: Building Blocks 1, 4, and 5 are now substantially complete following the design system implementation. A full three-layer UI (Aktion / Transparenz / Begründung) with 5-state app flow is live. Main remaining gaps: curation logic (BB3) and pilot-test preparation.
 
 ---
 
@@ -12,12 +12,12 @@ Status legend: ✅ done · 🟡 partial · ⬜ open
 
 Goal: Profile is transparent, viewable, changeable at any time — without configuration overkill.
 
-- 🟡 **PreferenceForm component** (`src/components/PreferenceForm.tsx`)
-  - ✅ Topics / interests — `TOPIC_OPTIONS` with 11 categories (PreferenceForm.tsx L. 8–26)
-  - ✅ Location — text field (L. 142)
-  - ✅ Moderation style — `VOICE_STYLES` (formal / casual / energetic, L. 28–33)
-  - ⬜ Show length — no length selector in the UI
-- 🟡 **Make profile visible**: currently only visible via the form, no permanent "current profile" panel in the main view
+- ✅ **PreferenceForm component** (`src/components/PreferenceForm.tsx`)
+  - ✅ Topics / interests — `TOPIC_OPTIONS` with 11 categories
+  - ✅ Location — text field
+  - ✅ Moderation style — `VOICE_STYLES` (formal / casual / energetic)
+  - ✅ Show length — `LENGTH_OPTIONS` (5 / 10 / 15 Min) — added Apr 28
+- ✅ **Make profile visible**: `ProfilePanel.tsx` shows profile in read mode on S1 idle screen (added Apr 28); "Anpassen" ghost button opens form inline
 - ✅ **Profile changeable at any time**: form submit loads new profile, takes effect immediately on next generate call (PreferenceForm.tsx L. 86–99)
 - ✅ **API route `/api/preferences`** — `src/app/api/preferences/route.ts` (GET L. 17–31, POST L. 33–59)
 - ✅ **Local storage** — `src/data/preferences.json` plus `localStorage` for `userId` (PreferenceForm.tsx L. 33–36)
@@ -86,12 +86,12 @@ Goal: Selection follows **not** dwell time, but diversity + time-of-day context 
 
 Goal: fixed, communicated show length, audible ending, no endless loop.
 
-- 🟡 **Show length displayed in UI** — `ShowStatus` shows generation duration and segment count (L. 90), but no estimated total listening time **before** start
+- ✅ **Show length displayed in UI** — `ShowPreviewCard.tsx` (S2) shows estimated total listening time and calculated end time (`endet hörbar um HH:MM`) **before** generation starts (added Apr 28)
 - ✅ **Audible ending** — farewell + outro jingle as last segments (orchestrator.ts L. 44–45)
-- ✅ **No autoplay** — player stops after outro (AudioPlayer.tsx L. 103–106)
+- ✅ **No autoplay** — player stops after outro; transitions to `EndOfShowCard` (S5)
 - ✅ **No "cliffhanger" recommendation** — no recommendation UI found
 - ✅ **No push notifications** — no Notification API / push permission calls
-- 🟡 **Wellbeing alternative instead of manipulative pattern** — `ShowStatus` has a gentle waiting text during generation, but no explicit post-show nudge like "Show ended — see you tomorrow"
+- ✅ **Wellbeing nudge at show end** — `EndOfShowCard.tsx` (S5) shows concentric-circle graphic, elapsed time, "bis zur nächsten Sendung — am besten morgen." and a Begründung block explaining the intentional pause (added Apr 28)
 
 ---
 
@@ -99,11 +99,11 @@ Goal: fixed, communicated show length, audible ending, no endless loop.
 
 Goal: viewable on the user side, where content comes from, which preference had which effect, and which pipeline steps ran.
 
-- 🟡 **Source display per news item** — data available (types.ts L. 33–38: `source`, `url`), but the player only shows segment type + transcript, without source/link
-- ⬜ **Profile effect visible** — no rationale "this show chosen because your profile X, Y, Z"
-- ⬜ **Pipeline trace** — console logs in the orchestrator available, but not visible in the UI
-- 🟡 **Show metadata** — `showId`, `generatedAt`, `totalDurationMs` in `ShowResult`; model name and TTS voice missing in the UI
-- ⬜ **Transparency UI as part of the main view** — no transparency component available
+- ✅ **Source display per news item** — `SourceLink.tsx` renders source name, date, and direct link with external-arrow icon inside `AudioPlayer.tsx` for every news segment (added Apr 28)
+- ✅ **Profile effect visible** — `RationaleCard.tsx` (S6, "Warum diese Sendung?") shows a profile-to-content mapping table (topic → article source, serendipity → surprise topic, location → weather city, style → voice) and a pipeline chain block (added Apr 28)
+- ✅ **Pipeline trace** — `PipelineTrace.tsx` (S3) renders live pipeline steps (Nachrichten laden / Wetter laden / Moderationstexte / Sprache erzeugen / Sendung montieren) with status icons, per-step source labels, and tabular timings during generation (added Apr 28)
+- ✅ **Show metadata** — model name and TTS voice shown in `RationaleCard` pipeline block; privacy note ("kein Verhaltens-Tracking") inline
+- ✅ **Transparency UI as part of the main view** — `PipelineTrace` (S3) and `RationaleCard` drawer (S6) are first-class app states; `ApiDisclaimer.tsx` footer on S1/S2 lists all external APIs (added Apr 28)
 
 ---
 
@@ -113,8 +113,9 @@ Goal: viewable on the user side, where content comes from, which preference had 
 
 - ✅ Defined show length (see Building Block 4) — structurally present
 - 🟡 Conscious diversification (Building Block 3) — logic partially missing
-- ⬜ Transparency UI (Building Block 5)
+- ✅ Transparency UI (Building Block 5) — fully implemented Apr 28 (PipelineTrace, RationaleCard, SourceLink, ApiDisclaimer)
 - ✅ No push, no autoplay (Building Block 4)
+- ✅ **Design system** — three-layer visual system (Aktion / Transparenz / Begründung) implemented in `globals.css` with CSS custom properties; light paper theme, single brass accent, IBM Plex Sans/Mono + Source Serif 4 italic; 5-state app flow (idle → preview → generating → ready → ended); anti-engagement: no pill buttons, gradients, glassmorphism, like buttons, streaks, recommendation carousels (added Apr 28)
 - ⬜ **Mapping table values → design decisions** (Outline 6.5) — documentation task, belongs to main document Ch. 6.5
 
 ### Data protection (Outline 6.6)
@@ -122,7 +123,7 @@ Goal: viewable on the user side, where content comes from, which preference had 
 - ✅ No tracking, no third-party analytics (no gtag / mixpanel / similar found)
 - ✅ Local storage of the profile (`src/data/preferences.json` + localStorage userId)
 - ⬜ Data flow diagram — documentation task for Ch. 6.6
-- 🟡 Clear UI notices about external APIs — `.env.local` contains keys, but no in-app disclaimer "Data goes to Anthropic / ElevenLabs / OpenWeatherMap / RSS"
+- ✅ Clear UI notices about external APIs — `ApiDisclaimer.tsx` footer on S1/S2 lists all external APIs ("nutzt Anthropic Claude · ElevenLabs · OpenWeatherMap · RSS SRF · NZZ · keine Tracker, keine Werbung"); privacy note inside `RationaleCard` (added Apr 28)
 
 ### Prepare SUS survey (Ch. 2.3.5 / Outline 8.3)
 
@@ -176,28 +177,31 @@ Goal: viewable on the user side, where content comes from, which preference had 
 
 | Area | ✅ | 🟡 | ⬜ | Quote |
 |---|---|---|---|---|
-| Building Block 1 (Profile) | 4 | 2 | 0 | 67% full, 100% at least partial |
+| Building Block 1 (Profile) | 6 | 0 | 0 | **100%** ↑ from 67% |
 | Building Block 2 (Pipeline) | 17 | 3 | 0 | 85% / 100% |
-| Building Block 3 (Curation) | 1 | 2 | 2 | 20% / 60% |
-| Building Block 4 (Session) | 4 | 2 | 0 | 67% / 100% |
-| Building Block 5 (Transparency) | 0 | 2 | 3 | 0% / 40% |
-| Cross-cutting | 3 | 2 | 5 | 30% / 50% |
+| Building Block 3 (Curation) | 1 | 2 | 2 | 20% / 60% (unchanged) |
+| Building Block 4 (Session) | 6 | 0 | 0 | **100%** ↑ from 67% |
+| Building Block 5 (Transparency) | 5 | 0 | 0 | **100%** ↑ from 0% |
+| Cross-cutting | 6 | 1 | 4 | ~55% / ~75% ↑ |
 
-**Strengths**: clean pipeline architecture, clear data flow, good error handling, privacy-respecting.
-**Main gaps**:
-1. Transparency UI almost completely open (Building Block 5).
-2. Curation logic is still rather passive (no diversification, no time-of-day variation, no serendipity).
-3. Wellbeing nudge at the end of the show and visible show length in UI missing.
+**Strengths**: clean pipeline architecture, clear data flow, good error handling, privacy-respecting. Three-layer design system live with anti-engagement constraints throughout.
+**Remaining gaps**:
+1. Curation logic still passive (no max-per-topic cap, no time-of-day variation, no serendipity item) — Building Block 3.
+2. Hallucination guards in LLM system prompt (no explicit "only paraphrase what is given").
+3. Voice mapping per moderation style (currently only prompt changes, not ElevenLabs voice ID).
+4. Pilot test setup (SUS questionnaire, consent form, diary template).
 
 ---
 
 ## Order (recommended, prioritized by audit)
 
-1. **Show length selector** in PreferenceForm (Building Block 1, quick)
-2. **Transparency UI** as main construction site: source display in player, "Why this show?" hint, pipeline trace
-3. **Sharpen curation logic**: max-per-topic, time-of-day variation, serendipity as named functions
-4. **Show length display** in player + gentle post-show nudge
-5. **Hallucination guards** in system prompt + few-shot examples
-6. **Voice mapping** per moderation style
+> Items 1, 2, and 4 completed Apr 28 as part of design system implementation.
+
+1. ~~**Show length selector** in PreferenceForm~~ ✅ done Apr 28
+2. ~~**Transparency UI**: source display in player, "Why this show?" hint, pipeline trace~~ ✅ done Apr 28
+3. **Sharpen curation logic**: max-per-topic cap (news.ts), serendipity item as named function, time-of-day tonality adjustment (prompts.ts)
+4. ~~**Show length display before start** + post-show wellbeing nudge~~ ✅ done Apr 28
+5. **Hallucination guards** in system prompt + few-shot examples (prompts.ts `RADIO_SYSTEM_PROMPT`)
+6. **Voice mapping** per moderation style — assign different ElevenLabs voice IDs to formal / casual / energetic
 7. Mapping table (Ch. 6.5) and data flow diagram (Ch. 6.6) in main document
-8. Pilot test setup (Appendices B/C, consent)
+8. Pilot test setup (Appendices B/C, SUS questionnaire DE, consent form, diary template)
