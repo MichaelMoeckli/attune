@@ -33,16 +33,22 @@ export async function GET(request: Request) {
   // Store tokens in httpOnly cookies
   const response = NextResponse.redirect(`${url.origin}/?spotifyConnected=true`);
 
+  const isProd = process.env.NODE_ENV === 'production';
+
   response.cookies.set('spotify_access_token', tokens.accessToken, {
     httpOnly: true,
     maxAge: tokens.expiresIn,
     sameSite: 'lax',
+    secure: isProd,
+    path: '/',
   });
 
   response.cookies.set('spotify_refresh_token', tokens.refreshToken, {
     httpOnly: true,
     maxAge: 60 * 60 * 24 * 30, // 30 days
     sameSite: 'lax',
+    secure: isProd,
+    path: '/',
   });
 
   // Clear the auth state cookie

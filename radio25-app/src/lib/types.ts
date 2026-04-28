@@ -28,6 +28,7 @@ export interface ShowConfig {
   voiceStyle: 'formal' | 'casual' | 'energetic';
   language: 'de' | 'en';
   targetLengthMin: 5 | 10 | 15;
+  useMockTts?: boolean;
 }
 
 export interface PipelineStep {
@@ -71,9 +72,3 @@ export interface WeatherData {
   forecast: string;
 }
 
-// --- User Preferences ---
-
-export interface UserPreferences extends ShowConfig {
-  createdAt: string;
-  updatedAt: string;
-}

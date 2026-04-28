@@ -78,7 +78,7 @@ export async function generateShow(config: ShowConfig): Promise<ShowResult> {
   for (const segment of textSegments) {
     if (segment.text) {
       const stepStart = Date.now();
-      const audioUrl = await textToSpeech(segment.text, segment.id);
+      const audioUrl = await textToSpeech(segment.text, segment.id, config.useMockTts);
       if (audioUrl) {
         segment.audioUrl = audioUrl;
       }
@@ -95,7 +95,7 @@ export async function generateShow(config: ShowConfig): Promise<ShowResult> {
     generatedAt: new Date().toISOString(),
     totalDurationMs,
     model: LLM_MODEL,
-    ttsVoiceId: getTtsVoiceId(),
+    ttsVoiceId: getTtsVoiceId(config.useMockTts),
     topicsUsed: config.topics,
     locationUsed: config.location,
     voiceStyleUsed: config.voiceStyle,

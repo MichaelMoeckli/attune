@@ -1,11 +1,8 @@
-import { writeFile } from 'fs/promises';
-import path from 'path';
-
-const AUDIO_DIR = path.join(process.cwd(), 'public', 'audio');
 const DEFAULT_VOICE_ID = 'pNInz6obpgDQGcFmaJgB';
 
-export function getTtsVoiceId(): string {
-  if (process.env.USE_MOCK_TTS === 'true') return 'browser-tts';
+export function getTtsVoiceId(forceMock?: boolean): string {
+  const mock = forceMock ?? process.env.USE_MOCK_TTS === 'true';
+  if (mock) return 'browser-tts';
   const apiKey = process.env.ELEVENLABS_API_KEY;
   const voiceId = process.env.ELEVENLABS_VOICE_ID;
   if (!apiKey || apiKey === 'your-elevenlabs-api-key-here' || !voiceId || voiceId === 'your-voice-id-here') {
@@ -14,9 +11,10 @@ export function getTtsVoiceId(): string {
   return voiceId;
 }
 
-export async function textToSpeech(text: string, segmentId: string): Promise<string> {
+export async function textToSpeech(text: string, segmentId: string, forceMock?: boolean): Promise<string> {
+  const mock = forceMock ?? process.env.USE_MOCK_TTS === 'true';
   // Mock mode: skip ElevenLabs, let the browser handle TTS via Web Speech API
-  if (process.env.USE_MOCK_TTS === 'true') {
+  if (mock) {
     console.log(`[tts] Mock mode — browser TTS will be used for: ${segmentId}`);
     return 'browser-tts';
   }
@@ -49,12 +47,8 @@ export async function textToSpeech(text: string, segmentId: string): Promise<str
     }
     const buffer = Buffer.concat(chunks);
 
-    // Write to public/audio/
-    const filename = `${segmentId}.mp3`;
-    const filePath = path.join(AUDIO_DIR, filename);
-    await writeFile(filePath, buffer);
-
-    return `/audio/${filename}`;
+    // Return audio inline as a data URL — Vercel's filesystem is read-only at runtime.
+    return `data:audio/mpeg;base64,${buffer.toString('base64')}`;
   } catch (error) {
     console.warn(`[tts] TTS failed for ${segmentId}:`, error);
     return '';

@@ -4,26 +4,62 @@ import { generateShow } from '@/lib/orchestrator';
 
 export const maxDuration = 60; // Allow up to 60s for show generation
 
+const ALLOWED_TOPICS = new Set([
+  'politik', 'international', 'schweiz', 'wirtschaft', 'finanzen',
+  'sport', 'technologie', 'kultur', 'wissenschaft', 'panorama', 'zuerich',
+]);
+const ALLOWED_VOICE_STYLES = new Set(['formal', 'casual', 'energetic']);
+const ALLOWED_LANGUAGES = new Set(['de', 'en']);
+const ALLOWED_LENGTHS = new Set([5, 10, 15]);
+
+function badRequest(error: string) {
+  return NextResponse.json({ error }, { status: 400 });
+}
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    // Validate required fields
-    const config: ShowConfig = {
-      userId: body.userId || 'anonymous',
-      topics: body.topics || ['politik', 'wirtschaft', 'sport'],
-      location: body.location || 'Zürich',
-      voiceStyle: body.voiceStyle || 'casual',
-      language: body.language || 'de',
-      targetLengthMin: body.targetLengthMin || 10,
-    };
-
-    if (!Array.isArray(config.topics) || config.topics.length === 0) {
-      return NextResponse.json(
-        { error: 'Mindestens ein Thema muss ausgewählt werden.' },
-        { status: 400 },
-      );
+    const topics: unknown = body.topics;
+    if (!Array.isArray(topics) || topics.length === 0 || topics.length > 10) {
+      return badRequest('Mindestens ein und höchstens zehn Themen müssen ausgewählt werden.');
     }
+    const validTopics = topics.filter(
+      (t): t is string => typeof t === 'string' && ALLOWED_TOPICS.has(t),
+    );
+    if (validTopics.length === 0) {
+      return badRequest('Mindestens ein gültiges Thema muss ausgewählt werden.');
+    }
+
+    const voiceStyle = typeof body.voiceStyle === 'string' && ALLOWED_VOICE_STYLES.has(body.voiceStyle)
+      ? (body.voiceStyle as ShowConfig['voiceStyle'])
+      : 'casual';
+
+    const language = typeof body.language === 'string' && ALLOWED_LANGUAGES.has(body.language)
+      ? (body.language as ShowConfig['language'])
+      : 'de';
+
+    const targetLengthMin = ALLOWED_LENGTHS.has(body.targetLengthMin)
+      ? (body.targetLengthMin as ShowConfig['targetLengthMin'])
+      : 10;
+
+    // Strip control chars and cap length to limit prompt-injection / log-spam surface.
+    const rawLocation = typeof body.location === 'string' ? body.location : 'Zürich';
+    const location = rawLocation.replace(/[\r\n\t]/g, ' ').trim().slice(0, 100) || 'Zürich';
+
+    const userId = typeof body.userId === 'string' ? body.userId.slice(0, 100) : 'anonymous';
+
+    const useMockTts = typeof body.useMockTts === 'boolean' ? body.useMockTts : undefined;
+
+    const config: ShowConfig = {
+      userId,
+      topics: validTopics,
+      location,
+      voiceStyle,
+      language,
+      targetLengthMin,
+      useMockTts,
+    };
 
     const result = await generateShow(config);
     return NextResponse.json(result);

@@ -3,154 +3,102 @@
 import { useRef, useState, useEffect, useCallback, useMemo } from 'react';
 import type { ShowResult, Segment } from '@/lib/types';
 import SpotifyPlayerComponent from './SpotifyPlayer';
+import SourceLink from './SourceLink';
+import type { NewsArticle } from '@/lib/types';
 
 const SEGMENT_LABELS: Record<string, string> = {
-  jingle: 'Jingle',
+  jingle:   'Jingle',
   greeting: 'Begrüssung',
-  news: 'Nachrichten',
-  weather: 'Wetter',
-  music: 'Musik',
+  news:     'Nachrichten',
+  weather:  'Wetter',
+  music:    'Musik',
   farewell: 'Verabschiedung',
 };
 
 interface AudioPlayerProps {
-  showResult: ShowResult | null;
-  isGenerating: boolean;
+  showResult: ShowResult;
   spotifyConnected: boolean;
+  onEnded: () => void;
+  onOpenRationale: () => void;
 }
 
-export default function AudioPlayer({ showResult, isGenerating, spotifyConnected }: AudioPlayerProps) {
+function isNewsArticleArray(data: Segment['data']): data is NewsArticle[] {
+  return Array.isArray(data);
+}
+
+export default function AudioPlayer({ showResult, spotifyConnected, onEnded, onOpenRationale }: AudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [hasPlayedOnce, setHasPlayedOnce] = useState(false);
+  const [elapsed, setElapsed] = useState(0);
+  const [duration, setDuration] = useState(0);
 
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const isBrowserTts = useRef(false);
+  const hasStartedRef = useRef(false);
 
   const playableSegments = useMemo(
-    () => showResult?.segments.filter((s) => s.audioUrl || s.spotifyUri) || [],
+    () => showResult.segments.filter(s => s.audioUrl || s.spotifyUri),
     [showResult],
   );
   const currentSegment: Segment | undefined = playableSegments[currentIndex];
   const isSpotifySegment = !!(currentSegment?.spotifyUri && spotifyConnected);
 
-  const playSegment = useCallback(
-    (index: number) => {
-      if (index >= playableSegments.length) {
-        setIsPlaying(false);
-        setCurrentIndex(-1);
-        return;
-      }
-
-      setHasPlayedOnce(true);
-
-      const segment = playableSegments[index];
-
-      // Skip segments with neither audio source
-      if (!segment.audioUrl && !segment.spotifyUri) {
-        playSegment(index + 1);
-        return;
-      }
-
-      // Stop any ongoing browser TTS
-      if (isBrowserTts.current) {
-        window.speechSynthesis.cancel();
-        isBrowserTts.current = false;
-      }
-
-      setCurrentIndex(index);
-      setProgress(0);
-
-      // Spotify segments are handled by SpotifyPlayerComponent
-      if (segment.spotifyUri && spotifyConnected) {
-        return;
-      }
-
-      // Browser TTS segments (mock mode)
-      if (segment.audioUrl === 'browser-tts' && segment.text) {
-        isBrowserTts.current = true;
-        const utterance = new SpeechSynthesisUtterance(segment.text);
-        utterance.lang = 'de-DE';
-        utterance.onend = () => {
-          isBrowserTts.current = false;
-          playSegment(index + 1);
-        };
-        utteranceRef.current = utterance;
-        window.speechSynthesis.speak(utterance);
-        return;
-      }
-
-      // HTML5 audio segments
-      const audio = audioRef.current;
-      if (!audio || !segment.audioUrl) {
-        playSegment(index + 1);
-        return;
-      }
-
-      audio.src = segment.audioUrl;
-      audio.play().catch((err) => {
-        console.warn('[AudioPlayer] Playback failed:', err);
-      });
-    },
-    [playableSegments, spotifyConnected],
-  );
-
-  // Reset play-once flag when a new show arrives
-  useEffect(() => {
-    setHasPlayedOnce(false);
-  }, [showResult?.showId]);
-
-  // Start playback when show result arrives
-  useEffect(() => {
-    if (showResult && playableSegments.length > 0 && currentIndex === -1 && !hasPlayedOnce) {
-      playSegment(0);
-      setIsPlaying(true);
+  const playSegment = useCallback((index: number) => {
+    if (index >= playableSegments.length) {
+      setIsPlaying(false);
+      setCurrentIndex(-1);
+      onEnded();
+      return;
     }
-  }, [showResult, playableSegments.length, currentIndex, playSegment, hasPlayedOnce]);
 
-  const handleEnded = () => {
-    playSegment(currentIndex + 1);
-  };
+    const segment = playableSegments[index];
+    if (!segment.audioUrl && !segment.spotifyUri) { playSegment(index + 1); return; }
 
-  const handleSpotifyTrackEnd = useCallback(() => {
-    playSegment(currentIndex + 1);
-  }, [currentIndex, playSegment]);
+    if (isBrowserTts.current) { window.speechSynthesis.cancel(); isBrowserTts.current = false; }
 
-  const handleSpotifyPlayingChange = useCallback((playing: boolean) => {
-    setIsPlaying(playing);
-  }, []);
+    setCurrentIndex(index);
+    setProgress(0);
+    setElapsed(0);
+    setDuration(0);
+    hasStartedRef.current = true;
 
-  const handleTimeUpdate = () => {
-    const audio = audioRef.current;
-    if (audio && audio.duration) {
-      setProgress((audio.currentTime / audio.duration) * 100);
-    }
-  };
+    if (segment.spotifyUri && spotifyConnected) return;
 
-  const togglePlayPause = () => {
-    if (isBrowserTts.current) {
-      if (isPlaying) {
-        window.speechSynthesis.pause();
-        setIsPlaying(false);
-      } else {
-        window.speechSynthesis.resume();
-        setIsPlaying(true);
-      }
+    if (segment.audioUrl === 'browser-tts' && segment.text) {
+      isBrowserTts.current = true;
+      const utt = new SpeechSynthesisUtterance(segment.text);
+      utt.lang = 'de-DE';
+      utt.onend = () => { isBrowserTts.current = false; playSegment(index + 1); };
+      utteranceRef.current = utt;
+      window.speechSynthesis.speak(utt);
       return;
     }
 
     const audio = audioRef.current;
-    if (!audio) return;
+    if (!audio || !segment.audioUrl) { playSegment(index + 1); return; }
+    audio.src = segment.audioUrl;
+    audio.play().catch(e => console.warn('[AudioPlayer]', e));
+  }, [playableSegments, spotifyConnected, onEnded]);
 
-    if (isPlaying) {
-      audio.pause();
-      setIsPlaying(false);
-    } else {
-      audio.play();
+  useEffect(() => {
+    if (playableSegments.length > 0 && currentIndex === -1 && !hasStartedRef.current) {
+      playSegment(0);
       setIsPlaying(true);
     }
+  }, [playableSegments.length, currentIndex, playSegment]);
+
+  const togglePlayPause = () => {
+    if (isBrowserTts.current) {
+      if (isPlaying) { window.speechSynthesis.pause(); setIsPlaying(false); }
+      else { window.speechSynthesis.resume(); setIsPlaying(true); }
+      return;
+    }
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (isPlaying) { audio.pause(); setIsPlaying(false); }
+    else { audio.play(); setIsPlaying(true); }
   };
 
   const skipNext = () => {
@@ -167,113 +115,322 @@ export default function AudioPlayer({ showResult, isGenerating, spotifyConnected
     }
   };
 
+  const handleTimeUpdate = () => {
+    const audio = audioRef.current;
+    if (audio && audio.duration) {
+      setProgress((audio.currentTime / audio.duration) * 100);
+      setElapsed(audio.currentTime);
+      setDuration(audio.duration);
+    }
+  };
+
+  const formatTime = (s: number) => {
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60);
+    return `${m.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+  };
+
+  // Source info for current segment
+  const currentSource = currentSegment && isNewsArticleArray(currentSegment.data)
+    ? currentSegment.data[0]
+    : null;
+
   return (
-    <div className="w-full max-w-md rounded-2xl bg-zinc-900 p-6 text-white shadow-xl">
+    <div style={{
+      background: 'var(--paper)',
+      boxShadow: 'var(--shadow-instrument)',
+      borderRadius: 4,
+      padding: '22px 24px',
+      display: 'flex', flexDirection: 'column', gap: 18,
+    }}>
       <audio
         ref={audioRef}
-        onEnded={handleEnded}
+        onEnded={() => playSegment(currentIndex + 1)}
         onTimeUpdate={handleTimeUpdate}
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
+        onLoadedMetadata={() => {
+          if (audioRef.current) setDuration(audioRef.current.duration);
+        }}
       />
 
-      {/* Spotify Web Playback SDK (invisible — handles Spotify segments) */}
       {spotifyConnected && currentSegment?.spotifyUri && (
         <SpotifyPlayerComponent
           spotifyUri={currentSegment.spotifyUri}
           isActive={isSpotifySegment}
-          onTrackEnd={handleSpotifyTrackEnd}
-          onPlayingChange={handleSpotifyPlayingChange}
+          onTrackEnd={() => playSegment(currentIndex + 1)}
+          onPlayingChange={setIsPlaying}
         />
       )}
 
-      {/* Station name */}
-      <div className="mb-4 text-center">
-        <h2 className="text-xl font-bold tracking-wide">Radio 25</h2>
-        {isGenerating && !showResult && (
-          <p className="mt-1 text-sm text-zinc-400">Sendung wird generiert...</p>
+      {/* Segment header */}
+      <div>
+        <div style={{
+          display: 'flex', alignItems: 'baseline', justifyContent: 'space-between',
+        }}>
+          <span style={{
+            fontFamily: 'var(--font-mono)', fontSize: 10, textTransform: 'uppercase',
+            letterSpacing: '0.16em', color: 'var(--ink-3)',
+          }}>sendung läuft</span>
+          {duration > 0 && (
+            <span style={{
+              fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--ink)',
+              fontVariantNumeric: 'tabular-nums',
+            }}>
+              {formatTime(elapsed)} / {formatTime(duration)}
+            </span>
+          )}
+        </div>
+        <h1 style={{
+          fontFamily: 'var(--font-serif)', fontWeight: 400, fontSize: 22,
+          lineHeight: 1.15, letterSpacing: 'var(--tracking-tight)', color: 'var(--ink)',
+          marginTop: 4,
+        }}>
+          {currentSegment
+            ? SEGMENT_LABELS[currentSegment.type] ?? currentSegment.type
+            : 'Bereit'}
+          {currentSegment?.spotifyTrackName && (
+            <span style={{
+              fontFamily: 'var(--font-mono)', fontSize: 13, color: 'var(--ink-3)',
+              marginLeft: 10, fontWeight: 400,
+            }}>
+              · {currentSegment.spotifyTrackName}
+            </span>
+          )}
+        </h1>
+        {currentIndex >= 0 && (
+          <div style={{
+            fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-3)', marginTop: 4,
+          }}>
+            segment {currentIndex + 1} von {playableSegments.length}
+          </div>
         )}
       </div>
 
-      {/* Current segment info */}
-      {currentSegment && (
-        <div className="mb-4 text-center">
-          <span className="inline-block rounded-full bg-zinc-700 px-3 py-1 text-xs font-medium uppercase tracking-wider">
-            {SEGMENT_LABELS[currentSegment.type] || currentSegment.type}
-          </span>
-          {currentSegment.spotifyTrackName && (
-            <p className="mt-1 text-sm text-amber-400">{currentSegment.spotifyTrackName}</p>
-          )}
-          <p className="mt-1 text-sm text-zinc-300">
-            Segment {currentIndex + 1} von {playableSegments.length}
+      {/* Progress bar */}
+      <div>
+        <div style={{ height: 2, background: 'var(--rule)', position: 'relative' }}>
+          <div style={{
+            position: 'absolute', left: 0, top: 0, bottom: 0,
+            width: `${progress}%`, background: 'var(--brass)',
+            transition: 'width 0.3s linear',
+          }}/>
+        </div>
+        <div style={{
+          display: 'flex', justifyContent: 'space-between', marginTop: 6,
+          fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--ink-3)',
+          fontVariantNumeric: 'tabular-nums',
+        }}>
+          <span>{formatTime(elapsed)}</span>
+          {duration > 0 && <span>noch {formatTime(Math.max(0, duration - elapsed))}</span>}
+        </div>
+      </div>
+
+      {/* Transparenz — source block */}
+      {currentSource && (
+        <div style={{
+          borderTop: '1px solid var(--rule)', borderBottom: '1px solid var(--rule)',
+          padding: '10px 0',
+        }}>
+          <SourceLink
+            source={currentSource.source}
+            date={currentSource.publishedAt
+              ? new Date(currentSource.publishedAt).toLocaleDateString('de-CH', { day: '2-digit', month: '2-digit', year: 'numeric' })
+              : undefined}
+            url={currentSource.url}
+          />
+        </div>
+      )}
+
+      {/* Transcript */}
+      {currentSegment?.text && (
+        <div style={{
+          background: 'var(--paper-2)', padding: '12px 14px',
+          borderLeft: '2px solid var(--rule-strong)',
+          maxHeight: 96, overflowY: 'auto',
+        }}>
+          <div style={{
+            fontFamily: 'var(--font-mono)', fontSize: 10, textTransform: 'uppercase',
+            letterSpacing: '0.16em', color: 'var(--ink-3)', marginBottom: 6,
+          }}>transkript</div>
+          <p style={{
+            fontFamily: 'var(--font-serif)', fontSize: 14, lineHeight: 1.5, color: 'var(--ink-2)',
+          }}>
+            {currentSegment.text}
           </p>
         </div>
       )}
 
-      {/* Progress bar */}
-      <div className="mb-4 h-1.5 overflow-hidden rounded-full bg-zinc-700">
-        <div
-          className="h-full rounded-full bg-amber-500 transition-all duration-300"
-          style={{ width: `${progress}%` }}
-        />
-      </div>
-
-      {/* Controls */}
-      <div className="flex items-center justify-center gap-6">
+      {/* Player controls */}
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 28,
+        padding: '4px 0',
+      }}>
         <button
           onClick={skipPrev}
           disabled={currentIndex <= 0}
-          className="text-zinc-400 transition hover:text-white disabled:opacity-30"
+          style={{
+            background: 'transparent', border: 0, cursor: 'pointer',
+            color: currentIndex <= 0 ? 'var(--ink-4)' : 'var(--ink)',
+            display: 'flex', padding: 8,
+          }}
           aria-label="Vorheriges Segment"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
-            <path d="M9.195 18.44c1.25.713 2.805-.19 2.805-1.629v-2.34l6.945 3.968c1.25.714 2.805-.188 2.805-1.628V7.19c0-1.44-1.555-2.342-2.805-1.628L12 9.53V7.19c0-1.44-1.555-2.342-2.805-1.628l-7.108 4.061c-1.26.72-1.26 2.536 0 3.256l7.108 4.061z" />
-          </svg>
+          <SkipBackIcon />
         </button>
 
         <button
           onClick={togglePlayPause}
-          disabled={!showResult || playableSegments.length === 0}
-          className="flex h-14 w-14 items-center justify-center rounded-full bg-amber-500 text-zinc-900 transition hover:bg-amber-400 disabled:opacity-30"
+          disabled={playableSegments.length === 0}
+          style={{
+            width: 56, height: 56, borderRadius: 28,
+            background: 'var(--ink)', color: 'var(--paper)',
+            border: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
+            cursor: 'pointer', flexShrink: 0,
+            opacity: playableSegments.length === 0 ? 0.4 : 1,
+          }}
           aria-label={isPlaying ? 'Pause' : 'Abspielen'}
         >
-          {isPlaying ? (
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-7 w-7">
-              <path fillRule="evenodd" d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7.5 0A.75.75 0 0115 4.5h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H15a.75.75 0 01-.75-.75V5.25z" clipRule="evenodd" />
-            </svg>
-          ) : (
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-7 w-7">
-              <path fillRule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clipRule="evenodd" />
-            </svg>
-          )}
+          {isPlaying ? <PauseIcon /> : <PlayIcon />}
         </button>
 
         <button
           onClick={skipNext}
           disabled={currentIndex >= playableSegments.length - 1}
-          className="text-zinc-400 transition hover:text-white disabled:opacity-30"
+          style={{
+            background: 'transparent', border: 0, cursor: 'pointer',
+            color: currentIndex >= playableSegments.length - 1 ? 'var(--ink-4)' : 'var(--ink)',
+            display: 'flex', padding: 8,
+          }}
           aria-label="Nächstes Segment"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
-            <path d="M5.055 7.06c-1.25-.714-2.805.189-2.805 1.628v9.726c0 1.44 1.555 2.342 2.805 1.628L12 16.471v2.34c0 1.44 1.555 2.342 2.805 1.628l7.108-4.061c1.26-.72 1.26-2.536 0-3.256l-7.108-4.06C13.555 8.346 12 9.25 12 10.69v2.34L5.055 7.06z" />
-          </svg>
+          <SkipFwdIcon />
         </button>
       </div>
 
-      {/* Transcript */}
-      {currentSegment?.text && (
-        <div className="mt-4 max-h-24 overflow-y-auto rounded-lg bg-zinc-800 p-3">
-          <p className="text-xs leading-relaxed text-zinc-400">{currentSegment.text}</p>
-        </div>
-      )}
+      {/* Segment overview */}
+      <details style={{ cursor: 'pointer' }}>
+        <summary style={{
+          fontFamily: 'var(--font-mono)', fontSize: 10, textTransform: 'uppercase',
+          letterSpacing: '0.16em', color: 'var(--ink-3)', listStyle: 'none',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          paddingBottom: 8,
+        }}>
+          <span>sendung-übersicht</span>
+          <ChevronIcon />
+        </summary>
+        {playableSegments.map((seg, i) => {
+          const isCurrent = i === currentIndex;
+          const isDone = i < currentIndex;
+          return (
+            <div key={seg.id} style={{
+              display: 'flex', alignItems: 'baseline', gap: 10, padding: '8px 0',
+              borderTop: '1px solid var(--rule)',
+            }}>
+              <span style={{ width: 12, display: 'flex', justifyContent: 'center', marginTop: 4 }}>
+                {isDone
+                  ? <CheckIcon />
+                  : isCurrent
+                    ? <span style={{ width: 6, height: 6, background: 'var(--brass)', display: 'inline-block' }}/>
+                    : <span style={{ width: 8, height: 8, border: '1.5px solid var(--ink-4)', borderRadius: 4, display: 'inline-block' }}/>
+                }
+              </span>
+              <span style={{
+                fontFamily: 'var(--font-sans)', fontSize: 13.5, flex: 1,
+                color: isCurrent ? 'var(--ink)' : isDone ? 'var(--ink-3)' : 'var(--ink-2)',
+                fontWeight: isCurrent ? 500 : 400,
+              }}>
+                {SEGMENT_LABELS[seg.type] ?? seg.type}
+                {seg.spotifyTrackName && (
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-3)', marginLeft: 8 }}>
+                    · {seg.spotifyTrackName}
+                  </span>
+                )}
+              </span>
+              {isCurrent && (
+                <span style={{
+                  fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--brass-deep)',
+                  letterSpacing: '0.04em',
+                }}>aktuell</span>
+              )}
+            </div>
+          );
+        })}
+        <div style={{ height: 1, background: 'var(--rule)', marginTop: 4 }}/>
+      </details>
 
-      {/* Post-show wellbeing nudge */}
-      {showResult && hasPlayedOnce && currentIndex === -1 && (
-        <div className="mt-4 rounded-lg bg-zinc-800/60 p-4 text-center">
-          <p className="text-sm font-medium text-zinc-200">Sendung beendet — bis morgen!</p>
-          <p className="mt-1 text-xs text-zinc-400">Du hast die ganze Sendung gehört.</p>
-        </div>
-      )}
+      {/* Footer: Rationale link */}
+      <div>
+        <button
+          onClick={onOpenRationale}
+          style={{
+            fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500,
+            background: 'transparent', color: 'var(--ink)', border: 0,
+            cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6,
+            padding: '8px 0',
+          }}
+        >
+          <InfoIcon /> Warum diese Sendung?
+        </button>
+      </div>
     </div>
+  );
+}
+
+function PlayIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+      <polygon points="7,5 19,12 7,19"/>
+    </svg>
+  );
+}
+function PauseIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+      <rect x="7" y="5" width="3.5" height="14"/>
+      <rect x="13.5" y="5" width="3.5" height="14"/>
+    </svg>
+  );
+}
+function SkipBackIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+      <polygon points="18,5 8,12 18,19"/>
+      <rect x="5" y="5" width="2" height="14"/>
+    </svg>
+  );
+}
+function SkipFwdIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+      <polygon points="6,5 16,12 6,19"/>
+      <rect x="17" y="5" width="2" height="14"/>
+    </svg>
+  );
+}
+function CheckIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+      stroke="var(--ink-3)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="5,12 10,17 19,7"/>
+    </svg>
+  );
+}
+function ChevronIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="6,9 12,15 18,9"/>
+    </svg>
+  );
+}
+function InfoIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="9"/>
+      <line x1="12" y1="11" x2="12" y2="16"/>
+      <circle cx="12" cy="8" r="0.6" fill="currentColor"/>
+    </svg>
   );
 }

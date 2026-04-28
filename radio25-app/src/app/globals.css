@@ -1,1 +1,227 @@
 @import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+/* ============================================================
+   Radio 25 — Design Tokens
+   Three semantic layers: Aktion / Transparenz / Begründung
+   ============================================================ */
+
+:root {
+  /* Surface */
+  --paper:        oklch(97.2% 0.006 80);
+  --paper-2:      oklch(94.5% 0.008 80);
+  --paper-3:      oklch(91.8% 0.010 80);
+
+  /* Ink */
+  --ink:          oklch(20% 0.012 60);
+  --ink-2:        oklch(38% 0.012 60);
+  --ink-3:        oklch(54% 0.010 60);
+  --ink-4:        oklch(68% 0.008 60);
+
+  /* Rules */
+  --rule:         oklch(85% 0.008 70);
+  --rule-strong:  oklch(72% 0.010 70);
+
+  /* Aktion — single accent */
+  --brass:        oklch(64% 0.135 70);
+  --brass-deep:   oklch(54% 0.140 65);
+  --brass-tint:   oklch(94% 0.040 78);
+
+  /* Begründung */
+  --reason:       oklch(48% 0.018 55);
+  --reason-rule:  oklch(80% 0.020 55);
+  --reason-tint:  oklch(95.5% 0.012 55);
+
+  /* Status */
+  --ok:           oklch(48% 0.10 145);
+  --warn:         oklch(60% 0.12 75);
+  --err:          oklch(48% 0.16 28);
+  --err-tint:     oklch(95% 0.018 28);
+
+  /* Typography */
+  --font-serif:   'Source Serif 4', ui-serif, Georgia, serif;
+  --font-sans:    'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono:    'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Scale */
+  --fs-xs:    0.75rem;
+  --fs-sm:    0.875rem;
+  --fs-base:  1rem;
+  --fs-md:    1.125rem;
+  --fs-lg:    1.375rem;
+  --fs-xl:    1.75rem;
+  --fs-2xl:   2.25rem;
+
+  --leading-tight: 1.15;
+  --leading-snug:  1.3;
+  --leading-prose: 1.55;
+
+  --tracking-tight: -0.012em;
+  --tracking-wide:   0.06em;
+  --tracking-wider:  0.14em;
+
+  /* Spacing */
+  --s-1:  4px;
+  --s-2:  8px;
+  --s-3:  12px;
+  --s-4:  16px;
+  --s-5:  24px;
+  --s-6:  32px;
+  --s-7:  40px;
+  --s-8:  48px;
+
+  /* Radii — restrained */
+  --r-1: 2px;
+  --r-2: 4px;
+
+  /* Shadows — almost none */
+  --shadow-instrument: 0 1px 0 oklch(0% 0 0 / 0.04), 0 0 0 1px var(--rule);
+
+  /* Motion */
+  --ease:        cubic-bezier(0.32, 0.04, 0.16, 1);
+  --d-quick:     200ms;
+  --d-medium:    320ms;
+  --d-broadcast: 600ms;
+
+  /* Semantic layer aliases */
+  --aktion-bg:          var(--ink);
+  --aktion-fg:          var(--paper);
+  --aktion-accent:      var(--brass);
+  --trans-fg:           var(--ink-3);
+  --trans-rule:         var(--rule);
+  --trans-bg:           var(--paper-3);
+  --reason-fg:          var(--reason);
+  --reason-bg:          var(--reason-tint);
+  --reason-edge:        var(--reason-rule);
+}
+
+/* Dark theme — secondary, evening sessions */
+[data-theme="dark"] {
+  --paper:        oklch(18% 0.008 60);
+  --paper-2:      oklch(22% 0.010 60);
+  --paper-3:      oklch(26% 0.012 60);
+  --ink:          oklch(94% 0.008 80);
+  --ink-2:        oklch(78% 0.008 80);
+  --ink-3:        oklch(60% 0.008 70);
+  --ink-4:        oklch(45% 0.008 70);
+  --rule:         oklch(32% 0.010 70);
+  --rule-strong:  oklch(45% 0.012 70);
+  --brass:        oklch(72% 0.130 75);
+  --brass-deep:   oklch(80% 0.130 75);
+  --brass-tint:   oklch(28% 0.050 75);
+  --reason:       oklch(72% 0.020 55);
+  --reason-rule:  oklch(40% 0.020 55);
+  --reason-tint:  oklch(24% 0.014 55);
+  --shadow-instrument: 0 1px 0 oklch(0% 0 0 / 0.4), 0 0 0 1px var(--rule);
+}
+
+/* ============================================================
+   Tailwind 4 @theme mapping
+   ============================================================ */
+@theme {
+  --color-paper:       var(--paper);
+  --color-paper-2:     var(--paper-2);
+  --color-paper-3:     var(--paper-3);
+  --color-ink:         var(--ink);
+  --color-ink-2:       var(--ink-2);
+  --color-ink-3:       var(--ink-3);
+  --color-ink-4:       var(--ink-4);
+  --color-brass:       var(--brass);
+  --color-brass-deep:  var(--brass-deep);
+  --color-rule:        var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-reason:      var(--reason);
+  --color-warn:        var(--warn);
+  --color-err:         var(--err);
+
+  --font-sans:   var(--font-sans);
+  --font-serif:  var(--font-serif);
+  --font-mono:   var(--font-mono);
+}
+
+/* ============================================================
+   Global element styles
+   ============================================================ */
+html {
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  line-height: var(--leading-prose);
+  color: var(--ink);
+  background: var(--paper);
+  font-feature-settings: 'tnum' 1, 'kern' 1, 'liga' 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body { margin: 0; }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-tight);
+  margin: 0;
+  color: var(--ink);
+}
+
+p { margin: 0; }
+
+button {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+a:hover { text-decoration-thickness: 2px; }
+
+*:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+* { box-sizing: border-box; }
+
+/* ============================================================
+   Semantic layer utility classes
+   ============================================================ */
+
+/* Transparenz */
+.t-label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: lowercase;
+  color: var(--ink-3);
+  letter-spacing: 0.04em;
+}
+
+.t-section {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--ink-3);
+}
+
+/* Begründung */
+.reason {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: var(--fs-sm);
+  line-height: var(--leading-prose);
+  color: var(--reason-fg);
+  border-left: 2px solid var(--reason-edge);
+  padding: var(--s-1) 0 var(--s-1) var(--s-4);
+}
+
+.hairline { border-top: 1px solid var(--rule); }
