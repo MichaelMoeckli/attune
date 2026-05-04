@@ -1,18 +1,45 @@
+import type { VoiceStyle } from '@/lib/types';
+
 const DEFAULT_VOICE_ID = 'pNInz6obpgDQGcFmaJgB';
 
-export function getTtsVoiceId(forceMock?: boolean): string {
-  const mock = forceMock ?? process.env.USE_MOCK_TTS === 'true';
+const STYLE_ENV_VAR: Record<VoiceStyle, string> = {
+  formal: 'ELEVENLABS_VOICE_ID_FORMAL',
+  casual: 'ELEVENLABS_VOICE_ID_CASUAL',
+  energetic: 'ELEVENLABS_VOICE_ID_ENERGETIC',
+};
+
+function resolveVoiceId(voiceStyle?: VoiceStyle): string | undefined {
+  if (voiceStyle) {
+    const styleVoiceId = process.env[STYLE_ENV_VAR[voiceStyle]];
+    if (styleVoiceId && styleVoiceId !== 'your-voice-id-here') {
+      return styleVoiceId;
+    }
+  }
+  const fallback = process.env.ELEVENLABS_VOICE_ID;
+  if (fallback && fallback !== 'your-voice-id-here') {
+    return fallback;
+  }
+  return undefined;
+}
+
+export function getTtsVoiceId(voiceStyle?: VoiceStyle, forceMock?: boolean): string {
+  const mock = forceMock === true || process.env.USE_MOCK_TTS === 'true';
   if (mock) return 'browser-tts';
   const apiKey = process.env.ELEVENLABS_API_KEY;
-  const voiceId = process.env.ELEVENLABS_VOICE_ID;
-  if (!apiKey || apiKey === 'your-elevenlabs-api-key-here' || !voiceId || voiceId === 'your-voice-id-here') {
+  const voiceId = resolveVoiceId(voiceStyle);
+  if (!apiKey || apiKey === 'your-elevenlabs-api-key-here' || !voiceId) {
     return 'mock';
   }
   return voiceId;
 }
 
-export async function textToSpeech(text: string, segmentId: string, forceMock?: boolean): Promise<string> {
-  const mock = forceMock ?? process.env.USE_MOCK_TTS === 'true';
+export async function textToSpeech(
+  text: string,
+  segmentId: string,
+  voiceStyle?: VoiceStyle,
+  forceMock?: boolean,
+): Promise<string> {
+  const mock = forceMock === true || process.env.USE_MOCK_TTS === 'true';
   // Mock mode: skip ElevenLabs, let the browser handle TTS via Web Speech API
   if (mock) {
     console.log(`[tts] Mock mode — browser TTS will be used for: ${segmentId}`);
@@ -20,9 +47,9 @@ export async function textToSpeech(text: string, segmentId: string, forceMock?: 
   }
 
   const apiKey = process.env.ELEVENLABS_API_KEY;
-  const voiceId = process.env.ELEVENLABS_VOICE_ID;
+  const voiceId = resolveVoiceId(voiceStyle);
 
-  if (!apiKey || apiKey === 'your-elevenlabs-api-key-here' || !voiceId || voiceId === 'your-voice-id-here') {
+  if (!apiKey || apiKey === 'your-elevenlabs-api-key-here' || !voiceId) {
     console.log(`[tts] Using mock audio for segment: ${segmentId}`);
     return '';
   }

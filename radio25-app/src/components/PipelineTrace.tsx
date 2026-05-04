@@ -1,70 +1,28 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import type { ShowResult } from '@/lib/types';
-
-interface PipelineStep {
-  label: string;
-  source: string;
-  triggerMs: number;
-}
-
-const STEPS: PipelineStep[] = [
-  { label: 'Nachrichten geladen',   source: 'SRF · NZZ — RSS-Feeds',        triggerMs: 500  },
-  { label: 'Wetter geladen',        source: 'OpenWeatherMap',                triggerMs: 1000 },
-  { label: 'Moderationstexte',      source: 'Claude Sonnet',                 triggerMs: 1500 },
-  { label: 'Sprache erzeugen',      source: 'ElevenLabs TTS',                triggerMs: 3000 },
-  { label: 'Sendung montieren',     source: 'Audio-Mixer',                   triggerMs: 4000 },
-];
+import type { PipelineProgress } from '@/lib/types';
 
 type StepStatus = 'wait' | 'run' | 'done';
 
-interface PipelineTraceProps {
-  showResult: ShowResult | null;
-  error: string | null;
-  startedAt: number;
+interface RowDef {
+  label: string;
+  source: string;
 }
 
-export default function PipelineTrace({ showResult, error, startedAt }: PipelineTraceProps) {
-  const [statuses, setStatuses] = useState<StepStatus[]>(STEPS.map(() => 'wait'));
+const ROWS: Record<'news' | 'weather' | 'llm' | 'tts' | 'mix', RowDef> = {
+  news:    { label: 'Nachrichten geladen', source: 'SRF · NZZ — RSS-Feeds' },
+  weather: { label: 'Wetter geladen',      source: 'OpenWeatherMap'         },
+  llm:     { label: 'Moderationstexte',    source: 'Claude Sonnet'          },
+  tts:     { label: 'Sprache erzeugen',    source: 'ElevenLabs TTS'         },
+  mix:     { label: 'Sendung montieren',   source: 'Audio-Mixer'            },
+};
 
-  useEffect(() => {
-    if (showResult) {
-      setStatuses(STEPS.map(() => 'done'));
-      return;
-    }
+interface PipelineTraceProps {
+  progress: PipelineProgress;
+  error: string | null;
+}
 
-    const timers = STEPS.map((step, i) => {
-      const delay = step.triggerMs - (Date.now() - startedAt);
-      if (delay <= 0) {
-        setStatuses(prev => {
-          const next = [...prev];
-          if (next[i] === 'wait') next[i] = 'done';
-          if (i + 1 < next.length && next[i + 1] === 'wait') next[i + 1] = 'run';
-          return next;
-        });
-        return null;
-      }
-      return setTimeout(() => {
-        setStatuses(prev => {
-          const next = [...prev];
-          if (next[i] === 'wait' || next[i] === 'run') next[i] = 'done';
-          if (i + 1 < next.length && next[i + 1] === 'wait') next[i + 1] = 'run';
-          return next;
-        });
-      }, delay);
-    });
-
-    // Start first step immediately
-    setStatuses(prev => {
-      const next = [...prev];
-      if (next[0] === 'wait') next[0] = 'run';
-      return next;
-    });
-
-    return () => timers.forEach(t => t && clearTimeout(t));
-  }, [showResult, startedAt]);
-
+export default function PipelineTrace({ progress, error }: PipelineTraceProps) {
   if (error) {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -80,6 +38,10 @@ export default function PipelineTrace({ showResult, error, startedAt }: Pipeline
       </div>
     );
   }
+
+  // No real server-side mix step exists; this row marks "alle Segmente fertig".
+  // Stays 'wait' until the final 'done' event arrives, so it doesn't pretend something is running.
+  const mixStatus: StepStatus = progress.mix === 'done' ? 'done' : 'wait';
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
@@ -99,9 +61,21 @@ export default function PipelineTrace({ showResult, error, startedAt }: Pipeline
           fontFamily: 'var(--font-mono)', fontSize: 10, textTransform: 'uppercase',
           letterSpacing: '0.16em', color: 'var(--ink-3)', marginBottom: 4,
         }}>schritte</div>
-        {STEPS.map((step, i) => (
-          <StepRow key={i} step={step} status={statuses[i]} />
-        ))}
+
+        <StepRow def={ROWS.news} status={progress.news} />
+        <StepRow def={ROWS.weather} status={progress.weather} />
+        <StepRow
+          def={ROWS.llm}
+          status={progress.llm.status}
+          counter={progress.llm.total > 0 ? `${progress.llm.done} / ${progress.llm.total}` : undefined}
+        />
+        <StepRow
+          def={ROWS.tts}
+          status={progress.tts.status}
+          counter={progress.tts.total > 0 ? `${progress.tts.done} / ${progress.tts.total}` : undefined}
+        />
+        <StepRow def={ROWS.mix} status={mixStatus} />
+
         <div style={{ height: 1, background: 'var(--rule)' }}/>
       </div>
 
@@ -118,9 +92,22 @@ export default function PipelineTrace({ showResult, error, startedAt }: Pipeline
   );
 }
 
-function StepRow({ step, status }: { step: PipelineStep; status: StepStatus }) {
+function StepRow({
+  def, status, counter,
+}: { def: RowDef; status: StepStatus; counter?: string }) {
   const labelColor = status === 'wait' ? 'var(--ink-3)' : 'var(--ink)';
   const timeColor = status === 'run' ? 'var(--brass-deep)' : 'var(--ink-3)';
+
+  let rightLabel: string;
+  if (counter) {
+    rightLabel = counter;
+  } else if (status === 'done') {
+    rightLabel = 'fertig';
+  } else if (status === 'run') {
+    rightLabel = 'läuft …';
+  } else {
+    rightLabel = '—';
+  }
 
   return (
     <div style={{
@@ -136,19 +123,16 @@ function StepRow({ step, status }: { step: PipelineStep; status: StepStatus }) {
         }}>
           <span style={{
             fontFamily: 'var(--font-mono)', fontSize: 12.5, color: labelColor,
-          }}>{step.label}</span>
+          }}>{def.label}</span>
           <span style={{
             fontFamily: 'var(--font-mono)', fontSize: 11, color: timeColor,
             fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap',
-          }}>
-            {status === 'done' ? `${(step.triggerMs / 1000).toFixed(1)} s` :
-             status === 'run'  ? 'läuft …' : '—'}
-          </span>
+          }}>{rightLabel}</span>
         </div>
         <div style={{
           fontFamily: 'var(--font-mono)', fontSize: 10.5, color: 'var(--ink-3)',
           marginTop: 3, letterSpacing: '0.02em',
-        }}>{step.source}</div>
+        }}>{def.source}</div>
       </div>
     </div>
   );

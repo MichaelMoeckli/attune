@@ -31,6 +31,22 @@ const LENGTH_OPTIONS = [
   { id: 15 as const, label: '15 Min', description: 'Ausführlich' },
 ];
 
+// Estimated minutes for the spoken portion (no music) by length tier.
+const SPOKEN_MIN_BY_LENGTH: Record<number, number> = { 5: 2, 10: 4, 15: 6 };
+// Music tracks added when "Mit Musik" is on, by length tier.
+const MUSIC_TRACKS_BY_LENGTH: Record<number, number> = { 5: 1, 10: 2, 15: 3 };
+// Approx. minutes added per music track.
+const MUSIC_MIN_PER_TRACK = 3;
+
+// News article slots per length tier (mirrors NEWS_ARTICLE_COUNT in orchestrator.ts).
+// Sweet-spot topic count: profile coverage + 1 serendipity slot fits comfortably.
+// Ok-range upper bound = slots (so all chosen topics still get one article each).
+const TOPIC_GUIDANCE: Record<number, { slots: number; ideal: [number, number]; ok: [number, number] }> = {
+  5:  { slots: 3,  ideal: [2, 3], ok: [1, 3]  },
+  10: { slots: 6,  ideal: [3, 5], ok: [1, 6]  },
+  15: { slots: 10, ideal: [5, 7], ok: [1, 10] },
+};
+
 const monoLabel: React.CSSProperties = {
   fontFamily: 'var(--font-mono)', fontSize: 10, textTransform: 'uppercase',
   letterSpacing: '0.16em', color: 'var(--ink-3)', display: 'block', marginBottom: 8,
@@ -68,6 +84,7 @@ export default function PreferenceForm({ onSubmit, isGenerating, defaultConfig }
   const [location, setLocation] = useState(defaultConfig?.location ?? 'Zürich');
   const [voiceStyle, setVoiceStyle] = useState<ShowConfig['voiceStyle']>(defaultConfig?.voiceStyle ?? 'casual');
   const [targetLengthMin, setTargetLengthMin] = useState<ShowConfig['targetLengthMin']>(defaultConfig?.targetLengthMin ?? 10);
+  const [includeMusic, setIncludeMusic] = useState<boolean>(defaultConfig?.includeMusic ?? true);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -80,6 +97,7 @@ export default function PreferenceForm({ onSubmit, isGenerating, defaultConfig }
         if (typeof prefs.location === 'string') setLocation(prefs.location);
         if (prefs.voiceStyle) setVoiceStyle(prefs.voiceStyle);
         if (prefs.targetLengthMin) setTargetLengthMin(prefs.targetLengthMin);
+        if (typeof prefs.includeMusic === 'boolean') setIncludeMusic(prefs.includeMusic);
       }
     } catch {
       // Ignore corrupt localStorage; fall back to defaults.
@@ -93,9 +111,14 @@ export default function PreferenceForm({ onSubmit, isGenerating, defaultConfig }
 
   const handleSubmit = () => {
     const userId = getUserId();
-    const config: ShowConfig = { userId, topics, location, voiceStyle, language: 'de', targetLengthMin };
+    const config: ShowConfig = {
+      userId, topics, location, voiceStyle, language: 'de', targetLengthMin, includeMusic,
+    };
     try {
-      localStorage.setItem(PREFS_KEY, JSON.stringify({ topics, location, voiceStyle, targetLengthMin }));
+      localStorage.setItem(
+        PREFS_KEY,
+        JSON.stringify({ topics, location, voiceStyle, targetLengthMin, includeMusic }),
+      );
     } catch {
       // Quota exceeded or storage disabled — non-fatal.
     }
@@ -107,26 +130,56 @@ export default function PreferenceForm({ onSubmit, isGenerating, defaultConfig }
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       {/* Topics */}
-      <div>
-        <label style={monoLabel}>Themen</label>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-          {TOPIC_OPTIONS.map(t => (
-            <button key={t.id} onClick={() => toggleTopic(t.id)} style={chip(topics.includes(t.id))}>
-              {t.label}
-            </button>
-          ))}
-        </div>
-        {/* Reasoning block */}
-        <div style={{
-          fontFamily: 'var(--font-serif)', fontStyle: 'italic',
-          fontSize: 13, lineHeight: 1.55, color: 'var(--reason)',
-          borderLeft: '2px solid var(--reason-rule)', padding: '5px 0 5px 12px',
-          marginTop: 12,
-        }}>
-          Diese Sendung enthält je eine Meldung pro Thema. Ein zufälliges Thema ausserhalb
-          deiner Auswahl wird hinzugefügt.
-        </div>
-      </div>
+      {(() => {
+        const guidance = TOPIC_GUIDANCE[targetLengthMin] ?? TOPIC_GUIDANCE[10];
+        const k = topics.length;
+        const tooMany = k > guidance.ok[1];
+        const indicatorColor = tooMany ? 'var(--warn)' : 'var(--ink-3)';
+        const dropped = tooMany ? k - guidance.slots : 0;
+        return (
+          <div>
+            <div style={{
+              display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
+              marginBottom: 8,
+            }}>
+              <label style={{ ...monoLabel, marginBottom: 0 }}>Themen</label>
+              <span style={{
+                fontFamily: 'var(--font-mono)', fontSize: 10,
+                color: indicatorColor, letterSpacing: '0.04em',
+              }}>
+                {k} / {guidance.ideal[0]}–{guidance.ideal[1]} empfohlen für {targetLengthMin} Min
+              </span>
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              {TOPIC_OPTIONS.map(t => (
+                <button key={t.id} onClick={() => toggleTopic(t.id)} style={chip(topics.includes(t.id))}>
+                  {t.label}
+                </button>
+              ))}
+            </div>
+            {/* Reasoning block */}
+            <div style={{
+              fontFamily: 'var(--font-serif)', fontStyle: 'italic',
+              fontSize: 13, lineHeight: 1.55, color: 'var(--reason)',
+              borderLeft: '2px solid var(--reason-rule)', padding: '5px 0 5px 12px',
+              marginTop: 12,
+            }}>
+              Jedes gewählte Thema bekommt zuerst eine Meldung. Wenn Platz bleibt, kommt
+              eine Überraschung ausserhalb deiner Auswahl dazu, danach zweite Meldungen
+              pro Thema.
+              {tooMany && (
+                <>
+                  {' '}<span style={{ color: 'var(--warn)' }}>
+                    Bei {targetLengthMin} Min ist nur Platz für {guidance.slots} Meldungen —
+                    {dropped === 1 ? ' ein Thema wird ' : ` ${dropped} Themen werden `}
+                    nicht erscheinen.
+                  </span>
+                </>
+              )}
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Location */}
       <div>
@@ -180,6 +233,42 @@ export default function PreferenceForm({ onSubmit, isGenerating, defaultConfig }
         </div>
       </div>
 
+      {/* Music toggle */}
+      <div>
+        <label style={monoLabel}>Musik</label>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 6 }}>
+          <button onClick={() => setIncludeMusic(true)} style={{
+            ...chip(includeMusic),
+            padding: '10px 8px', textAlign: 'center',
+            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
+          }}>
+            <span style={{ fontSize: 13 }}>Mit Musik</span>
+            <span style={{ fontSize: 11, opacity: 0.7 }}>
+              {MUSIC_TRACKS_BY_LENGTH[targetLengthMin]} Song{MUSIC_TRACKS_BY_LENGTH[targetLengthMin] > 1 ? 's' : ''}
+            </span>
+          </button>
+          <button onClick={() => setIncludeMusic(false)} style={{
+            ...chip(!includeMusic),
+            padding: '10px 8px', textAlign: 'center',
+            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
+          }}>
+            <span style={{ fontSize: 13 }}>Ohne</span>
+            <span style={{ fontSize: 11, opacity: 0.7 }}>Nur Sprache</span>
+          </button>
+        </div>
+        {/* Reasoning block */}
+        <div style={{
+          fontFamily: 'var(--font-serif)', fontStyle: 'italic',
+          fontSize: 13, lineHeight: 1.55, color: 'var(--reason)',
+          borderLeft: '2px solid var(--reason-rule)', padding: '5px 0 5px 12px',
+          marginTop: 12,
+        }}>
+          {includeMusic
+            ? `Mit Musik dauert die Sendung etwa ${SPOKEN_MIN_BY_LENGTH[targetLengthMin] + MUSIC_TRACKS_BY_LENGTH[targetLengthMin] * MUSIC_MIN_PER_TRACK} Min — die Songs verlängern sie um rund ${MUSIC_TRACKS_BY_LENGTH[targetLengthMin] * MUSIC_MIN_PER_TRACK} Min.`
+            : `Reine Sprache — etwa ${SPOKEN_MIN_BY_LENGTH[targetLengthMin]} Min, kompakter ohne Musikpausen.`}
+        </div>
+      </div>
+
       {/* Submit */}
       <button
         onClick={handleSubmit}
@@ -200,7 +289,9 @@ export default function PreferenceForm({ onSubmit, isGenerating, defaultConfig }
           Sendung vorbereiten
         </span>
         <span style={{ fontFamily: 'var(--font-mono)', fontVariantNumeric: 'tabular-nums' }}>
-          · {targetLengthMin} Min
+          · ca. {includeMusic
+            ? SPOKEN_MIN_BY_LENGTH[targetLengthMin] + MUSIC_TRACKS_BY_LENGTH[targetLengthMin] * MUSIC_MIN_PER_TRACK
+            : SPOKEN_MIN_BY_LENGTH[targetLengthMin]} Min
         </span>
       </button>
     </div>

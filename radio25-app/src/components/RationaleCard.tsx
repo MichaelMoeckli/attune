@@ -1,12 +1,14 @@
 'use client';
 
-import type { ShowConfig, ShowResult } from '@/lib/types';
+import type { NewsArticle, ShowConfig, ShowResult } from '@/lib/types';
 
 const VOICE_LABELS: Record<string, string> = {
   formal: 'Seriös',
   casual: 'Locker',
   energetic: 'Energisch',
 };
+
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 interface RationaleCardProps {
   config: ShowConfig;
@@ -16,7 +18,7 @@ interface RationaleCardProps {
 
 export default function RationaleCard({ config, showResult, onClose }: RationaleCardProps) {
   const topicsLabel = config.topics.length > 0
-    ? config.topics.map(t => t.charAt(0).toUpperCase() + t.slice(1)).join(' · ')
+    ? config.topics.map(cap).join(' · ')
     : '—';
 
   const profileRows: [string, string][] = [
@@ -25,12 +27,25 @@ export default function RationaleCard({ config, showResult, onClose }: Rationale
     ['Stil', VOICE_LABELS[config.voiceStyle] ?? config.voiceStyle],
   ];
 
+  // Pull the actual articles selected for this show, so the mapping reflects
+  // what selectNews picked (capPerTopic + pickSerendipity + applyDaypart).
+  const newsSegment = showResult?.segments.find(s => s.type === 'news');
+  const articles = (Array.isArray(newsSegment?.data) ? newsSegment.data : []) as NewsArticle[];
+  const profileArticles = articles.filter(a => a.selectionReason !== 'serendipity');
+  const serendipityArticles = articles.filter(a => a.selectionReason === 'serendipity');
+
+  const profileTopics = Array.from(new Set(
+    profileArticles.map(a => a.topic).filter((t): t is string => !!t),
+  ));
+  const serendipityTopic = serendipityArticles[0]?.topic;
+
+  const topicMappings: [string, string][] = profileTopics.length > 0
+    ? profileTopics.map(t => [cap(t), `Profil-Nachricht aus SRF + NZZ`] as [string, string])
+    : config.topics.map(t => [cap(t), 'Nachricht aus SRF + NZZ'] as [string, string]);
+
   const mappings: [string, string][] = [
-    ...config.topics.map(t => [
-      t.charAt(0).toUpperCase() + t.slice(1),
-      `Nachricht aus ${t === 'wirtschaft' ? 'NZZ' : 'SRF'}`,
-    ] as [string, string]),
-    ['Serendipity', 'Wissenschaft (unerwartet)'],
+    ...topicMappings,
+    ['Überraschung', serendipityTopic ? `${cap(serendipityTopic)} (ausserhalb Profil)` : 'keine in dieser Sendung'],
     [`Standort ${config.location || 'Zürich'}`, `Wetter ${config.location || 'Zürich'}`],
     [`Stil '${VOICE_LABELS[config.voiceStyle]?.toLowerCase() ?? config.voiceStyle}'`, `Voice '${config.voiceStyle}'`],
   ];

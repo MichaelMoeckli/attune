@@ -3,7 +3,7 @@
 import { useRef, useState, useEffect, useCallback, useMemo } from 'react';
 import type { ShowResult, Segment } from '@/lib/types';
 import SpotifyPlayerComponent from './SpotifyPlayer';
-import SourceLink from './SourceLink';
+import SourceList from './SourceList';
 import type { NewsArticle } from '@/lib/types';
 
 const SEGMENT_LABELS: Record<string, string> = {
@@ -130,10 +130,11 @@ export default function AudioPlayer({ showResult, spotifyConnected, onEnded, onO
     return `${m.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
   };
 
-  // Source info for current segment
-  const currentSource = currentSegment && isNewsArticleArray(currentSegment.data)
-    ? currentSegment.data[0]
-    : null;
+  // All sources for current segment (was: only data[0])
+  const currentSources: NewsArticle[] = currentSegment && isNewsArticleArray(currentSegment.data)
+    ? currentSegment.data
+    : [];
+  const sourceCheck = currentSegment?.sourceCheck;
 
   return (
     <div style={{
@@ -226,19 +227,25 @@ export default function AudioPlayer({ showResult, spotifyConnected, onEnded, onO
         </div>
       </div>
 
-      {/* Transparenz — source block */}
-      {currentSource && (
+      {/* Transparenz — sources block */}
+      {currentSources.length > 0 && (
         <div style={{
           borderTop: '1px solid var(--rule)', borderBottom: '1px solid var(--rule)',
           padding: '10px 0',
         }}>
-          <SourceLink
-            source={currentSource.source}
-            date={currentSource.publishedAt
-              ? new Date(currentSource.publishedAt).toLocaleDateString('de-CH', { day: '2-digit', month: '2-digit', year: 'numeric' })
-              : undefined}
-            url={currentSource.url}
-          />
+          <SourceList sources={currentSources} />
+          {sourceCheck?.hasUnverifiedMention && (
+            <div style={{
+              fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-3)',
+              padding: '8px 0 0', display: 'flex', gap: 8, alignItems: 'flex-start',
+              borderTop: '1px dotted var(--rule)', marginTop: 8,
+            }}>
+              <span style={{ color: 'var(--brass-deep)' }}>[!]</span>
+              <span>
+                Im Audio wird {sourceCheck.unverifiedOutlets.join(', ')} erwähnt, aber nicht in den oben gelisteten Artikeln verlinkt. Mögliche Ungenauigkeit der Sprache.
+              </span>
+            </div>
+          )}
         </div>
       )}
 

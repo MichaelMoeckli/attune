@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import type { ShowConfig, ShowResult } from '@/lib/types';
+import type { PipelineProgress, ProgressEvent, ShowConfig, ShowResult } from '@/lib/types';
 import AudioPlayer from '@/components/AudioPlayer';
 import PreferenceForm from '@/components/PreferenceForm';
 import ProfilePanel from '@/components/ProfilePanel';
@@ -19,6 +19,45 @@ type AppState = 'idle' | 'preview' | 'generating' | 'ready' | 'ended';
 const isMockMode = process.env.NEXT_PUBLIC_MOCK_MODE === 'true';
 const TTS_MODE_KEY = 'radio25.useMockTts';
 
+const initialProgress: PipelineProgress = {
+  news: 'wait',
+  weather: 'wait',
+  llm: { status: 'wait', done: 0, total: 0 },
+  tts: { status: 'wait', done: 0, total: 0 },
+  mix: 'wait',
+};
+
+function applyProgressEvent(prev: PipelineProgress, e: ProgressEvent): PipelineProgress {
+  if (e.type === 'step') {
+    if (e.key === 'fetch-news') return { ...prev, news: e.status === 'start' ? 'run' : 'done' };
+    if (e.key === 'fetch-weather') return { ...prev, weather: e.status === 'start' ? 'run' : 'done' };
+    return prev;
+  }
+  if (e.type === 'segment') {
+    if (e.phase === 'llm') {
+      const done = e.status === 'done' ? Math.max(prev.llm.done, e.index + 1) : prev.llm.done;
+      const status: 'run' | 'done' = done >= e.total && e.total > 0 ? 'done' : 'run';
+      return { ...prev, llm: { status, done, total: e.total } };
+    }
+    if (e.phase === 'tts') {
+      const done = e.status === 'done' ? Math.max(prev.tts.done, e.index + 1) : prev.tts.done;
+      const status: 'run' | 'done' = done >= e.total && e.total > 0 ? 'done' : 'run';
+      return { ...prev, tts: { status, done, total: e.total } };
+    }
+  }
+  if (e.type === 'done') {
+    return {
+      ...prev,
+      news: 'done',
+      weather: 'done',
+      llm: { ...prev.llm, status: 'done' },
+      tts: { ...prev.tts, status: 'done' },
+      mix: 'done',
+    };
+  }
+  return prev;
+}
+
 export default function Home() {
   const [appState, setAppState] = useState<AppState>('idle');
   const [pendingConfig, setPendingConfig] = useState<ShowConfig | null>(null);
@@ -28,7 +67,7 @@ export default function Home() {
   const [showRationale, setShowRationale] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [useMockTts, setUseMockTts] = useState<boolean>(true);
-  const generationStartRef = useRef<number>(0);
+  const [progress, setProgress] = useState<PipelineProgress>(initialProgress);
 
   const endTimeRef = useRef('');
 
@@ -57,8 +96,8 @@ export default function Home() {
   const handleConfirmGenerate = async () => {
     if (!pendingConfig) return;
     setAppState('generating');
-    generationStartRef.current = Date.now();
     setError(null);
+    setProgress(initialProgress);
 
     try {
       const res = await fetch('/api/generate', {
@@ -67,11 +106,47 @@ export default function Home() {
         body: JSON.stringify({ ...pendingConfig, useMockTts }),
       });
       if (!res.ok) {
-        const data = await res.json();
+        const data = await res.json().catch(() => ({}));
         throw new Error(data.error || 'Unbekannter Fehler');
       }
-      const result: ShowResult = await res.json();
-      setShowResult(result);
+      if (!res.body) {
+        throw new Error('Keine Antwort vom Server.');
+      }
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      let finalResult: ShowResult | null = null;
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        let nl: number;
+        while ((nl = buffer.indexOf('\n')) !== -1) {
+          const line = buffer.slice(0, nl).trim();
+          buffer = buffer.slice(nl + 1);
+          if (!line) continue;
+          let event: ProgressEvent;
+          try {
+            event = JSON.parse(line) as ProgressEvent;
+          } catch {
+            continue;
+          }
+          if (event.type === 'error') {
+            throw new Error(event.message);
+          }
+          setProgress((prev) => applyProgressEvent(prev, event));
+          if (event.type === 'done') {
+            finalResult = event.result;
+          }
+        }
+      }
+
+      if (!finalResult) {
+        throw new Error('Sendung konnte nicht generiert werden.');
+      }
+      setShowResult(finalResult);
       setAppState('ready');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Sendung konnte nicht generiert werden.');
@@ -129,7 +204,14 @@ export default function Home() {
                         Sendung starten
                       </span>
                       <span style={{ fontFamily: 'var(--font-mono)', fontVariantNumeric: 'tabular-nums' }}>
-                        · {pendingConfig.targetLengthMin} Min
+                        · ca. {(() => {
+                          const SPOKEN: Record<number, number> = { 5: 2, 10: 4, 15: 6 };
+                          const TRACKS: Record<number, number> = { 5: 1, 10: 2, 15: 3 };
+                          const len = pendingConfig.targetLengthMin;
+                          const spoken = SPOKEN[len] ?? 4;
+                          const tracks = pendingConfig.includeMusic !== false ? (TRACKS[len] ?? 2) : 0;
+                          return spoken + tracks * 3;
+                        })()} Min
                       </span>
                     </button>
                   </div>
@@ -165,9 +247,8 @@ export default function Home() {
         {/* ── S3: Generating ───────────────────────────── */}
         {appState === 'generating' && (
           <PipelineTrace
-            showResult={showResult}
+            progress={progress}
             error={error}
-            startedAt={generationStartRef.current}
           />
         )}
 

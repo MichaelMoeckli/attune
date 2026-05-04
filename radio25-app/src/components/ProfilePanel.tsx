@@ -18,11 +18,19 @@ export default function ProfilePanel({ config, onEdit }: ProfilePanelProps) {
     ? config.topics.map(t => t.charAt(0).toUpperCase() + t.slice(1)).join(' · ')
     : '—';
 
+  const includeMusic = config.includeMusic !== false;
+  const tracksByLength: Record<number, number> = { 5: 1, 10: 2, 15: 3 };
+  const tracks = tracksByLength[config.targetLengthMin] ?? 2;
+  const musicLabel = includeMusic
+    ? `Mit Musik · ${tracks} Song${tracks === 1 ? '' : 's'}`
+    : 'Ohne Musik';
+
   const rows: [string, string][] = [
     ['Themen', topicsLabel],
     ['Standort', config.location || '—'],
     ['Stil', VOICE_LABELS[config.voiceStyle] ?? config.voiceStyle],
     ['Länge', `${config.targetLengthMin} Minuten`],
+    ['Musik', musicLabel],
   ];
 
   return (

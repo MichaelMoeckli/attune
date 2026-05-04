@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import type { ShowConfig } from '@/lib/types';
+import type { ProgressEvent, ShowConfig } from '@/lib/types';
 import { generateShow } from '@/lib/orchestrator';
 
 export const maxDuration = 60; // Allow up to 60s for show generation
@@ -50,6 +50,7 @@ export async function POST(request: Request) {
     const userId = typeof body.userId === 'string' ? body.userId.slice(0, 100) : 'anonymous';
 
     const useMockTts = typeof body.useMockTts === 'boolean' ? body.useMockTts : undefined;
+    const includeMusic = typeof body.includeMusic === 'boolean' ? body.includeMusic : true;
 
     const config: ShowConfig = {
       userId,
@@ -58,11 +59,47 @@ export async function POST(request: Request) {
       voiceStyle,
       language,
       targetLengthMin,
+      includeMusic,
       useMockTts,
     };
 
-    const result = await generateShow(config);
-    return NextResponse.json(result);
+    const stream = new ReadableStream<Uint8Array>({
+      async start(controller) {
+        const enc = new TextEncoder();
+        let closed = false;
+        const send = (e: ProgressEvent) => {
+          if (closed) return;
+          try {
+            controller.enqueue(enc.encode(JSON.stringify(e) + '\n'));
+          } catch {
+            // Client disconnected — stop trying to write but let the orchestrator finish.
+            closed = true;
+          }
+        };
+        try {
+          const result = await generateShow(config, send);
+          send({ type: 'done', result });
+        } catch (err) {
+          console.error('[api/generate] Error:', err);
+          send({
+            type: 'error',
+            message: 'Sendung konnte nicht generiert werden. Bitte versuchen Sie es erneut.',
+          });
+        } finally {
+          if (!closed) {
+            try { controller.close(); } catch { /* already closed */ }
+          }
+        }
+      },
+    });
+
+    return new Response(stream, {
+      headers: {
+        'Content-Type': 'application/x-ndjson; charset=utf-8',
+        'Cache-Control': 'no-store',
+        'X-Accel-Buffering': 'no',
+      },
+    });
   } catch (error) {
     console.error('[api/generate] Error:', error);
     return NextResponse.json(

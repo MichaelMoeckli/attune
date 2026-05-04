@@ -8,22 +8,30 @@ interface ShowPreviewCardProps {
   onBack: () => void;
 }
 
+const SPOKEN_MIN_BY_LENGTH: Record<number, number> = { 5: 2, 10: 4, 15: 6 };
+const MUSIC_TRACKS_BY_LENGTH: Record<number, number> = { 5: 1, 10: 2, 15: 3 };
+const MUSIC_MIN_PER_TRACK = 3;
+
 function computeEndTime(minutesFromNow: number): string {
   const end = new Date(Date.now() + minutesFromNow * 60 * 1000);
   return `${end.getHours().toString().padStart(2, '0')}:${end.getMinutes().toString().padStart(2, '0')}`;
 }
 
 export default function ShowPreviewCard({ config, onConfirm, onBack }: ShowPreviewCardProps) {
-  const endTime = computeEndTime(config.targetLengthMin);
+  const includeMusic = config.includeMusic !== false;
+  const tracks = includeMusic ? (MUSIC_TRACKS_BY_LENGTH[config.targetLengthMin] ?? 2) : 0;
+  const spokenMin = SPOKEN_MIN_BY_LENGTH[config.targetLengthMin] ?? 4;
+  const approxMin = spokenMin + tracks * MUSIC_MIN_PER_TRACK;
+  const endTime = computeEndTime(approxMin);
 
-  const segments = [
-    { label: 'Begrüssung', count: null },
-    { label: 'Nachrichten', count: config.topics.length > 0 ? String(config.topics.length) : null },
-    { label: 'Musik', count: null },
-    { label: `Wetter ${config.location || 'Zürich'}`, count: null },
-    { label: 'Musik', count: null },
-    { label: 'Verabschiedung', count: null },
-  ];
+  type Row = { label: string; count: string | null };
+  const segments: Row[] = [{ label: 'Begrüssung', count: null }];
+  if (tracks >= 3) segments.push({ label: 'Musik', count: null });
+  segments.push({ label: 'Nachrichten', count: config.topics.length > 0 ? String(config.topics.length) : null });
+  if (tracks >= 1) segments.push({ label: 'Musik', count: null });
+  segments.push({ label: `Wetter ${config.location || 'Zürich'}`, count: null });
+  if (tracks >= 2) segments.push({ label: 'Musik', count: null });
+  segments.push({ label: 'Verabschiedung', count: null });
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
@@ -43,7 +51,7 @@ export default function ShowPreviewCard({ config, onConfirm, onBack }: ShowPrevi
         }}>
           {segments.length} Segmente · ca.{' '}
           <span style={{ fontFamily: 'var(--font-mono)', fontVariantNumeric: 'tabular-nums' }}>
-            {config.targetLengthMin} Minuten
+            {approxMin} Minuten
           </span>
           {' '}· endet hörbar um{' '}
           <span style={{ fontFamily: 'var(--font-mono)', fontVariantNumeric: 'tabular-nums' }}>
@@ -106,7 +114,7 @@ export default function ShowPreviewCard({ config, onConfirm, onBack }: ShowPrevi
             Sendung starten
           </span>
           <span style={{ fontFamily: 'var(--font-mono)', fontVariantNumeric: 'tabular-nums' }}>
-            · {config.targetLengthMin} Min
+            · ca. {approxMin} Min
           </span>
         </button>
         <button
