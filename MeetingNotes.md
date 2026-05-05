@@ -2,12 +2,38 @@
 
 ---
 
+**Datum:** 30. April 2026
+
+---
+Validierung
+ 
+1) Machbarkeitsnachweis
+Prototyp, evtl. Unit Tests die Funktionsfähigkeit belegen
+ 
+2) Usability/Akzeptanz
+Instrument suchen (wir haben keine "nützliche" Software), selbst mit GPT oder äquivalent frage-items erzeugen, die an SUS/TAM/UTAUT angelehnt sind (pro Einstellungsmöglichkeit: was gefällt, was unnötig empfunden, .... was würdest Du dich sonst noch wünschen?)
+ 
+3) Wirkung
+Kriterien aus Literaturrecherche (Background/Related Work) hervornehmen und zusätzliche Frageitems daraus machen
+ 
+4) Fragebogen allgemein; Demographische Daten (Alter, höchst abgeschl. Ausb., ...) 
+-> Wie informieren, unterhalten, awareness von Bubble, bias, grenzen, ...
+ 
+Format:
+1-mal-Nutzung durch Users (3 wäre schön, je mehr desto bessser) und Befragung im Anschluss
+Nutzung während Zeitraum (z.B. 1 Woche, oder minimum 1 Wochenende) und dann Befragung
+Falls Menschen beides machen, 2 mal fragebogen, unterschiedliche Antworten?
+
+Diskussion
+ 
+übetragen von VCalidierungserkenntnissen auf Forschungsfrage und related work: Handlungsempfehlungen
+
+---
+
 **Datum:** 23. April 2026
 
 ---
-- notes
 - ftp zuganag zu informaniak
-
 - erggäzugn hintergurnd und storyline: fazit finden zu radio 25 und was man alle verbessern könnte
 - features hinzufügen basierend auf konzepte
 - experimient 3 personen für den moment -> verbesserung finden
