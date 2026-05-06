@@ -41,8 +41,9 @@ const RSS_FEEDS: Record<string, string[]> = {
   sport:         ['https://www.srf.ch/sport/bnf/rss/718',     'https://www.nzz.ch/sport.rss'],
   kultur:        ['https://www.srf.ch/kultur/bnf/rss/454',    'https://www.nzz.ch/kultur.rss'],
   wissenschaft:  ['https://www.srf.ch/bnf/rss/630',           'https://www.nzz.ch/wissenschaft.rss'],
-  technologie:   ['https://www.srf.ch/bnf/rss/630',           'https://www.nzz.ch/technologie.rss'],
-  panorama:      ['https://www.srf.ch/news/bnf/rss/19032223', 'https://www.nzz.ch/panorama.rss'],
+  technologie:   ['https://www.srf.ch/bnf/rss/19920122',      'https://www.nzz.ch/technologie.rss'],
+  panorama:      ['https://www.srf.ch/bnf/rss/19920107',      'https://www.nzz.ch/panorama.rss'],
+  // SRF bietet keinen Zürich-spezifischen RSS-Feed; Schweiz-Feed ist die nächstbeste Annäherung.
   zuerich:       ['https://www.srf.ch/news/bnf/rss/1890',     'https://www.nzz.ch/zuerich.rss'],
 };
 
