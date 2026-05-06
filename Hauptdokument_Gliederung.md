@@ -1,6 +1,6 @@
 # Gliederung BSc-Thesis Radio 25 — Hauptdokument
 
-Stand: 25. April 2026 (überarbeitet nach Empfehlung A + B — Funktionsteilung Kap. 1 / Kap. 2 geschärft, Methodikkapitel separiert)
+Stand: 5. Mai 2026 (überarbeitet nach Empfehlungen A + B + C — Funktionsteilung Kap. 1 / Kap. 2 geschärft, Methodikkapitel separiert, Validierungskapitel nach Vorgabe des Dozenten neu strukturiert)
 Status-Legende: ✅ vorhanden · 🟡 teilweise · ⬜ fehlt
 
 > **Hinweis zur Überarbeitung nach Empfehlung A:**
@@ -13,6 +13,9 @@ Status-Legende: ✅ vorhanden · 🟡 teilweise · ⬜ fehlt
 > **Hinweis zur Überarbeitung nach Empfehlung B:**
 > Das «Vorgehen der Literaturrecherche» war zuvor als 2.1 im theoretischen Rahmen verankert und unterbrach den Argumentationsfluss. Es wurde nun in ein neues Kapitel **4 Methodik** verschoben (Abschnitt 4.1). Kap. 2 ist dadurch ein reiner Theorierahmen geworden; die Unterkapitel wurden umnummeriert (alt 2.2 → neu 2.1, alt 2.3 → neu 2.2, alt 2.4 → neu 2.3, alt 2.5 → neu 2.4, alt 2.6 → neu 2.5). Alle internen Querverweise im Dokument wurden entsprechend angepasst.
 > Das Kapitel **4 Methodik** ist als wachsender Container gedacht — weitere Methodik-Bausteine (Forschungsdesign nach Hevner/Peffers, Pilottest-Methodik, Auswertungsverfahren) werden im weiteren Verlauf der Arbeit ergänzt. Sobald das geplante Kapitel «Forschungsfrage und Zielsetzung» eingefügt ist, wird das aktuelle Kap. 4 zu Kap. 5.
+>
+> **Hinweis zur Überarbeitung nach Empfehlung C (Validierungsstruktur vom Dozenten):**
+> Auf Empfehlung des Dozenten wurde Kap. 8 «Evaluation» zu Kap. 8 «Validierung» umstrukturiert. Die Gliederung folgt nun einer dreiteiligen Argumentation: (1) Machbarkeitsnachweis (Prototyp + Unit Tests), (2) Usability und Akzeptanz (Instrument angelehnt an SUS / TAM / UTAUT, mit selbst formulierten Items pro Einstellungsmöglichkeit) und (3) Wirkung (Items aus dem Background/Related-Work-Kapitel, ergänzt um Awareness-Items zu Bubble, Bias und Grenzen) — flankiert von einem allgemeinen Fragebogen mit demographischen Daten. Das Studienformat kombiniert eine **1-malige Nutzung** mit anschliessender Befragung (mindestens 3 Testpersonen, mehr wünschenswert) und eine **längere Nutzung** über 1 Woche bzw. mindestens 1 Wochenende mit zweiter Befragung. Personen, die beide Formate durchlaufen, beantworten den Fragebogen zweimal — der Vergleich der Antworten dient als Indikator für Erstkontakt- vs. Gewohnheitseffekt. Kap. 9 (Ergebnisse) wurde an die neue Dreiteilung angepasst; Kap. 10 (Diskussion) bleibt strukturell unverändert, greift aber explizit die drei Validierungsstränge auf.
 
 ---
 
@@ -136,35 +139,76 @@ Bereits ausgearbeitet (3.1–3.5). Hier nur prüfen:
 
 ## Teil IV — Validierung
 
-### ⬜ 8 Evaluation
+### ⬜ 8 Validierung *(überarbeitet nach Empfehlung C — Struktur vom Dozenten vorgegeben)*
 
-⬜ **8.1 Evaluationsdesign** (Was wird wie gemessen — Brücke zur Methodik in Kap. 5)
-⬜ **8.2 Technische Validierung (Proof of Concept)** (Funktionsfähigkeit, Latenzmessungen, Fehlerraten)
-⬜ **8.3 Pilottest mit Nutzenden**
-  - 8.3.1 Setup (5 Testpersonen, 1 Woche, Onboarding)
-  - 8.3.2 Erhebungsinstrumente (SUS, Wellbeing-Items, Tagebuch, Abschluss-Interview)
-  - 8.3.3 Durchführung
-⬜ **8.4 Erfolgskriterien** (aus Disposition Kap. 7.3 übernehmen, ggf. operationalisieren)
-⬜ **8.5 Ethik und Einwilligung** (Informed Consent, Datennutzung, Anonymisierung)
+Funktion des Kapitels: **Funktioniert das Artefakt, wird es akzeptiert, und entfaltet es die intendierte Wirkung?** Das Kapitel folgt der dreiteiligen Logik (Machbarkeit → Usability/Akzeptanz → Wirkung) und schliesst mit einem allgemeinen Fragebogenteil sowie der Beschreibung des Studiensetups.
 
-### ⬜ 9 Ergebnisse
+⬜ **8.1 Validierungsdesign** (Was wird wie validiert; Brücke zur Methodik in Kap. 5; Übersicht der drei Validierungsstränge und ihrer Verzahnung)
 
-⬜ **9.1 Quantitative Ergebnisse** (SUS-Score, Nutzungsdauer, Häufigkeit)
-⬜ **9.2 Qualitative Ergebnisse** (Themen aus den Interviews, Zitate)
-⬜ **9.3 Beobachtungen aus den Logdaten**
-⬜ **9.4 Vergleich mit den Erfolgskriterien**
+⬜ **8.2 Machbarkeitsnachweis (Proof of Concept)**
+  - 8.2.1 Funktionsnachweis durch den Prototyp (End-to-End-Sendungserzeugung)
+  - 8.2.2 Unit Tests und automatisierte Funktionstests (Pipeline-Komponenten, Datenintegration, LLM- und TTS-Schnittstellen)
+  - 8.2.3 Nicht-funktionale Aspekte (Latenz, Kosten, Verfügbarkeit, Fehlerraten, Stabilität bei wiederholter Ausführung)
+
+⬜ **8.3 Usability und Akzeptanz**
+  - 8.3.1 Instrumentenwahl — Anlehnung an SUS (System Usability Scale), TAM (Technology Acceptance Model) und UTAUT (Unified Theory of Acceptance and Use of Technology)
+  - 8.3.2 Eigenkonstruktion der Frage-Items mit LLM-Unterstützung (GPT bzw. Claude) — pro Einstellungsmöglichkeit jeweils dreigeteilt:
+    - Was gefällt an dieser Einstellung?
+    - Was wird als unnötig empfunden?
+    - Was würdest du dir zusätzlich wünschen?
+  - 8.3.3 SUS-Score als standardisierter Vergleichswert
+  - 8.3.4 Qualitative Freitexte zur Bedienlogik und zur Transparenzanzeige
+
+⬜ **8.4 Wirkung**
+  - 8.4.1 Ableitung der Wirkungsitems aus dem theoretischen Rahmen (Kap. 2):
+    - aus SDT/METUX (2.3.1): Autonomieerleben, Kompetenzerleben, Verbundenheit
+    - aus VSD (2.3.2): wahrgenommene Werteorientierung des Artefakts
+    - aus Digital Wellbeing (2.3.3): Wohlbefinden in und nach der Nutzungssituation
+    - aus algorithmischer Souveränität (2.3.4): Transparenz, Steuerbarkeit, Vertrauen in die Auswahl
+  - 8.4.2 Items zu Information und Unterhaltung — Kerngebrauchszweck eines Radioformats
+  - 8.4.3 Awareness-Items: Bewusstsein für Filterblasen, Bias und Grenzen des Systems
+
+⬜ **8.5 Allgemeiner Fragebogen**
+  - 8.5.1 Demographische Daten (Alter, höchster abgeschlossener Bildungsgrad, Geschlecht, beruflicher Hintergrund)
+  - 8.5.2 Mediennutzungsverhalten (genutzte Newsquellen, durchschnittliche Hördauer Radio/Podcast, Nutzung sozialer Medien)
+  - 8.5.3 Allgemeine Wahrnehmung des Artefakts (offene Freitextfragen)
+
+⬜ **8.6 Studiensetup** (kombiniertes Format)
+  - 8.6.1 Stichprobe und Rekrutierung (mindestens 3 Testpersonen, mehr wünschenswert; Auswahl mit Blick auf demographische Streuung)
+  - 8.6.2 **Format A — 1-malige Nutzung** mit anschliessender Befragung (Onboarding, eine Sendung hören, Fragebogen, Kurzinterview)
+  - 8.6.3 **Format B — Längere Nutzung** über 1 Woche bzw. mindestens 1 Wochenende mit Abschluss-Befragung (Tagebuch optional, Logdaten)
+  - 8.6.4 **Kombination beider Formate** — Personen mit Doppelteilnahme beantworten den Fragebogen zweimal; Vergleich der Antworten als Indikator für Erstkontakt- vs. Gewohnheitseffekt
+
+⬜ **8.7 Erfolgskriterien** (Operationalisierung aus Disposition Kap. 7.3 und Forschungsfrage; getrennt nach Machbarkeit, Usability/Akzeptanz und Wirkung)
+
+⬜ **8.8 Ethik und Einwilligung** (Informed Consent, Datennutzung, Anonymisierung; Hinweis: kein Tracking, lokale Speicherung)
+
+Mögliche Verfeinerungen:
+- **Tabelle „Konstrukt → Quelle → Itemtyp"** in 8.3 und 8.4, um die Item-Herkunft transparent zu machen (welche Items aus SUS/TAM/UTAUT, welche aus Kap. 2 abgeleitet)
+- **Übersichtsabbildung** zu Beginn von 8.1, die die drei Validierungsstränge und das kombinierte Studienformat visualisiert
+
+### ⬜ 9 Ergebnisse *(angepasst an die Dreiteilung der Validierung)*
+
+⬜ **9.1 Ergebnisse Machbarkeitsnachweis** (Funktionstest-Ergebnisse, Latenz- und Kostenmessungen, Fehlerraten)
+⬜ **9.2 Ergebnisse Usability und Akzeptanz** (SUS-Score, Auswertung der Items pro Einstellungsmöglichkeit, qualitative Freitexte)
+⬜ **9.3 Ergebnisse Wirkung** (SDT-/Wellbeing-/Souveränitätsitems, Information-Unterhaltung, Awareness-Items)
+⬜ **9.4 Vergleich der Befragungszeitpunkte** (Format A vs. Format B; Auswertung der Doppelteilnehmenden — verändern sich Antworten von Erstkontakt zu Gewohnheit?)
+⬜ **9.5 Vergleich mit den Erfolgskriterien** (getrennt nach den drei Validierungssträngen)
+⬜ **9.6 Beobachtungen aus den Logdaten** (Nutzungsdauer, Häufigkeit, Einstellungsänderungen)
 
 ---
 
 ## Teil V — Diskussion und Abschluss
 
-### ⬜ 10 Diskussion
+### ⬜ 10 Diskussion *(greift die drei Validierungsstränge aus Kap. 8 explizit auf)*
 
-⬜ **10.1 Beantwortung der Forschungsfrage**
-⬜ **10.2 Einordnung in den theoretischen Rahmen** (SDT, VSD, Digital Wellbeing, algorithmische Souveränität)
-⬜ **10.3 Implikationen für Design und Praxis**
-⬜ **10.4 Limitationen** (kleine Stichprobe, kurzer Zeitraum, Selbstauswahl, technische Restriktionen)
-⬜ **10.5 Übertragbarkeit auf andere Medienkontexte**
+⬜ **10.1 Beantwortung der Forschungsfrage** (synthetisierend über die drei Stränge: Machbarkeit, Akzeptanz, Wirkung)
+⬜ **10.2 Diskussion der Machbarkeit** (technische Tragfähigkeit der Pipeline, Skalierungsfragen, Kostenstruktur)
+⬜ **10.3 Diskussion der Usability und Akzeptanz** (welche Einstellungen wurden geschätzt, welche überflüssig, welche fehlen)
+⬜ **10.4 Diskussion der Wirkung** (Einordnung in den theoretischen Rahmen — SDT, VSD, Digital Wellbeing, algorithmische Souveränität — und Reflexion der Awareness-Effekte)
+⬜ **10.5 Implikationen für Design und Praxis** (was lassen sich daraus für andere wellbeing-orientierte Medienartefakte ableiten?)
+⬜ **10.6 Limitationen** (kleine Stichprobe, kurzer Zeitraum, Selbstauswahl, mögliche Verzerrung durch zweimalige Befragung derselben Personen, technische Restriktionen)
+⬜ **10.7 Übertragbarkeit auf andere Medienkontexte**
 
 ### ⬜ 11 Fazit und Ausblick
 
@@ -189,14 +233,19 @@ Vorläufige Liste vorhanden. Vor Abgabe prüfen, dass alle im Text zitierten Que
 
 ### ⬜ Anhang
 
-⬜ **A** Interview-Leitfaden Pilottest
+⬜ **A** Interview-Leitfaden Pilottest (Format A und Format B getrennt)
 ⬜ **B** SUS-Fragebogen (deutsche Version)
-⬜ **C** Wellbeing-Items / Tagebuch-Vorlage
+⬜ **C** Vollständiger Item-Katalog Validierung
+  - C.1 Usability/Akzeptanz-Items pro Einstellungsmöglichkeit (gefällt / unnötig / Wunsch)
+  - C.2 Wirkungsitems (SDT, VSD, Digital Wellbeing, algorithmische Souveränität)
+  - C.3 Awareness-Items (Bubble, Bias, Grenzen)
+  - C.4 Demographie-Block
 ⬜ **D** System-Prompt(s) für Sendungsgenerierung
 ⬜ **E** Beispiel-Sendung (Transkript einer generierten Sendung)
 ⬜ **F** Screenshots der Webapplikation
 ⬜ **G** Architektur- und Sequenzdiagramme (falls nicht im Hauptteil)
-⬜ **H** Tabelle Arbeitspakete vs. Ist-Zustand (optional, für Reflexion)
+⬜ **H** Einwilligungserklärung (Informed Consent) — Vorlage für Format A und Format B
+⬜ **I** Tabelle Arbeitspakete vs. Ist-Zustand (optional, für Reflexion)
 
 ---
 
@@ -206,7 +255,7 @@ Vorläufige Liste vorhanden. Vor Abgabe prüfen, dass alle im Text zitierten Que
 2. **Kap. 5 Methodik** ergänzen — Design-Science-Rahmen explizit machen
 3. **Kap. 6 Konzept und Architektur** — Brücke vom Was (Kap. 3) zum Wie
 4. **Kap. 7 Implementation** parallel zur Code-Entwicklung
-5. **Kap. 8 Evaluation** vor dem Pilottest fertig haben (Instrumente, Consent)
+5. **Kap. 8 Validierung** vor dem Pilottest fertig haben (Instrumente, Item-Katalog, Consent, beide Studienformate)
 6. **Kap. 9–11** nach dem Pilottest
 7. **Front- und Back-Matter** zum Schluss
 
