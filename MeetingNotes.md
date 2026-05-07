@@ -1,4 +1,17 @@
 # Meetingprotokoll – Radio25
+---
+
+**Datum:** 07. Mai 2026
+
+---
+
+- SuS evt. mit komponoenten von ueq erweitern oder umgekehrt.
+- Fragebogen eininden: Fehlende unterhaltung?; Zuviele infos; Habe ich das gefühl mich jz auch ausserhalb meiner Bubble infos zu bekommen; würde ich dieses regemässig benutzen? 
+- Experiment mit Studenten durchführen ~ 30 pers; bis experiment 25. ready sein
+- Studenten müssen sich mich ID anmleden können
+- Elevenlabs kosten überprüfen für experiment
+- Erkenntins, dass eher weg von Radio und mehr Richtung on demand new service (von ersten test)
+- Zukünfitg könnte man evt. Spotify einbauen
 
 ---
 
