@@ -1,13 +1,18 @@
 'use client';
 
+import { buildSurveyUrl, isSurveyConfigured } from '@/lib/study';
+
 interface EndOfShowCardProps {
   durationMin: number;
   endTime: string;
   onNewShow: () => void;
   onEditProfile: () => void;
+  participantId?: string | null;
 }
 
-export default function EndOfShowCard({ durationMin, endTime, onNewShow, onEditProfile }: EndOfShowCardProps) {
+export default function EndOfShowCard({ durationMin, endTime, onNewShow, onEditProfile, participantId }: EndOfShowCardProps) {
+  const surveyReady = !!participantId && isSurveyConfigured();
+  const surveyUrl = participantId ? buildSurveyUrl(participantId) : null;
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
       {/* Concentric circles */}
@@ -48,6 +53,53 @@ export default function EndOfShowCard({ durationMin, endTime, onNewShow, onEditP
         </p>
       </div>
 
+      {/* Survey CTA (only during the pilot study, i.e. when a participant ID exists) */}
+      {participantId && (
+        <div style={{
+          display: 'flex', flexDirection: 'column', gap: 10,
+          border: '1px solid var(--rule-strong)', borderRadius: 2,
+          padding: '16px 16px 18px',
+        }}>
+          <div style={{
+            fontFamily: 'var(--font-mono)', fontSize: 10, textTransform: 'uppercase',
+            letterSpacing: '0.16em', color: 'var(--ink-3)',
+          }}>Pilotstudie</div>
+          <p style={{
+            fontFamily: 'var(--font-sans)', fontSize: 14, color: 'var(--ink-2)',
+            margin: 0, lineHeight: 1.5,
+          }}>
+            Bitte fülle jetzt den Fragebogen aus. Deine Teilnehmer-ID ist{' '}
+            <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--ink)', fontWeight: 600 }}>
+              {participantId}
+            </span>
+            {' '}— sie ist das erste Pflichtfeld.
+          </p>
+          {surveyReady && surveyUrl ? (
+            <a
+              href={surveyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 500,
+                padding: '13px 16px', background: 'var(--ink)', color: 'var(--paper)',
+                border: '1px solid var(--ink)', borderRadius: 2,
+                textAlign: 'center', textDecoration: 'none',
+              }}
+            >
+              Fragebogen jetzt ausfüllen →
+            </a>
+          ) : (
+            <p style={{
+              fontFamily: 'var(--font-sans)', fontSize: 12.5, color: 'var(--ink-3)',
+              margin: 0, lineHeight: 1.5,
+            }}>
+              (Den Link zum Fragebogen bekommst du gesondert vom Dozenten oder
+              per Mail.)
+            </p>
+          )}
+        </div>
+      )}
+
       {/* Actions */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         <button
@@ -80,7 +132,7 @@ export default function EndOfShowCard({ durationMin, endTime, onNewShow, onEditP
         fontSize: 14.5, lineHeight: 1.55, color: 'var(--reason)',
         borderLeft: '2px solid var(--reason-rule)', padding: '6px 0 6px 14px',
       }}>
-        Radio 25 schlägt nichts automatisch vor. Eine Pause hier ist Teil
+        Attune schlägt nichts automatisch vor. Eine Pause hier ist Teil
         des Konzepts — keine Cliffhanger, keine Anschlussempfehlung.
       </div>
     </div>

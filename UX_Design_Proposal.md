@@ -1,15 +1,15 @@
-# Radio 25 — UI/UX Design Proposal
+# Attune — UI/UX Design Proposal
 
 Stand: 26. April 2026
 Autor: erstellt mit Claude für Michael Möckli
 
-Diese Vorlage ist der Vorschlag, **wie** wir die UI/UX von Radio 25 gestalten, damit die fünf Bausteine aus Kapitel 3.3 der Disposition für Testpersonen sicht- und erlebbar werden. Sie schliesst gezielt die Lücken aus dem `Implementation_Checklist.md`-Audit (insb. Block 5 Transparenz und Block 3 Kuration). Der Tech-Stack (Next.js 15, Tailwind 4) bleibt; das visuelle Designsystem wird im Rahmen der Mockup-Phase mit Claude Design neu entworfen — der bestehende Prototyp-Stil ist nicht Vorgabe. Kein bestehender Code wird hier verändert; der Vorschlag ist die Diskussionsgrundlage.
+Diese Vorlage ist der Vorschlag, **wie** wir die UI/UX von Attune gestalten, damit die fünf Bausteine aus Kapitel 3.3 der Disposition für Testpersonen sicht- und erlebbar werden. Sie schliesst gezielt die Lücken aus dem `Implementation_Checklist.md`-Audit (insb. Block 5 Transparenz und Block 3 Kuration). Der Tech-Stack (Next.js 15, Tailwind 4) bleibt; das visuelle Designsystem wird im Rahmen der Mockup-Phase mit Claude Design neu entworfen — der bestehende Prototyp-Stil ist nicht Vorgabe. Kein bestehender Code wird hier verändert; der Vorschlag ist die Diskussionsgrundlage.
 
 ---
 
 ## 1. Designhaltung
 
-Radio 25 ist kein normales Player-UI. Es ist die sichtbare Seite einer These: dass dieselbe Technologie (LLM, TTS, Empfehlungslogik), die in heutigen Plattformen das Engagement maximiert, ebenso konsequent auf Nutzerwohl ausgerichtet werden kann. Jede UI-Entscheidung muss daher zwei Tests bestehen:
+Attune ist kein normales Player-UI. Es ist die sichtbare Seite einer These: dass dieselbe Technologie (LLM, TTS, Empfehlungslogik), die in heutigen Plattformen das Engagement maximiert, ebenso konsequent auf Nutzerwohl ausgerichtet werden kann. Jede UI-Entscheidung muss daher zwei Tests bestehen:
 
 1. **Theoriebezug** — ist die Entscheidung an SDT, METUX, Digital Wellbeing oder algorithmischer Souveränität nachvollziehbar verankert?
 2. **Anti-Engagement-Test** — vermeidet das Element systematisch die in Kapitel 1.3 katalogisierten manipulativen Designmuster (endloses Scrollen, Autoplay, variable Belohnungen, Push-Hooks, intransparente Algorithmen)?
@@ -39,7 +39,7 @@ Single-Page-App mit drei sichtbaren Bereichen und einem optionalen Detail-Panel.
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│  Header — Marke "Radio 25" + Spotify-Status         │
+│  Header — Marke "Attune" + Spotify-Status         │
 ├─────────────────────────────────────────────────────┤
 │  ① Profil-Panel                                      │
 │     Themen · Standort · Stil · Sendungslänge        │
@@ -96,7 +96,7 @@ Hinzu kommen eine ruhige, lesefreundliche Basis (Hintergrund + Text), ein Hinwei
 
 Verbindliche Anforderungen (konkrete Schriftwahl in der Mockup-Phase):
 
-- Sehr gute Lesbarkeit auf Mobile, da Radio 25 ein begleitendes Medium ist
+- Sehr gute Lesbarkeit auf Mobile, da Attune ein begleitendes Medium ist
 - Klare Hierarchie zwischen Stationsname, Zustands-Überschriften, Segmenttypen, Inhalt und Metadaten
 - Keine Display-Schriften für Marketing-Effekt
 - Bevorzugt Open-Source / System-fähig (z. B. Inter, IBM Plex, Source Sans, Atkinson Hyperlegible)
@@ -259,7 +259,7 @@ Designentscheidungen:
 │  [ Profil anpassen ]                         │
 │  [ Neue Sendung jetzt ]                      │
 │                                              │
-│ ⓘ Radio 25 schlägt nichts automatisch vor.   │
+│ ⓘ Attune schlägt nichts automatisch vor.   │
 │   Eine Pause hier ist Teil des Konzepts.     │
 └──────────────────────────────────────────────┘
 ```
@@ -299,7 +299,7 @@ Erreichbar über einen kleinen Knopf in der Sendungs-Übersicht oder am Ende. Ma
 └──────────────────────────────────────────────┘
 ```
 
-Diese Karte ist die *konkrete* Operationalisierung von algorithmischer Souveränität (Reviglio & Agosti 2020). Sie ist methodisch der wichtigste neue UI-Baustein — sie ist es, was Radio 25 vom redaktionellen oder vom engagement-getriebenen Modell sichtbar unterscheidet (Ch. 2.4 Tabelle).
+Diese Karte ist die *konkrete* Operationalisierung von algorithmischer Souveränität (Reviglio & Agosti 2020). Sie ist methodisch der wichtigste neue UI-Baustein — sie ist es, was Attune vom redaktionellen oder vom engagement-getriebenen Modell sichtbar unterscheidet (Ch. 2.4 Tabelle).
 
 ### 5.7 API-Disclaimer und Mock-Modus
 
@@ -339,7 +339,7 @@ Diese Tabelle ist nicht nur Designdokumentation, sondern direkt verwendbar als I
 
 Diese Negativ-Liste ist ein eigenständiger Designbeitrag. Sie wird in Kapitel 6.4 / 7 der Thesis benötigt, um zu zeigen, dass Wellbeing-Orientierung nicht durch das Hinzufügen von Wellbeing-Features erreicht wird, sondern durch das systematische Weglassen problematischer Muster.
 
-| Engagement-Pattern | Bei Radio 25 bewusst nicht vorhanden | Begründung |
+| Engagement-Pattern | Bei Attune bewusst nicht vorhanden | Begründung |
 |--------------------|-------------------------------------|------------|
 | Like / Heart / Reaction | – | Keine variable Belohnung (Montag et al. 2019) |
 | Streak-Counter / "Tage in Folge" | – | Keine künstliche Bindung (Persuasive Tech kritisch) |
@@ -364,7 +364,7 @@ Status: vorgelegt. Zweck: Diskussionsgrundlage mit Betreuer Alexandre de Spindle
 Liefergegenstand: Entweder als HTML-Prototyp oder als statische Bilder, die alle Zustände S1–S7 zeigen. Aufwand: 1 Sitzung. Vorteil: schnelles Feedback, ohne Code zu touchen.
 
 ### Stufe C — High-Fi-Mockup im neuen Designsystem
-Liefergegenstand: visuelle Mockups aller Zustände im mit Claude Design neu entworfenen Designsystem (drei semantische Schichten, Palette, Typografie). Optional zusätzlich als nicht-verkabelter React-Prototyp innerhalb von `radio25-app/` (z. B. `/preview`-Route) mit Tailwind-Styling und realistischen Daten. Aufwand: 1–2 Tage. Vorteil: realistische Wahrnehmung, nutzbar für erstes informelles Feedback und Diskussion mit dem Betreuer.
+Liefergegenstand: visuelle Mockups aller Zustände im mit Claude Design neu entworfenen Designsystem (drei semantische Schichten, Palette, Typografie). Optional zusätzlich als nicht-verkabelter React-Prototyp innerhalb von `attune-app/` (z. B. `/preview`-Route) mit Tailwind-Styling und realistischen Daten. Aufwand: 1–2 Tage. Vorteil: realistische Wahrnehmung, nutzbar für erstes informelles Feedback und Diskussion mit dem Betreuer.
 
 ### Stufe D — Implementierung in den Live-Code
 Reihenfolge nach Audit-Priorität:

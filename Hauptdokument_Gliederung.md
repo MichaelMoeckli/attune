@@ -1,4 +1,4 @@
-# Gliederung BSc-Thesis Radio 25 — Hauptdokument
+# Gliederung BSc-Thesis Attune — Hauptdokument
 
 Stand: 5. Mai 2026 (überarbeitet nach Empfehlungen A + B + C — Funktionsteilung Kap. 1 / Kap. 2 geschärft, Methodikkapitel separiert, Validierungskapitel nach Vorgabe des Dozenten neu strukturiert)
 Status-Legende: ✅ vorhanden · 🟡 teilweise · ⬜ fehlt
@@ -81,7 +81,7 @@ Mögliche Verfeinerungen:
 
 ## Teil II — Forschungsfrage und Lösungsvorschlag
 
-### 🟡 3 Radio 25 als Forschungsartefakt
+### 🟡 3 Attune als Forschungsartefakt
 
 Bereits ausgearbeitet (3.1–3.5). Hier nur prüfen:
 - 3.5 (Abgrenzung) ist gut — verweist gut auf Ausblick

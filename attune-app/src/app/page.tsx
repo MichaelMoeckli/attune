@@ -13,11 +13,14 @@ import ApiDisclaimer from '@/components/ApiDisclaimer';
 import MockBanner from '@/components/MockBanner';
 import SpotifyConnect from '@/components/SpotifyConnect';
 import TtsModeToggle from '@/components/TtsModeToggle';
+import WelcomeScreen from '@/components/WelcomeScreen';
+import ParticipantIdForm from '@/components/ParticipantIdForm';
+import { WELCOME_SEEN_KEY, PARTICIPANT_ID_KEY } from '@/lib/study';
 
-type AppState = 'idle' | 'preview' | 'generating' | 'ready' | 'ended';
+type AppState = 'loading' | 'welcome' | 'participant-id' | 'idle' | 'preview' | 'generating' | 'ready' | 'ended';
 
 const isMockMode = process.env.NEXT_PUBLIC_MOCK_MODE === 'true';
-const TTS_MODE_KEY = 'radio25.useMockTts';
+const TTS_MODE_KEY = 'attune.useMockTts';
 
 const initialProgress: PipelineProgress = {
   news: 'wait',
@@ -59,7 +62,10 @@ function applyProgressEvent(prev: PipelineProgress, e: ProgressEvent): PipelineP
 }
 
 export default function Home() {
-  const [appState, setAppState] = useState<AppState>('idle');
+  // Start in 'loading' so SSR and the first client render agree on empty output;
+  // the useEffect below decides whether to land on welcome / participant-id / idle.
+  const [appState, setAppState] = useState<AppState>('loading');
+  const [participantId, setParticipantId] = useState<string | null>(null);
   const [pendingConfig, setPendingConfig] = useState<ShowConfig | null>(null);
   const [showResult, setShowResult] = useState<ShowResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -70,6 +76,22 @@ export default function Home() {
   const [progress, setProgress] = useState<PipelineProgress>(initialProgress);
 
   const endTimeRef = useRef('');
+
+  // Hydrate welcome / participant-id flow from localStorage on first mount.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const welcomeSeen = localStorage.getItem(WELCOME_SEEN_KEY) === 'true';
+    const storedPid = localStorage.getItem(PARTICIPANT_ID_KEY);
+    if (storedPid) setParticipantId(storedPid);
+
+    if (!welcomeSeen) {
+      setAppState('welcome');
+    } else if (!storedPid) {
+      setAppState('participant-id');
+    } else {
+      setAppState('idle');
+    }
+  }, []);
 
   // Hydrate TTS mode from localStorage; default to mock if unset.
   useEffect(() => {
@@ -83,6 +105,23 @@ export default function Home() {
     if (typeof window === 'undefined') return;
     localStorage.setItem(TTS_MODE_KEY, String(useMockTts));
   }, [useMockTts]);
+
+  // Welcome → participant-id (or idle, if ID was set previously somehow)
+  const handleWelcomeContinue = () => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(WELCOME_SEEN_KEY, 'true');
+    }
+    setAppState(participantId ? 'idle' : 'participant-id');
+  };
+
+  // Participant-id → idle (persist the entered ID)
+  const handleParticipantIdSubmit = (id: string) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(PARTICIPANT_ID_KEY, id);
+    }
+    setParticipantId(id);
+    setAppState('idle');
+  };
 
   // S1 → S2: user submits form → show preview
   const handleFormSubmit = (config: ShowConfig) => {
@@ -180,6 +219,33 @@ export default function Home() {
         display: 'flex', flexDirection: 'column', gap: 32,
       }}>
 
+        {/* ── Participant-ID Badge (shown once the ID is set) ── */}
+        {participantId && appState !== 'welcome' && appState !== 'participant-id' && appState !== 'loading' && (
+          <div style={{
+            display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 8,
+            marginBottom: -16,
+          }}>
+            <span style={{
+              fontFamily: 'var(--font-mono)', fontSize: 10, textTransform: 'uppercase',
+              letterSpacing: '0.16em', color: 'var(--ink-3)',
+            }}>Teilnehmer-ID</span>
+            <span style={{
+              fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--ink)',
+              padding: '4px 8px', border: '1px solid var(--rule-strong)', borderRadius: 2,
+            }}>{participantId}</span>
+          </div>
+        )}
+
+        {/* ── S0a: Welcome ─────────────────────────────── */}
+        {appState === 'welcome' && (
+          <WelcomeScreen onContinue={handleWelcomeContinue} />
+        )}
+
+        {/* ── S0b: Participant-ID entry ────────────────── */}
+        {appState === 'participant-id' && (
+          <ParticipantIdForm onSubmit={handleParticipantIdSubmit} />
+        )}
+
         {/* ── S1: Idle ─────────────────────────────────── */}
         {appState === 'idle' && (
           <>
@@ -269,6 +335,7 @@ export default function Home() {
             endTime={endTimeRef.current}
             onNewShow={() => handleReset(false)}
             onEditProfile={() => handleReset(true)}
+            participantId={participantId}
           />
         )}
       </main>

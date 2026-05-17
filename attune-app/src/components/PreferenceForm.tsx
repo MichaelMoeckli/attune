@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import type { ShowConfig } from '@/lib/types';
 
-const PREFS_KEY = 'radio25-prefs';
+const PREFS_KEY = 'attune-prefs';
 
 const TOPIC_OPTIONS = [
   { id: 'politik',       label: 'Politik' },
@@ -71,10 +71,10 @@ interface PreferenceFormProps {
 
 function getUserId(): string {
   if (typeof window === 'undefined') return '';
-  let id = localStorage.getItem('radio25-userId');
+  let id = localStorage.getItem('attune-userId');
   if (!id) {
     id = crypto.randomUUID();
-    localStorage.setItem('radio25-userId', id);
+    localStorage.setItem('attune-userId', id);
   }
   return id;
 }

@@ -2,9 +2,9 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "radio25-dev",
+      "name": "attune-dev",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["--prefix", "radio25-app", "run", "dev"],
+      "runtimeArgs": ["--prefix", "attune-app", "run", "dev"],
       "port": 3000,
       "autoPort": true
     }

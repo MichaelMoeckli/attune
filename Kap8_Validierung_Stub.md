@@ -10,7 +10,7 @@
 
 ## 8 Validierung
 
-Das vorliegende Kapitel beantwortet die Frage, **ob Radio 25 als Forschungsartefakt funktioniert, akzeptiert wird und die im theoretischen Rahmen (Kap. 2) hergeleiteten Wirkungen tatsächlich entfaltet**. Auf Empfehlung des Dozenten folgt die Validierung einer dreiteiligen Logik: **Machbarkeitsnachweis** (Funktioniert das Artefakt zuverlässig?), **Usability und Akzeptanz** (Wird es als bedienbar und nützlich empfunden?) und **Wirkung** (Erleben Nutzende die intendierten Effekte hinsichtlich Autonomie, Wohlbefinden und algorithmischer Souveränität?). Ergänzt wird die Validierung durch einen allgemeinen Fragebogenteil mit demographischen Daten sowie einem kombinierten Studienformat aus 1-maliger Nutzung und längerer Nutzungsphase.
+Das vorliegende Kapitel beantwortet die Frage, **ob Attune als Forschungsartefakt funktioniert, akzeptiert wird und die im theoretischen Rahmen (Kap. 2) hergeleiteten Wirkungen tatsächlich entfaltet**. Auf Empfehlung des Dozenten folgt die Validierung einer dreiteiligen Logik: **Machbarkeitsnachweis** (Funktioniert das Artefakt zuverlässig?), **Usability und Akzeptanz** (Wird es als bedienbar und nützlich empfunden?) und **Wirkung** (Erleben Nutzende die intendierten Effekte hinsichtlich Autonomie, Wohlbefinden und algorithmischer Souveränität?). Ergänzt wird die Validierung durch einen allgemeinen Fragebogenteil mit demographischen Daten sowie einem kombinierten Studienformat aus 1-maliger Nutzung und längerer Nutzungsphase.
 
 ### 8.1 Validierungsdesign
 
@@ -38,7 +38,7 @@ Erfasst werden Latenz pro Pipeline-Schritt, Gesamtkosten pro Sendung (LLM-Tokens
 
 ### 8.3 Usability und Akzeptanz
 
-Da für Radio 25 als wellbeing-orientiertes Medienartefakt kein etabliertes Akzeptanz-Instrument existiert, wird das Erhebungsinstrument **selbst konstruiert** und an etablierten Modellen ausgerichtet.
+Da für Attune als wellbeing-orientiertes Medienartefakt kein etabliertes Akzeptanz-Instrument existiert, wird das Erhebungsinstrument **selbst konstruiert** und an etablierten Modellen ausgerichtet.
 
 #### 8.3.1 Instrumentenwahl
 
@@ -49,7 +49,7 @@ Das Instrument lehnt sich an drei etablierte Modelle an:
 
 #### 8.3.2 Eigenkonstruktion der Frage-Items
 
-Die spezifischen Items werden mit LLM-Unterstützung (GPT bzw. Claude) auf Basis der konkreten Einstellungsmöglichkeiten der Radio-25-Webapplikation formuliert. **Pro Einstellungsmöglichkeit** (z. B. Sendungslänge, Themenpräferenzen, Stimmenwahl, Diversifikationsgrad, Transparenzanzeige) wird ein dreigeteiltes Item-Set erhoben:
+Die spezifischen Items werden mit LLM-Unterstützung (GPT bzw. Claude) auf Basis der konkreten Einstellungsmöglichkeiten der Attune-Webapplikation formuliert. **Pro Einstellungsmöglichkeit** (z. B. Sendungslänge, Themenpräferenzen, Stimmenwahl, Diversifikationsgrad, Transparenzanzeige) wird ein dreigeteiltes Item-Set erhoben:
 
 1. **Was gefällt an dieser Einstellung?** (Was wird positiv wahrgenommen?)
 2. **Was wird als unnötig empfunden?** (Was könnte wegfallen?)
@@ -73,25 +73,25 @@ Die Wirkungs-Items werden **direkt aus dem theoretischen Rahmen in Kapitel 2 abg
 
 | Theoretischer Bezug (Kap. 2) | Konstrukt | Beispiel-Itemtyp |
 |---|---|---|
-| 2.3.1 SDT/METUX | Autonomieerleben | „Ich konnte Radio 25 nach meinen eigenen Bedürfnissen einstellen." |
-| 2.3.1 SDT/METUX | Kompetenzerleben | „Ich verstehe, was Radio 25 mir warum vorschlägt." |
+| 2.3.1 SDT/METUX | Autonomieerleben | „Ich konnte Attune nach meinen eigenen Bedürfnissen einstellen." |
+| 2.3.1 SDT/METUX | Kompetenzerleben | „Ich verstehe, was Attune mir warum vorschlägt." |
 | 2.3.1 SDT/METUX | Verbundenheit | „Die Sendungen wirkten auf mich relevant für mein Umfeld." |
-| 2.3.2 VSD | Werteorientierung | „Radio 25 entspricht meinen Vorstellungen davon, wie Mediennutzung sein sollte." |
+| 2.3.2 VSD | Werteorientierung | „Attune entspricht meinen Vorstellungen davon, wie Mediennutzung sein sollte." |
 | 2.3.3 Digital Wellbeing | Wohlbefinden in der Nutzung | „Nach dem Hören fühlte ich mich informiert, ohne überfordert zu sein." |
 | 2.3.4 Algorithmische Souveränität | Transparenz | „Mir war klar, woher die Inhalte stammen." |
 | 2.3.4 Algorithmische Souveränität | Steuerbarkeit | „Ich hatte das Gefühl, das System zu kontrollieren — und nicht umgekehrt." |
-| 2.3.4 Algorithmische Souveränität | Vertrauen | „Ich vertraue der Auswahl, die Radio 25 mir präsentiert." |
+| 2.3.4 Algorithmische Souveränität | Vertrauen | „Ich vertraue der Auswahl, die Attune mir präsentiert." |
 
 *[Items werden vor dem Pilottest finalisiert, mit GPT/Claude vorformuliert und mit dem Betreuer abgestimmt.]*
 
 #### 8.4.2 Items zu Information und Unterhaltung
 
-Da Radio 25 ein Medienartefakt ist, werden zwei klassische Gebrauchszwecke explizit abgefragt: **Wie informativ wurde die Sendung erlebt?** und **Wie unterhaltsam wurde die Sendung erlebt?** Diese Items dienen als Kontrollvariablen — ein wellbeing-orientiertes Radio darf nicht auf Kosten der Grundfunktion gehen.
+Da Attune ein Medienartefakt ist, werden zwei klassische Gebrauchszwecke explizit abgefragt: **Wie informativ wurde die Sendung erlebt?** und **Wie unterhaltsam wurde die Sendung erlebt?** Diese Items dienen als Kontrollvariablen — ein wellbeing-orientiertes Radio darf nicht auf Kosten der Grundfunktion gehen.
 
 #### 8.4.3 Awareness-Items
 
 Ein zentraler Anspruch des Artefakts ist es, das Bewusstsein für Limitationen algorithmischer Auswahl zu schärfen. Items dazu erheben:
-- Bewusstsein für **Filterblasen / Echokammern** (z. B. „Mir wurde durch Radio 25 bewusst, dass meine Mediennutzung normalerweise selektiv ist.")
+- Bewusstsein für **Filterblasen / Echokammern** (z. B. „Mir wurde durch Attune bewusst, dass meine Mediennutzung normalerweise selektiv ist.")
 - Bewusstsein für **Bias** (z. B. in der Themenauswahl, in der Tonalität)
 - Bewusstsein für **Grenzen des Systems** (z. B. „Ich konnte einschätzen, wo das System an seine Grenzen kommt.")
 
@@ -107,7 +107,7 @@ Genutzte Newsquellen (Mehrfachnennung), durchschnittliche Hördauer Radio/Podcas
 
 #### 8.5.3 Allgemeine Wahrnehmung
 
-Offene Freitextfragen zum Gesamteindruck: «Wie würdest du Radio 25 jemandem in einem Satz beschreiben?», «Was fehlt dir am meisten?», «Was würdest du zuerst weglassen?».
+Offene Freitextfragen zum Gesamteindruck: «Wie würdest du Attune jemandem in einem Satz beschreiben?», «Was fehlt dir am meisten?», «Was würdest du zuerst weglassen?».
 
 ### 8.6 Studiensetup — kombiniertes Format
 
@@ -123,7 +123,7 @@ Ablauf: kurzes Onboarding (max. 10 Minuten), eine Sendung anhören (typische Lä
 
 #### 8.6.3 Format B — Längere Nutzung
 
-Ablauf: Onboarding, dann eigenständige Nutzung über **1 Woche bzw. mindestens 1 Wochenende**. Die Testpersonen entscheiden selbst, wann und wie oft sie Radio 25 hören. Optional: kurzes Tagebuch (frei formuliert oder mit Vorlage, siehe Anhang A). Logdaten dokumentieren Nutzungshäufigkeit und Einstellungsänderungen. Abschluss-Befragung mit Fragebogen und ausführlicherem Interview (30 Minuten).
+Ablauf: Onboarding, dann eigenständige Nutzung über **1 Woche bzw. mindestens 1 Wochenende**. Die Testpersonen entscheiden selbst, wann und wie oft sie Attune hören. Optional: kurzes Tagebuch (frei formuliert oder mit Vorlage, siehe Anhang A). Logdaten dokumentieren Nutzungshäufigkeit und Einstellungsänderungen. Abschluss-Befragung mit Fragebogen und ausführlicherem Interview (30 Minuten).
 
 #### 8.6.4 Kombination beider Formate
 
@@ -173,4 +173,4 @@ Kleine Stichprobe (mindestens 3, mehr wünschenswert); kurzer Untersuchungszeitr
 
 ### 10.7 Übertragbarkeit auf andere Medienkontexte
 
-Inwiefern lassen sich die Befunde auf Streaming, Podcast-Empfehlungen, News-Aggregatoren übertragen? Welche Eigenschaften von Radio 25 sind generisch, welche formatspezifisch? *[Stub.]*
+Inwiefern lassen sich die Befunde auf Streaming, Podcast-Empfehlungen, News-Aggregatoren übertragen? Welche Eigenschaften von Attune sind generisch, welche formatspezifisch? *[Stub.]*

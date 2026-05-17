@@ -39,7 +39,7 @@ export default function UnlockPage() {
           fontFamily: 'var(--font-mono)', fontSize: 10, textTransform: 'uppercase',
           letterSpacing: '0.16em', color: 'var(--ink-3)',
         }}>
-          radio 25 — vorschau
+          attune — vorschau
         </div>
         <h1 style={{
           fontFamily: 'var(--font-serif)', fontWeight: 400, fontSize: 28,

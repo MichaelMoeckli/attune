@@ -1,7 +1,7 @@
-# Claude Code Prompts — Radio 25 (Stand 2026-04-28)
+# Claude Code Prompts — Attune (Stand 2026-04-28)
 
 Reihenfolge entspricht der Priorität aus dem Implementation_Checklist (Audit 2026-04-28).
-Jeder Prompt ist self-contained — kannst du einzeln in Claude Code (im Repo-Root von `radio25-app/`) reinkopieren.
+Jeder Prompt ist self-contained — kannst du einzeln in Claude Code (im Repo-Root von `attune-app/`) reinkopieren.
 
 ---
 
@@ -138,7 +138,7 @@ Aufgaben:
      - Zwei 1–7-Slider mit Schweizer Hochdeutsch-Labels:
        "Wie ist dein Energielevel gerade?" und "Wie ruhig fühlst du dich?"
      - Ein optionaler Freitext (max 140 Zeichen, "freiwillig").
-     - Submit speichert in `localStorage` unter Key `radio25.mood.<showId>.<phase>`,
+     - Submit speichert in `localStorage` unter Key `attune.mood.<showId>.<phase>`,
        wo `phase` = 'pre' | 'post'.
      - Variante "lite" (ohne Freitext) für vor der Sendung, Variante "full"
        (mit Freitext) für nach der Sendung.
@@ -161,7 +161,7 @@ Aufgaben:
    Mood-Einträge als kleine Tabelle. KEIN Aggregat-Dashboard, keine
    Vergleiche, keine Erfolgsanzeigen.
 
-5. README-Eintrag im radio25-app/README: "Pilotstudien-Hinweis: Mood-Daten
+5. README-Eintrag im attune-app/README: "Pilotstudien-Hinweis: Mood-Daten
    liegen ausschliesslich lokal in `src/data/mood.json` und werden für
    die Auswertung anonymisiert exportiert."
 
@@ -177,7 +177,7 @@ Reload. Tasten-Tab-Reihenfolge ergibt Sinn (a11y).
 
 ```
 Erstelle drei Word-Dokumente im Ordner `Anhaenge/` (auf Repo-Ebene des
-gesamten Projekts, NICHT in radio25-app/):
+gesamten Projekts, NICHT in attune-app/):
 
 1. `Anhaenge/Anhang_B_SUS_DE.docx` — System Usability Scale, deutsche
    Version nach Lewis (2018) und der validierten ZHAW-Übersetzung
@@ -218,7 +218,7 @@ Leitfaden für das Abschlussinterview der Pilotstudie (Hauptdokument
 Outline 8.3).
 
 Struktur:
-1. Aufwärmen (5 Min): "Erzähl mir frei, wie war deine Woche mit Radio 25."
+1. Aufwärmen (5 Min): "Erzähl mir frei, wie war deine Woche mit Attune."
 2. Block T1 — Autonomie/Profil (3 Fragen, je mit 2 Nachfragen)
 3. Block T2 — Inhaltsdiversität/Kuratierung (3 Fragen)
 4. Block T3 — Sessiongestaltung/definiertes Ende (3 Fragen)
@@ -249,7 +249,7 @@ Vorgehen:
    ähnlich gemäss Hauptdokument_Gliederung.md).
 
 2. Füge dort eine Tabelle ein mit den Spalten:
-     | Wert (VSD) | Theorie-Anker | Designentscheidung in Radio 25 | Sichtbar in Code |
+     | Wert (VSD) | Theorie-Anker | Designentscheidung in Attune | Sichtbar in Code |
 
 3. Mindestens diese Zeilen:
      - Autonomie | Ryan & Deci 2000, METUX | explizite Profilangabe statt
@@ -305,8 +305,8 @@ Erstelle ein Datenflussdiagramm für `Hauptdokument.docx` Kap. 6.6.
    "Text + style"). Roter Hinweispfeil "kein Behaviour-Tracking" als
    Negativ-Annotation.
 
-4. Speichere SVG als `Anhaenge/diagramme/datenfluss_radio25.svg` UND
-   als PNG (300 dpi) `Anhaenge/diagramme/datenfluss_radio25.png`.
+4. Speichere SVG als `Anhaenge/diagramme/datenfluss_attune.svg` UND
+   als PNG (300 dpi) `Anhaenge/diagramme/datenfluss_attune.png`.
 
 5. Füge die PNG in Hauptdokument.docx Kap. 6.6 ein (als tracked change),
    plus drei Sätze Bildunterschrift, die das Diagramm an Kap. 3.3.2 + 3.3.5

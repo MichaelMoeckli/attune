@@ -1,8 +1,8 @@
-# Radio 25 — Techstack & Architektur
+# Attune — Techstack & Architektur
 
 ## Übersicht
 
-Techstack und Architektur für **Radio 25**, optimiert für maximale Einfachheit und Entwicklung mit **Claude Code**. Prinzip: so wenige Dependencies und Moving Parts wie möglich — alles in einem Next.js-Projekt, kein Redis, kein Docker, kein separater Server.
+Techstack und Architektur für **Attune**, optimiert für maximale Einfachheit und Entwicklung mit **Claude Code**. Prinzip: so wenige Dependencies und Moving Parts wie möglich — alles in einem Next.js-Projekt, kein Redis, kein Docker, kein separater Server.
 
 ---
 
@@ -144,7 +144,7 @@ Alle Services erkennen automatisch, ob ihr API-Key gesetzt ist. Fehlt ein Key (o
 Flache, einfache Struktur — alles in einem Next.js-Projekt.
 
 ```
-radio25-app/
+attune-app/
 ├── src/
 │   ├── app/
 │   │   ├── page.tsx                 # Hauptseite: Player + Einstellungen + Status (Client Component)
@@ -261,7 +261,7 @@ async function generateShow(config: ShowConfig): Promise<ShowResult> {
 
 Die LLM-Prompts sind als eigenes Modul ausgelagert, um sie einfach iterieren zu können:
 
-- **System-Prompt**: Definiert die Radio-25-Moderator-Persona (Schweizer Hochdeutsch, Ton, Format-Regeln)
+- **System-Prompt**: Definiert die Attune-Moderator-Persona (Schweizer Hochdeutsch, Ton, Format-Regeln)
 - **Segment-Prompts**: Pro Segmenttyp (greeting, news, weather, farewell) ein Template mit dynamischen Daten (Uhrzeit, Wetter, Nachrichten, Standort, Moderationsstil)
 
 ---
@@ -324,7 +324,7 @@ Jedes Segment hat eine `id` (UUID), einen `type`, optional `text` (LLM-generiert
 
 Kein Auth-System. Stattdessen ein simples UUID-basiertes Profil:
 
-- Beim ersten Besuch erstellt `PreferenceForm.tsx` eine UUID via `crypto.randomUUID()` und speichert sie im LocalStorage (`radio25-userId`).
+- Beim ersten Besuch erstellt `PreferenceForm.tsx` eine UUID via `crypto.randomUUID()` und speichert sie im LocalStorage (`attune-userId`).
 - Präferenzen (Themen, Ort, Moderationsstil) werden mit dieser UUID an `POST /api/preferences` gesendet und in `src/data/preferences.json` auf dem Server abgelegt.
 - Beim nächsten Besuch lädt `PreferenceForm.tsx` die gespeicherten Präferenzen via `GET /api/preferences?userId=xxx`.
 - Für die Usability-Studie reicht die UUID zur Zuordnung der Ergebnisse.
@@ -392,7 +392,7 @@ Die Musik-Segmente können optional über die **Spotify Web API** mit echten, vo
 ```mermaid
 sequenceDiagram
     participant User as Browser
-    participant App as Radio 25
+    participant App as Attune
     participant Auth as /api/spotify/*
     participant SDK as Spotify Web Playback SDK
     participant API as Spotify Web API

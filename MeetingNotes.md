@@ -1,4 +1,4 @@
-# Meetingprotokoll – Radio25
+# Meetingprotokoll – Attune
 
 ---
 
@@ -34,7 +34,7 @@ Diskussion
 
 ---
 - ftp zuganag zu informaniak
-- erggäzugn hintergurnd und storyline: fazit finden zu radio 25 und was man alle verbessern könnte
+- erggäzugn hintergurnd und storyline: fazit finden zu Attune und was man alle verbessern könnte
 - features hinzufügen basierend auf konzepte
 - experimient 3 personen für den moment -> verbesserung finden
 - nacher längeres experiment

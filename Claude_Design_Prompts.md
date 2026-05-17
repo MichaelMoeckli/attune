@@ -1,4 +1,4 @@
-# Claude Design — Starter-Prompts für Radio 25
+# Claude Design — Starter-Prompts für Attune
 
 Stand: 26. April 2026
 Drei Prompts in Reihenfolge: (1) Kontext-Briefing, (2) Designsystem, (3) Screen-Generierung pro Zustand. Du kannst alle drei nacheinander einfügen oder Prompt 1 + 2 zusammenfassen, falls Claude Design ein einzelnes grosses Brief erlaubt.
@@ -8,7 +8,7 @@ Drei Prompts in Reihenfolge: (1) Kontext-Briefing, (2) Designsystem, (3) Screen-
 ## PROMPT 1 — Kontext-Briefing (zuerst senden)
 
 ```
-Ich gestalte das UI für "Radio 25" — ein vollautomatisiertes,
+Ich gestalte das UI für "Attune" — ein vollautomatisiertes,
 KI-gestütztes Radio, das ich als BSc-Thesis-Artefakt an der ZHAW
 entwickle. Das Projekt ist eine Konzeptstudie für nutzerzentrierte
 Personalisierung im Kontext von Digital Wellbeing.
@@ -66,7 +66,7 @@ dem Designsystem und den Screens weitermachen.
 
 ```
 Wichtig: Bitte ignoriere bestehende Design-Hinweise aus dem
-hochgeladenen Code von radio25-app. Ich möchte ein frisches
+hochgeladenen Code von attune-app. Ich möchte ein frisches
 visuelles Design, das aus den Thesis-Prinzipien neu entsteht —
 nicht aus dem aktuellen Prototyp abgeleitet.
 
@@ -147,7 +147,7 @@ Wahlweise alle sieben auf einmal oder einzeln. Empfehlung: einzeln, beginnend mi
 ### Variante A: Alle Screens auf einmal
 
 ```
-Generiere bitte sieben Screens / Zustände für Radio 25 als
+Generiere bitte sieben Screens / Zustände für Attune als
 Mobile-Mockup im Designsystem, das du gerade vorgeschlagen hast.
 Jeder Screen ist eine eigene Ansicht derselben Single-Page-App.
 Verwende konsequent die drei semantischen Schichten:
@@ -156,7 +156,7 @@ BEGRÜNDUNG (Warum-Schicht).
 
 S1 — IDLE / PROFIL SICHTBAR
 Hauptzustand wenn keine Sendung läuft. Zeigt:
-- Header mit Titel "Radio 25"
+- Header mit Titel "Attune"
 - Profil-Panel mit Lese-Zeilen:
   Themen: Politik · Wirtschaft · Sport
   Standort: Zürich
@@ -220,7 +220,7 @@ S5 — SENDUNGSENDE
 - Zwei Knöpfe gleichwertig (sekundär, Outline):
   [Profil anpassen]
   [Neue Sendung jetzt]
-- Hinweistext in der BEGRÜNDUNGS-Schicht mit ⓘ: "Radio 25
+- Hinweistext in der BEGRÜNDUNGS-Schicht mit ⓘ: "Attune
   schlägt nichts automatisch vor. Eine Pause hier ist Teil des
   Konzepts."
 
@@ -297,7 +297,7 @@ Nachdem die ersten Mockups da sind, kannst du gezielt nachschärfen:
 **Falls zu generisch:**
 
 ```
-Die Mockups sind zu sehr "moderne App". Radio 25 soll die
+Die Mockups sind zu sehr "moderne App". Attune soll die
 Anmutung eines klassischen Radios mit transparentem Innenleben
 haben. Reduziere visuelle Spielereien, verstärke die
 Lesbarkeit der Quellen- und Begründungs-Blöcke. Inspiration:
@@ -319,9 +319,9 @@ Originalquelle" deutlicher.
 
 ```
 Ergänze auf S5 (Sendungsende) und S2 (Vorschau) je eine kleine
-"Was Radio 25 NICHT macht"-Note: kleine Liste in dezenter
+"Was Attune NICHT macht"-Note: kleine Liste in dezenter
 sekundärer Schriftfarbe, am Fuss der Karte:
-"Radio 25 hat keine Likes, keine Streaks, kein Autoplay.
+"Attune hat keine Likes, keine Streaks, kein Autoplay.
 Das ist Absicht."
 ```
 
@@ -333,7 +333,7 @@ Wenn die Mockups stehen, nutze Claude Designs eingebauten Code-Handoff:
 
 ```
 Bitte verpacke das Design als Handoff-Bundle für Claude Code.
-Ziel-Repository: radio25-app/ (Next.js 15, React 19, TypeScript,
+Ziel-Repository: attune-app/ (Next.js 15, React 19, TypeScript,
 Tailwind CSS 4). Bestehende Komponenten, die erweitert werden
 sollen statt neu erstellt: AudioPlayer.tsx, PreferenceForm.tsx,
 ShowStatus.tsx, page.tsx. Neue Komponenten: ProfilePanel.tsx,

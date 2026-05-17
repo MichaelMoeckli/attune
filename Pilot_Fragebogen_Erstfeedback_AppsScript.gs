@@ -1,5 +1,5 @@
 /**
- * Radio 25 — Erstfeedback Usability (Kurzversion)
+ * Attune — Erstfeedback Usability (Kurzversion)
  *
  * Erstellt automatisch ein Google Form mit 12 Pflicht-Items + 2 offenen Fragen
  * (Demographie-Mini + SUS-10 + 2 Freitext) für den ersten Usability-Test.
@@ -7,7 +7,7 @@
  * --- ANLEITUNG ---
  * 1. https://script.google.com öffnen, mit Google-Konto einloggen.
  * 2. "Neues Projekt" → diesen Inhalt in "Code.gs" einfügen (Beispielcode überschreiben).
- * 3. Funktion "createRadio25ErstfeedbackForm" wählen → "Ausführen" klicken.
+ * 3. Funktion "createAttuneErstfeedbackForm" wählen → "Ausführen" klicken.
  * 4. Beim ersten Lauf: Berechtigungen für Drive + Forms bestätigen.
  * 5. Im Ausführungsprotokoll erscheinen Edit-URL (zum Bearbeiten) und View-URL (zum Teilen).
  *
@@ -15,11 +15,11 @@
  * Formular, das alte bleibt erhalten.
  */
 
-function createRadio25ErstfeedbackForm() {
-  var form = FormApp.create('Radio 25 — Erstfeedback Usability');
+function createAttuneErstfeedbackForm() {
+  var form = FormApp.create('Attune — Erstfeedback Usability');
 
   form.setDescription(
-    'Vielen Dank, dass du Radio 25 ausprobiert hast!\n\n' +
+    'Vielen Dank, dass du Attune ausprobiert hast!\n\n' +
     'Dieser kurze Fragebogen dauert 3–4 Minuten und konzentriert sich auf die Bedienbarkeit ' +
     'und dein erstes Feedback. Antworten werden anonymisiert ausgewertet, lokal gespeichert ' +
     'und 6 Monate nach Thesis-Abgabe gelöscht.'
@@ -63,16 +63,16 @@ function createRadio25ErstfeedbackForm() {
                  '(1 = stimme gar nicht zu, 5 = stimme voll zu)');
 
   var susItems = [
-    'S1. Ich denke, dass ich Radio 25 gerne regelmässig nutzen würde.',
-    'S2. Ich fand Radio 25 unnötig komplex.',
-    'S3. Ich fand Radio 25 einfach zu nutzen.',
-    'S4. Ich glaube, ich würde die Hilfe einer technisch versierten Person benötigen, um Radio 25 nutzen zu können.',
-    'S5. Ich fand, die verschiedenen Funktionen in Radio 25 waren gut integriert.',
-    'S6. Ich denke, es gab zu viele Inkonsistenzen in Radio 25.',
-    'S7. Ich kann mir vorstellen, dass die meisten Menschen den Umgang mit Radio 25 sehr schnell lernen.',
-    'S8. Ich fand Radio 25 sehr umständlich zu nutzen.',
-    'S9. Ich fühlte mich bei der Nutzung von Radio 25 sehr sicher.',
-    'S10. Ich musste viele Dinge lernen, bevor ich mit Radio 25 arbeiten konnte.'
+    'S1. Ich denke, dass ich Attune gerne regelmässig nutzen würde.',
+    'S2. Ich fand Attune unnötig komplex.',
+    'S3. Ich fand Attune einfach zu nutzen.',
+    'S4. Ich glaube, ich würde die Hilfe einer technisch versierten Person benötigen, um Attune nutzen zu können.',
+    'S5. Ich fand, die verschiedenen Funktionen in Attune waren gut integriert.',
+    'S6. Ich denke, es gab zu viele Inkonsistenzen in Attune.',
+    'S7. Ich kann mir vorstellen, dass die meisten Menschen den Umgang mit Attune sehr schnell lernen.',
+    'S8. Ich fand Attune sehr umständlich zu nutzen.',
+    'S9. Ich fühlte mich bei der Nutzung von Attune sehr sicher.',
+    'S10. Ich musste viele Dinge lernen, bevor ich mit Attune arbeiten konnte.'
   ];
 
   susItems.forEach(function(t) {
@@ -91,7 +91,7 @@ function createRadio25ErstfeedbackForm() {
     .setHelpText('Zwei kurze offene Fragen — bei kleinen Stichproben das wertvollste Material.');
 
   form.addParagraphTextItem()
-    .setTitle('Was hat besonders gut funktioniert oder dir an Radio 25 gefallen?')
+    .setTitle('Was hat besonders gut funktioniert oder dir an Attune gefallen?')
     .setRequired(false);
 
   form.addParagraphTextItem()

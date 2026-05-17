@@ -93,7 +93,7 @@ export default function SpotifyPlayerComponent({
     if (!sdkReady) return;
 
     const player = new window.Spotify.Player({
-      name: 'Radio 25',
+      name: 'Attune',
       getOAuthToken: async (cb) => {
         const token = await getToken();
         if (token) cb(token);

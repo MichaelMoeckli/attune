@@ -1,4 +1,4 @@
-# Pilotstudie Radio 25 — Erstfeedback Usability (Kurzversion)
+# Pilotstudie Attune — Erstfeedback Usability (Kurzversion)
 
 **Version:** 2026-05-06 · Reduziert auf Erstfeedback-Bedarf
 **Studienformat:** Erste, kurze Testrunde — Fokus **Usability + qualitatives Erstfeedback**
@@ -35,16 +35,16 @@ Damit Antworten später ggf. einer zweiten Befragung zugeordnet werden können. 
 
 > Reihenfolge und Wortlaut der SUS-Items werden nicht verändert — sonst verliert der Score den Vergleichswert.
 
-S1. Ich denke, dass ich Radio 25 gerne regelmässig nutzen würde.
-S2. Ich fand Radio 25 unnötig komplex.
-S3. Ich fand Radio 25 einfach zu nutzen.
-S4. Ich glaube, ich würde die Hilfe einer technisch versierten Person benötigen, um Radio 25 nutzen zu können.
-S5. Ich fand, die verschiedenen Funktionen in Radio 25 waren gut integriert.
-S6. Ich denke, es gab zu viele Inkonsistenzen in Radio 25.
-S7. Ich kann mir vorstellen, dass die meisten Menschen den Umgang mit Radio 25 sehr schnell lernen.
-S8. Ich fand Radio 25 sehr umständlich zu nutzen.
-S9. Ich fühlte mich bei der Nutzung von Radio 25 sehr sicher.
-S10. Ich musste viele Dinge lernen, bevor ich mit Radio 25 arbeiten konnte.
+S1. Ich denke, dass ich Attune gerne regelmässig nutzen würde.
+S2. Ich fand Attune unnötig komplex.
+S3. Ich fand Attune einfach zu nutzen.
+S4. Ich glaube, ich würde die Hilfe einer technisch versierten Person benötigen, um Attune nutzen zu können.
+S5. Ich fand, die verschiedenen Funktionen in Attune waren gut integriert.
+S6. Ich denke, es gab zu viele Inkonsistenzen in Attune.
+S7. Ich kann mir vorstellen, dass die meisten Menschen den Umgang mit Attune sehr schnell lernen.
+S8. Ich fand Attune sehr umständlich zu nutzen.
+S9. Ich fühlte mich bei der Nutzung von Attune sehr sicher.
+S10. Ich musste viele Dinge lernen, bevor ich mit Attune arbeiten konnte.
 
 *Auswertung: ungerade Items mit (Antwort − 1), gerade mit (5 − Antwort), Summe × 2,5 → SUS-Score 0–100.*
 
@@ -52,7 +52,7 @@ S10. Ich musste viele Dinge lernen, bevor ich mit Radio 25 arbeiten konnte.
 
 ## Block 3 — Offenes Feedback (2 Items)
 
-**O1.** Was hat besonders gut funktioniert oder dir an Radio 25 gefallen? *(Freitext, optional)*
+**O1.** Was hat besonders gut funktioniert oder dir an Attune gefallen? *(Freitext, optional)*
 
 **O2.** Wo bist du steckengeblieben, was war verwirrend, oder was hat dir gefehlt? *(Freitext, optional)*
 

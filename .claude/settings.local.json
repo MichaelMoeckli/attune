@@ -23,9 +23,9 @@
       "Bash(git -C \"E:/Projects/Radio25\" rev-parse --abbrev-ref HEAD)",
       "Bash(git -C \"E:/Projects/Radio25\" rev-list --left-right --count origin/main...HEAD)",
       "Bash(git -C \"E:/Projects/Radio25\" diff --stat HEAD -- \":!_backup\" \":!.claude\")",
-      "Bash(git -C \"E:/Projects/Radio25\" add radio25-app/src radio25-app/next.config.ts radio25-app/.env.example)",
+      "Bash(git -C \"E:/Projects/Radio25\" add attune-app/src attune-app/next.config.ts attune-app/.env.example)",
       "Bash(git -C \"E:/Projects/Radio25\" diff --cached --stat)",
-      "Bash(git -C \"E:/Projects/Radio25\" add Hauptdokument.docx Implementation_Checklist.md Claude_Design_Prompts.md Radio25_Erhebungsinstrumente.docx Radio25_Evaluationskonzept.docx UX_Design_Proposal.md \"Radio 25 — Sieben Zustände \\(Print\\).pdf\")"
+      "Bash(git -C \"E:/Projects/Radio25\" add Hauptdokument.docx Implementation_Checklist.md Claude_Design_Prompts.md Attune_Erhebungsinstrumente.docx Attune_Evaluationskonzept.docx UX_Design_Proposal.md \"Radio 25 — Sieben Zustände \\(Print\\).pdf\")"
     ]
   }
 }

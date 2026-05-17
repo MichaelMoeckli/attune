@@ -1,4 +1,4 @@
-# Pilotstudie Radio 25 — Fragebogen Kurztest (Format A) / Wiederholt für Format B
+# Pilotstudie Attune — Fragebogen Kurztest (Format A) / Wiederholt für Format B
 
 **Version:** 2026-05-06 · Erste Fassung für Pilottest
 **Studienformat:** Format A (1-malige Nutzung) — identische Items werden nach Format B (1-Woche) erneut erhoben (vgl. Kap. 8.6.4 → Vergleich Erstkontakt vs. Gewohnheit).
@@ -54,16 +54,16 @@ Freitext, kurz.
 
 > **Wichtig:** Die SUS-Items werden in der hier angegebenen Reihenfolge und im Original-Wording (deutsche Standardübersetzung nach Brooke / Bangor) ausgespielt. Nicht umformulieren — sonst verliert der Score den Vergleichswert.
 
-S1. Ich denke, dass ich Radio 25 gerne regelmässig nutzen würde.
-S2. Ich fand Radio 25 unnötig komplex.
-S3. Ich fand Radio 25 einfach zu nutzen.
-S4. Ich glaube, ich würde die Hilfe einer technisch versierten Person benötigen, um Radio 25 nutzen zu können.
-S5. Ich fand, die verschiedenen Funktionen in Radio 25 waren gut integriert.
-S6. Ich denke, es gab zu viele Inkonsistenzen in Radio 25.
-S7. Ich kann mir vorstellen, dass die meisten Menschen den Umgang mit Radio 25 sehr schnell lernen.
-S8. Ich fand Radio 25 sehr umständlich zu nutzen.
-S9. Ich fühlte mich bei der Nutzung von Radio 25 sehr sicher.
-S10. Ich musste viele Dinge lernen, bevor ich mit Radio 25 arbeiten konnte.
+S1. Ich denke, dass ich Attune gerne regelmässig nutzen würde.
+S2. Ich fand Attune unnötig komplex.
+S3. Ich fand Attune einfach zu nutzen.
+S4. Ich glaube, ich würde die Hilfe einer technisch versierten Person benötigen, um Attune nutzen zu können.
+S5. Ich fand, die verschiedenen Funktionen in Attune waren gut integriert.
+S6. Ich denke, es gab zu viele Inkonsistenzen in Attune.
+S7. Ich kann mir vorstellen, dass die meisten Menschen den Umgang mit Attune sehr schnell lernen.
+S8. Ich fand Attune sehr umständlich zu nutzen.
+S9. Ich fühlte mich bei der Nutzung von Attune sehr sicher.
+S10. Ich musste viele Dinge lernen, bevor ich mit Attune arbeiten konnte.
 
 *Auswertung später: ungerade Items werden mit (Antwort − 1) gewertet, gerade Items mit (5 − Antwort), Summe × 2,5 → SUS-Score 0–100.*
 
@@ -74,14 +74,14 @@ S10. Ich musste viele Dinge lernen, bevor ich mit Radio 25 arbeiten konnte.
 **Anleitung:** „Wie hast du die Sendung erlebt? Bitte stimme zu oder nicht."
 **Antwortskala (für alle Items):** 1 = stimme gar nicht zu · 2 · 3 · 4 · 5 = stimme voll zu
 
-W1. **(SDT — Autonomie)** Ich konnte Radio 25 nach meinen eigenen Bedürfnissen einstellen.
-W2. **(SDT — Kompetenz)** Ich habe verstanden, warum Radio 25 mir genau diese Inhalte vorgeschlagen hat.
+W1. **(SDT — Autonomie)** Ich konnte Attune nach meinen eigenen Bedürfnissen einstellen.
+W2. **(SDT — Kompetenz)** Ich habe verstanden, warum Attune mir genau diese Inhalte vorgeschlagen hat.
 W3. **(Digital Wellbeing)** Nach dem Hören fühlte ich mich informiert, ohne überfordert zu sein.
 W4. **(Algorithmische Souveränität — Transparenz)** Mir war klar, woher die Inhalte stammen.
 W5. **(Algorithmische Souveränität — Steuerbarkeit)** Ich hatte das Gefühl, das System zu steuern — und nicht umgekehrt.
 
 > **Optionales 6. Wirkungs-Item, falls noch Luft im Fragebogen ist:**
-> W6. **(VSD — Werteorientierung)** Radio 25 entspricht meiner Vorstellung davon, wie Mediennutzung sein sollte.
+> W6. **(VSD — Werteorientierung)** Attune entspricht meiner Vorstellung davon, wie Mediennutzung sein sollte.
 
 ---
 
@@ -101,17 +101,17 @@ K2. Die Sendung war für mich **unterhaltsam**.
 
 **Antwortskala:** 1 = stimme gar nicht zu · … · 5 = stimme voll zu
 
-A1. **(Bubble-Bewusstsein)** Mir wurde durch Radio 25 bewusst, wie selektiv meine sonstige Mediennutzung ist.
-A2. **(Grenzen-Bewusstsein)** Ich konnte einschätzen, wo Radio 25 an seine Grenzen stösst (z. B. bei der Themenauswahl oder bei den generierten Texten).
+A1. **(Bubble-Bewusstsein)** Mir wurde durch Attune bewusst, wie selektiv meine sonstige Mediennutzung ist.
+A2. **(Grenzen-Bewusstsein)** Ich konnte einschätzen, wo Attune an seine Grenzen stösst (z. B. bei der Themenauswahl oder bei den generierten Texten).
 
 > **Optionales drittes Awareness-Item, falls Bias separat geprüft werden soll:**
-> A3. Ich habe wahrgenommen, dass auch Radio 25 bestimmte Themen oder Tonalitäten bevorzugt.
+> A3. Ich habe wahrgenommen, dass auch Attune bestimmte Themen oder Tonalitäten bevorzugt.
 
 ---
 
 ## Block 6 — Offene Fragen (2 Items)
 
-O1. **Wie würdest du Radio 25 jemandem in einem Satz beschreiben?** *(Freitext, ~1 Satz)*
+O1. **Wie würdest du Attune jemandem in einem Satz beschreiben?** *(Freitext, ~1 Satz)*
 
 O2. **Was hat dich gestört, was hat gefehlt, oder was würdest du zuerst weglassen?** *(Freitext, 2–3 Sätze)*
 
@@ -119,7 +119,7 @@ O2. **Was hat dich gestört, was hat gefehlt, oder was würdest du zuerst weglas
 
 ## Aufbau in Google Forms — konkrete Anleitung
 
-1. **Neues Formular** anlegen, Titel „Radio 25 — Pilotstudie Fragebogen". In die Beschreibung: kurzer Datenschutz-Hinweis (anonymisiert ausgewertet, Speicherung lokal, Löschung 6 Monate nach Thesis-Abgabe — vgl. Kap. 8.8).
+1. **Neues Formular** anlegen, Titel „Attune — Pilotstudie Fragebogen". In die Beschreibung: kurzer Datenschutz-Hinweis (anonymisiert ausgewertet, Speicherung lokal, Löschung 6 Monate nach Thesis-Abgabe — vgl. Kap. 8.8).
 2. **Sektionen anlegen** (in Forms: „Abschnitt hinzufügen" zwischen jedem Block). Sechs Abschnitte: Steuerungsfrage → Demographie → SUS → Wirkung → Kontrollvariablen → Awareness → Offene Fragen. Jede Sektion bekommt eine kurze Einleitung von 1–2 Sätzen.
 3. **Antwortformat festlegen:**
    - Steuerungsfrage Format A/B → *Multiple-Choice* (Pflicht).
@@ -137,7 +137,7 @@ O2. **Was hat dich gestört, was hat gefehlt, oder was würdest du zuerst weglas
 
 - **Identisches Formular** verwenden — Doppel-Teilnehmende füllen es einfach erneut aus (Steuerungsfrage „Format B" wählen, gleicher Teilnehmer-Code wie bei Format A → Auswertung kann paaren).
 - **Optional Zusatzblock B nur für 1-Wochen-Variante** (separater Sektionsabschnitt, der nur eingeblendet wird wenn „Format B" gewählt ist — Forms unterstützt das via „Zu Sektion springen je nach Antwort"):
-  1. „Wie oft hast du Radio 25 in der Testwoche gehört?" — Skala 0/1–2/3–5/täglich.
+  1. „Wie oft hast du Attune in der Testwoche gehört?" — Skala 0/1–2/3–5/täglich.
   2. „Hast du im Verlauf der Woche Einstellungen geändert?" — Ja/Nein + Freitext.
   3. „Hat sich dein Eindruck zwischen erster und letzter Sendung verändert?" — Freitext.
 

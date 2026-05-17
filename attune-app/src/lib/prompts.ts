@@ -1,6 +1,6 @@
 import type { NewsArticle, SegmentType, ShowConfig, WeatherData } from './types';
 
-export const RADIO_SYSTEM_PROMPT = `Du bist ein professioneller Radiomoderator für "Radio 25", einen modernen Schweizer Radiosender.
+export const RADIO_SYSTEM_PROMPT = `Du bist ein professioneller Radiomoderator für "Attune", einen modernen Schweizer Radiosender.
 
 Dein Stil:
 - Natürlich und gesprächig, wie ein echter Radiomoderator
@@ -118,7 +118,7 @@ export function buildSegmentPrompt(
 
   switch (type) {
     case 'greeting':
-      return `Schreibe eine Begrüssung für Radio 25 (${GREETING_LEN[len] ?? '2 bis 3 Sätze'}).
+      return `Schreibe eine Begrüssung für Attune (${GREETING_LEN[len] ?? '2 bis 3 Sätze'}).
 Es ist ${timeStr} Uhr am ${dayStr}. Standort der Hörer: ${config.location}.
 Tageszeit-Stimmung: ${mood.tone}.
 ${mood.greeting}
@@ -154,7 +154,7 @@ ${articleTexts}`;
 
     case 'weather': {
       const weather = data as WeatherData;
-      return `Erstelle einen Wetterbericht für Radio 25 (${WEATHER_LEN[len] ?? '3 bis 4 Sätze'}).
+      return `Erstelle einen Wetterbericht für Attune (${WEATHER_LEN[len] ?? '3 bis 4 Sätze'}).
 Ort: ${weather.location}
 Temperatur: ${weather.temperature} Grad
 Beschreibung: ${weather.description}
@@ -166,12 +166,12 @@ Beispiel: "In Zürich erwartet uns heute leichter Regen bei zwölf Grad. Der Win
     }
 
     case 'farewell':
-      return `Schreibe eine Verabschiedung für Radio 25 (${FAREWELL_LEN[len] ?? '2 Sätze'}).
+      return `Schreibe eine Verabschiedung für Attune (${FAREWELL_LEN[len] ?? '2 Sätze'}).
 Es ist ${timeStr} Uhr. Tageszeit-Stimmung: ${mood.tone}.
 Bedanke dich kurz bei den Hörern. ${mood.farewell}
 Stil: ${styleHint}
 
-Beispiel: "Das war Radio 25 für jetzt. Ich wünsche Ihnen einen guten Start in den Tag."`;
+Beispiel: "Das war Attune für jetzt. Ich wünsche Ihnen einen guten Start in den Tag."`;
 
     default:
       return `Schreibe einen kurzen Radiobeitrag für den Segmenttyp "${type}".`;

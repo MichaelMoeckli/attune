@@ -4,7 +4,7 @@ Institut für Wirtschaftsinformatik
 
 **BSc-Thesis**
 
-**Radio 25: Nutzerzentrierte Personalisierung**
+**Attune: Nutzerzentrierte Personalisierung**
 
 **im vollautomatisierten Radio**
 
@@ -537,14 +537,14 @@ Gegenmodell zur Seite stellt, steht aus. Genau diese Lücke adressiert
 die vorliegende Arbeit; die Forschungsfrage sowie der Lösungsvorschlag
 werden in den nachfolgenden Kapiteln entwickelt.
 
-**3 Radio 25 als Forschungsartefakt**
+**3 Attune als Forschungsartefakt**
 
 Aus der in Kapitel 2 dargestellten Forschungslücke leitet sich die
 Notwendigkeit eines konkreten, lauffähigen Demonstrationsmediums ab, an
 dem die diskutierten Prinzipien der nutzerzentrierten Personalisierung
 sicht- und untersuchbar werden. Die vorliegende Arbeit setzt diesen
 Lösungsvorschlag in Form eines vollautomatisierten, KI-gestützten Radios
-um, im Folgenden als Radio 25 bezeichnet. Dieses Kapitel begründet die
+um, im Folgenden als Attune bezeichnet. Dieses Kapitel begründet die
 Wahl des Mediums, beschreibt den geplanten Untersuchungsgegenstand und
 ordnet die zu untersuchenden Mechanismen den in Kapitel 2 entwickelten
 Beurteilungsgrundlagen zu.
@@ -637,9 +637,9 @@ Drittanbieters und kann dennoch Personalisierung, Inhaltsdiversität,
 Transparenz und Zeitgestaltung in einem konsistenten Erlebnis
 kombinieren.
 
-**3.3 Was an Radio 25 konkret umgesetzt wird**
+**3.3 Was an Attune konkret umgesetzt wird**
 
-Radio 25 ist als prototypischer Demonstrator konzipiert, der die in
+Attune ist als prototypischer Demonstrator konzipiert, der die in
 Kapitel 2 beschriebenen Mechanismen exemplarisch in einer
 wellbeing-orientierten Variante zeigt. Die folgenden Bausteine werden
 umgesetzt.
@@ -649,7 +649,7 @@ umgesetzt.
 Die Hörerinnen und Hörer geben ihre Interessen, ihren Standort und einen
 Moderationsstil aktiv und nachvollziehbar an. Anders als bei
 Plattformen, die Profile primär aus implizitem Verhalten lernen, bleibt
-das Profil bei Radio 25 transparent, einsehbar und jederzeit
+das Profil bei Attune transparent, einsehbar und jederzeit
 veränderbar. Damit wird die Anforderung an algorithmische Souveränität
 (Reviglio & Agosti, 2020) konkret operationalisierbar, ohne die
 Nutzenden mit einem aufwendigen Konfigurationsritual zu überfordern.
@@ -735,7 +735,7 @@ wellbeing-orientierten Modell systematisch umakzentuiert.
 
 **3.5 Abgrenzung des Untersuchungsumfangs**
 
-Radio 25 versteht sich als Konzeptstudie, nicht als marktreifes Produkt.
+Attune versteht sich als Konzeptstudie, nicht als marktreifes Produkt.
 Die Pipeline wird soweit umgesetzt, wie es für eine konsistente
 Hörerfahrung und eine aussagekräftige Nutzerstudie mit einer kleinen
 Probandengruppe erforderlich ist. Aspekte, die für eine Skalierung
@@ -785,7 +785,7 @@ konkretes, lauffähiges Artefakt beantwortet, an dem sich die genannten
 Mechanismen sichtbar und beobachtbar machen lassen.
 
 Die Beantwortung erfolgt durch die Entwicklung und Evaluation eines
-vollautomatisierten, KI-gestützten Radios (Radio 25), an dem sich die
+vollautomatisierten, KI-gestützten Radios (Attune), an dem sich die
 Wirkung expliziter Präferenzangabe, transparenter Personalisierungslogik
 und definierter Sessiongestaltung in einem einwöchigen Pilottest mit
 Nutzenden empirisch beobachten lässt. Das methodische Vorgehen wird in
@@ -900,7 +900,7 @@ Vorlage, an der sich grössere Folgestudien orientieren können.
 
 Auf gesellschaftlicher Ebene zeigt die Arbeit, dass Personalisierung
 kein per se schädliches Konzept ist, sondern dass die Wirkung an der
-zugrundeliegenden Zielfunktion hängt. Indem Radio 25 als
+zugrundeliegenden Zielfunktion hängt. Indem Attune als
 funktionierendes Gegenbeispiel zu engagement-getriebenen Plattformen
 verfügbar wird, wird die Diskussion um ethische Medientechnologie auf
 eine konkrete Erfahrungsebene gehoben. Die zugrundeliegenden
@@ -912,7 +912,7 @@ Wellbeing-supportive Design (Peters et al., 2020) dienen.
 
 **4.5 Abgrenzung**
 
-Radio 25 versteht sich, wie in Abschnitt 3.5 bereits eingeführt, als
+Attune versteht sich, wie in Abschnitt 3.5 bereits eingeführt, als
 Konzeptstudie. Die Arbeit fokussiert auf die nutzerzentrierte
 Personalisierung und das daraus erwachsende Wohlbefinden; einige
 verwandte Themenfelder werden bewusst ausgeklammert, um den
@@ -1025,7 +1025,7 @@ Park und Ram (2004) für die Wirtschaftsinformatik etabliert und von
 Peffers, Tuunanen, Rothenberger und Chatterjee (2007) zu einer
 prozeduralen Forschungsmethodologie ausgearbeitet wurde. Im Zentrum
 dieses Ansatzes steht die Entwicklung eines neuartigen, zweckgebundenen
-Artefakts (hier: Radio 25), das ein praktisches Problem
+Artefakts (hier: Attune), das ein praktisches Problem
 (engagement-getriebene, wellbeing-untergrabende Personalisierung)
 adressiert und gleichzeitig einen wissenschaftlichen Erkenntnisbeitrag
 leistet. Design Science ist dafür besonders geeignet, weil es die im
@@ -1201,7 +1201,7 @@ beantwortet werden kann, ohne den Rahmen einer BSc-Thesis zu
 date="2026-05-06T12:00:00Z"}[]{.paragraph-insertion author="Claude"
 date="2026-05-06T12:00:00Z"}
 
-[Das vorliegende Kapitel beantwortet die Frage, ob Radio 25 als
+[Das vorliegende Kapitel beantwortet die Frage, ob Attune als
 Forschungsartefakt funktioniert, akzeptiert wird und die im
 theoretischen Rahmen (Kap. 2) hergeleiteten Wirkungen tatsächlich
 entfaltet. Auf Empfehlung des Dozenten folgt die Validierung einer
@@ -1300,7 +1300,7 @@ date="2026-05-06T12:00:00Z"}
 date="2026-05-06T12:00:00Z"}[]{.paragraph-insertion author="Claude"
 date="2026-05-06T12:00:00Z"}
 
-[Da für Radio 25 als wellbeing-orientiertes Medienartefakt kein
+[Da für Attune als wellbeing-orientiertes Medienartefakt kein
 etabliertes Akzeptanz-Instrument existiert, wird das Erhebungsinstrument
 selbst konstruiert und an etablierten Modellen ausgerichtet. Diese
 Eigenkonstruktion ist methodisch begründet: Standardinstrumente prüfen
@@ -1331,7 +1331,7 @@ date="2026-05-06T12:00:00Z"}
 
 [Die spezifischen Items werden mit LLM-Unterstützung (GPT bzw. Claude)
 auf Basis der konkreten Einstellungsmöglichkeiten der
-Radio-25-Webapplikation formuliert. Pro Einstellungsmöglichkeit --
+Attune-Webapplikation formuliert. Pro Einstellungsmöglichkeit --
 beispielsweise Sendungslänge, Themenpräferenzen, Stimmenwahl,
 Diversifikationsgrad oder Transparenzanzeige -- wird ein dreigeteiltes
 Item-Set erhoben: erstens die Frage, was an dieser Einstellung gefällt;
@@ -1385,7 +1385,7 @@ author="Claude" date="2026-05-06T12:00:00Z"}[]{.paragraph-insertion
 author="Claude" date="2026-05-06T12:00:00Z"}
 
 [Pro theoretisches Konstrukt aus Kap. 2.3 werden Items formuliert, die
-das jeweilige Konstrukt im Kontext einer Radio-25-Nutzung
+das jeweilige Konstrukt im Kontext einer Attune-Nutzung
 operationalisieren. Aus der Self-Determination Theory und dem
 METUX-Modell (Abschnitt 2.3.1) werden Items zu Autonomieerleben,
 Kompetenzerleben und Verbundenheit abgeleitet. Aus Value-Sensitive
@@ -1406,7 +1406,7 @@ date="2026-05-06T12:00:00Z"}
 author="Claude" date="2026-05-06T12:00:00Z"}[]{.paragraph-insertion
 author="Claude" date="2026-05-06T12:00:00Z"}
 
-[Da Radio 25 ein Medienartefakt ist, werden zwei klassische
+[Da Attune ein Medienartefakt ist, werden zwei klassische
 Gebrauchszwecke explizit abgefragt: Wie informativ wurde die Sendung
 erlebt, und wie unterhaltsam wurde sie erlebt? Diese Items dienen als
 Kontrollvariablen -- ein wellbeing-orientiertes Radio darf nicht auf
@@ -1467,7 +1467,7 @@ date="2026-05-06T12:00:00Z"}[]{.paragraph-insertion author="Claude"
 date="2026-05-06T12:00:00Z"}
 
 [Offene Freitextfragen zum Gesamteindruck schliessen den allgemeinen
-Fragebogen ab: Wie würden Sie Radio 25 jemandem in einem Satz
+Fragebogen ab: Wie würden Sie Attune jemandem in einem Satz
 beschreiben? Was fehlt Ihnen am meisten? Was würden Sie zuerst
 weglassen?]{.insertion author="Claude"
 date="2026-05-06T12:00:00Z"}[]{.paragraph-insertion author="Claude"
@@ -1517,7 +1517,7 @@ date="2026-05-06T12:00:00Z"}
 
 [Ablauf: Onboarding wie in Format A, dann eigenständige Nutzung über
 eine Woche bzw. mindestens ein Wochenende. Die Testpersonen entscheiden
-selbst, wann und wie oft sie Radio 25 hören. Optional führen sie ein
+selbst, wann und wie oft sie Attune hören. Optional führen sie ein
 kurzes Tagebuch (frei formuliert oder mit Vorlage, siehe Anhang A).
 Logdaten dokumentieren Nutzungshäufigkeit und Einstellungsänderungen.
 Den Abschluss bildet eine ausführlichere Befragung mit Fragebogen und
@@ -1668,7 +1668,7 @@ author="Claude" date="2026-05-06T12:00:00Z"}
 
 [\[Stub.\] Inwiefern lassen sich die Befunde auf Streaming,
 Podcast-Empfehlungen oder News-Aggregatoren übertragen? Welche
-Eigenschaften von Radio 25 sind generisch (definierte Sessionlänge,
+Eigenschaften von Attune sind generisch (definierte Sessionlänge,
 explizite Präferenzangabe, Transparenzanzeige), welche formatspezifisch
 (auditive Modalität, eingebettete Musikauswahl)?]{.insertion
 author="Claude" date="2026-05-06T12:00:00Z"}[]{.paragraph-insertion

@@ -1,5 +1,5 @@
 /**
- * Radio 25 — Pilotstudie Fragebogen
+ * Attune — Pilotstudie Fragebogen
  *
  * Erstellt automatisch ein Google Form mit allen 25 Items des Pilot-Fragebogens
  * (Demographie + SUS + Wirkung + Kontrollvariablen + Awareness + Offene Fragen),
@@ -9,7 +9,7 @@
  * 1. https://script.google.com öffnen, mit Google-Konto einloggen.
  * 2. "Neues Projekt" → den gesamten Inhalt dieser Datei in die Datei "Code.gs" einfügen
  *    (vorhandenen Beispielcode überschreiben).
- * 3. Oben das Funktionsdropdown auf "createRadio25PilotForm" stellen → "Ausführen" klicken.
+ * 3. Oben das Funktionsdropdown auf "createAttunePilotForm" stellen → "Ausführen" klicken.
  * 4. Beim ersten Lauf wird Google nach Berechtigungen fragen ("Drive + Forms erstellen") — bestätigen.
  * 5. Nach ~5 Sekunden zeigt das Ausführungsprotokoll zwei Links:
  *      - EDIT_URL  → Formular weiter bearbeiten
@@ -22,11 +22,11 @@
  * Formular (das alte bleibt unverändert in deinem Drive). So kannst du iterieren ohne Datenverlust.
  */
 
-function createRadio25PilotForm() {
-  var form = FormApp.create('Radio 25 — Pilotstudie Fragebogen');
+function createAttunePilotForm() {
+  var form = FormApp.create('Attune — Pilotstudie Fragebogen');
 
   form.setDescription(
-    'Vielen Dank, dass du Radio 25 testest!\n\n' +
+    'Vielen Dank, dass du Attune testest!\n\n' +
     'Der Fragebogen dauert 5–7 Minuten. Deine Antworten werden anonymisiert ausgewertet, ' +
     'lokal gespeichert und 6 Monate nach Thesis-Abgabe gelöscht.\n\n' +
     'Ganz am Ende fragen wir, ob du gerade Format A (direkt nach der ersten Sendung) oder ' +
@@ -93,16 +93,16 @@ function createRadio25PilotForm() {
                  '(1 = stimme gar nicht zu, 5 = stimme voll zu)');
 
   var susItems = [
-    'S1. Ich denke, dass ich Radio 25 gerne regelmässig nutzen würde.',
-    'S2. Ich fand Radio 25 unnötig komplex.',
-    'S3. Ich fand Radio 25 einfach zu nutzen.',
-    'S4. Ich glaube, ich würde die Hilfe einer technisch versierten Person benötigen, um Radio 25 nutzen zu können.',
-    'S5. Ich fand, die verschiedenen Funktionen in Radio 25 waren gut integriert.',
-    'S6. Ich denke, es gab zu viele Inkonsistenzen in Radio 25.',
-    'S7. Ich kann mir vorstellen, dass die meisten Menschen den Umgang mit Radio 25 sehr schnell lernen.',
-    'S8. Ich fand Radio 25 sehr umständlich zu nutzen.',
-    'S9. Ich fühlte mich bei der Nutzung von Radio 25 sehr sicher.',
-    'S10. Ich musste viele Dinge lernen, bevor ich mit Radio 25 arbeiten konnte.'
+    'S1. Ich denke, dass ich Attune gerne regelmässig nutzen würde.',
+    'S2. Ich fand Attune unnötig komplex.',
+    'S3. Ich fand Attune einfach zu nutzen.',
+    'S4. Ich glaube, ich würde die Hilfe einer technisch versierten Person benötigen, um Attune nutzen zu können.',
+    'S5. Ich fand, die verschiedenen Funktionen in Attune waren gut integriert.',
+    'S6. Ich denke, es gab zu viele Inkonsistenzen in Attune.',
+    'S7. Ich kann mir vorstellen, dass die meisten Menschen den Umgang mit Attune sehr schnell lernen.',
+    'S8. Ich fand Attune sehr umständlich zu nutzen.',
+    'S9. Ich fühlte mich bei der Nutzung von Attune sehr sicher.',
+    'S10. Ich musste viele Dinge lernen, bevor ich mit Attune arbeiten konnte.'
   ];
 
   susItems.forEach(function(t) {
@@ -121,8 +121,8 @@ function createRadio25PilotForm() {
     .setHelpText('Wieder dieselbe Skala: 1 = stimme gar nicht zu, 5 = stimme voll zu.');
 
   var wirkItems = [
-    'W1. Ich konnte Radio 25 nach meinen eigenen Bedürfnissen einstellen.',
-    'W2. Ich habe verstanden, warum Radio 25 mir genau diese Inhalte vorgeschlagen hat.',
+    'W1. Ich konnte Attune nach meinen eigenen Bedürfnissen einstellen.',
+    'W2. Ich habe verstanden, warum Attune mir genau diese Inhalte vorgeschlagen hat.',
     'W3. Nach dem Hören fühlte ich mich informiert, ohne überfordert zu sein.',
     'W4. Mir war klar, woher die Inhalte stammen.',
     'W5. Ich hatte das Gefühl, das System zu steuern — und nicht umgekehrt.'
@@ -156,13 +156,13 @@ function createRadio25PilotForm() {
     .setRequired(true);
 
   form.addScaleItem()
-    .setTitle('A1. Mir wurde durch Radio 25 bewusst, wie selektiv meine sonstige Mediennutzung ist.')
+    .setTitle('A1. Mir wurde durch Attune bewusst, wie selektiv meine sonstige Mediennutzung ist.')
     .setBounds(1, 5)
     .setLabels('stimme gar nicht zu', 'stimme voll zu')
     .setRequired(true);
 
   form.addScaleItem()
-    .setTitle('A2. Ich konnte einschätzen, wo Radio 25 an seine Grenzen stösst (z. B. bei der Themenauswahl oder bei den generierten Texten).')
+    .setTitle('A2. Ich konnte einschätzen, wo Attune an seine Grenzen stösst (z. B. bei der Themenauswahl oder bei den generierten Texten).')
     .setBounds(1, 5)
     .setLabels('stimme gar nicht zu', 'stimme voll zu')
     .setRequired(true);
@@ -175,7 +175,7 @@ function createRadio25PilotForm() {
     .setHelpText('Zwei kurze Freitext-Fragen, danach nur noch die Frage zum Studienformat.');
 
   form.addParagraphTextItem()
-    .setTitle('O1. Wie würdest du Radio 25 jemandem in einem Satz beschreiben?')
+    .setTitle('O1. Wie würdest du Attune jemandem in einem Satz beschreiben?')
     .setRequired(false);
 
   form.addParagraphTextItem()
@@ -193,7 +193,7 @@ function createRadio25PilotForm() {
     .setHelpText('Drei kurze Fragen, die nur Format-B-Teilnehmende ausfüllen.');
 
   var b1 = form.addMultipleChoiceItem();
-  b1.setTitle('B1. Wie oft hast du Radio 25 in der Testwoche gehört?')
+  b1.setTitle('B1. Wie oft hast du Attune in der Testwoche gehört?')
     .setChoices([
       b1.createChoice('0 mal'),
       b1.createChoice('1–2 mal'),

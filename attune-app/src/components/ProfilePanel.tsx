@@ -43,7 +43,7 @@ export default function ProfilePanel({ config, onEdit }: ProfilePanelProps) {
         <span style={{
           fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 16,
           letterSpacing: '0.18em', color: 'var(--ink)',
-        }}>RADIO 25</span>
+        }}>ATTUNE</span>
         <span style={{
           fontFamily: 'var(--font-mono)', fontSize: 9.5, letterSpacing: '0.22em',
           color: 'var(--ink-3)', textTransform: 'uppercase', marginLeft: 'auto',
