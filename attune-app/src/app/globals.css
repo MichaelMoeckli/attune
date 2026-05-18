@@ -225,3 +225,20 @@ a:hover { text-decoration-thickness: 2px; }
 }
 
 .hairline { border-top: 1px solid var(--rule); }
+
+/* ============================================================
+   Motion — Pipeline-Indikatoren
+   ============================================================ */
+@keyframes attune-pulse {
+  0%, 100% { transform: scale(0.7); opacity: 0.55; }
+  50%      { transform: scale(1);   opacity: 1; }
+}
+
+.attune-pulse {
+  animation: attune-pulse 1.4s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .attune-pulse { animation: none; opacity: 1; transform: none; }
+}
