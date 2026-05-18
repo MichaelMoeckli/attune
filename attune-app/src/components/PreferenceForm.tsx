@@ -155,6 +155,9 @@ export default function PreferenceForm({ onSubmit, isGenerating, defaultConfig }
         const tooMany = k > guidance.ok[1];
         const indicatorColor = tooMany ? 'var(--warn)' : 'var(--ink-3)';
         const dropped = tooMany ? k - guidance.slots : 0;
+        const displayMin = includeMusic
+          ? targetLengthMin
+          : SPOKEN_MIN_BY_LENGTH[targetLengthMin];
         return (
           <div>
             <div style={{
@@ -174,7 +177,7 @@ export default function PreferenceForm({ onSubmit, isGenerating, defaultConfig }
                 fontFamily: 'var(--font-mono)', fontSize: 10,
                 color: indicatorColor, letterSpacing: '0.04em',
               }}>
-                {k} / {guidance.ideal[0]}–{guidance.ideal[1]} empfohlen für {targetLengthMin} Min
+                {k} / {guidance.ideal[0]}–{guidance.ideal[1]} empfohlen für {displayMin} Min
               </span>
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
@@ -197,7 +200,7 @@ export default function PreferenceForm({ onSubmit, isGenerating, defaultConfig }
               {tooMany && (
                 <>
                   {' '}<span style={{ color: 'var(--warn)' }}>
-                    Bei {targetLengthMin} Min ist nur Platz für {guidance.slots} Meldungen —
+                    Bei {displayMin} Min ist nur Platz für {guidance.slots} Meldungen —
                     {dropped === 1 ? ' ein Thema wird ' : ` ${dropped} Themen werden `}
                     nicht erscheinen.
                   </span>
@@ -263,23 +266,27 @@ export default function PreferenceForm({ onSubmit, isGenerating, defaultConfig }
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
           <label style={{ ...monoLabel, marginBottom: 0 }}>Sendelänge</label>
           <HelpButton label="Sendelänge">
-            Wie lange soll die Sendung dauern? Gemeint ist die <em>gesprochene</em>
-            Zeit — mit Musik kommt pro Song rund 3&nbsp;Min&nbsp;dazu. Für die Studie
-            empfehle ich «10&nbsp;Min» (Standard); bitte plane diese Zeit am Stück
-            ein und hör die Sendung in Ruhe zu Ende.
+            Wie lange soll die Sendung dauern? Die Zahl zeigt die <em>Gesamtlänge
+            mit Musik</em>; ohne Musik wechselt sie auf die reine Sprechzeit
+            (rund 2&nbsp;/&nbsp;3&nbsp;/&nbsp;6&nbsp;Min). Für die Studie empfehle
+            ich «10&nbsp;Min» (Standard); bitte plane diese Zeit am Stück ein
+            und hör die Sendung in Ruhe zu Ende.
           </HelpButton>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
-          {LENGTH_OPTIONS.map(o => (
-            <button key={o.id} onClick={() => setTargetLengthMin(o.id)} style={{
-              ...chip(targetLengthMin === o.id),
-              padding: '10px 8px', textAlign: 'center',
-              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
-            }}>
-              <span style={{ fontSize: 13 }}>{o.label}</span>
-              <span style={{ fontSize: 11, opacity: 0.7 }}>{o.description}</span>
-            </button>
-          ))}
+          {LENGTH_OPTIONS.map(o => {
+            const min = includeMusic ? o.id : SPOKEN_MIN_BY_LENGTH[o.id];
+            return (
+              <button key={o.id} onClick={() => setTargetLengthMin(o.id)} style={{
+                ...chip(targetLengthMin === o.id),
+                padding: '10px 8px', textAlign: 'center',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
+              }}>
+                <span style={{ fontSize: 13 }}>{min} Min</span>
+                <span style={{ fontSize: 11, opacity: 0.7 }}>{o.description}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
 

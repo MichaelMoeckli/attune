@@ -20,7 +20,11 @@ export default function ProfilePanel({ config, onEdit }: ProfilePanelProps) {
 
   const includeMusic = config.includeMusic !== false;
   const tracksByLength: Record<number, number> = { 5: 1, 10: 2, 15: 3 };
+  const spokenMinByLength: Record<number, number> = { 5: 2, 10: 3, 15: 6 };
   const tracks = tracksByLength[config.targetLengthMin] ?? 2;
+  const displayMin = includeMusic
+    ? config.targetLengthMin
+    : (spokenMinByLength[config.targetLengthMin] ?? config.targetLengthMin);
   const musicLabel = includeMusic
     ? `Mit Musik · ${tracks} Song${tracks === 1 ? '' : 's'}`
     : 'Ohne Musik';
@@ -29,7 +33,7 @@ export default function ProfilePanel({ config, onEdit }: ProfilePanelProps) {
     ['Themen', topicsLabel],
     ['Standort', config.location || '—'],
     ['Stil', VOICE_LABELS[config.voiceStyle] ?? config.voiceStyle],
-    ['Länge', `${config.targetLengthMin} Minuten`],
+    ['Länge', `${displayMin} Minuten`],
     ['Musik', musicLabel],
   ];
 
