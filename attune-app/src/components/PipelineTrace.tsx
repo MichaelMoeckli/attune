@@ -166,7 +166,7 @@ function StepIcon({ status }: { status: StepStatus }) {
         display: 'inline-block', width: 10, height: 10,
         border: '1.5px solid var(--brass)', borderRadius: 5, position: 'relative',
       }}>
-        <span style={{
+        <span className="attune-pulse" style={{
           position: 'absolute', inset: 2,
           background: 'var(--brass)', borderRadius: 3,
         }}/>
