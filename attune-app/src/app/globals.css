@@ -230,12 +230,12 @@ a:hover { text-decoration-thickness: 2px; }
    Motion — Pipeline-Indikatoren
    ============================================================ */
 @keyframes attune-pulse {
-  0%, 100% { transform: scale(0.7); opacity: 0.55; }
+  0%, 100% { transform: scale(0.4); opacity: 0.3; }
   50%      { transform: scale(1);   opacity: 1; }
 }
 
 .attune-pulse {
-  animation: attune-pulse 1.4s ease-in-out infinite;
+  animation: attune-pulse 1.2s ease-in-out infinite;
   transform-origin: center;
 }
 
