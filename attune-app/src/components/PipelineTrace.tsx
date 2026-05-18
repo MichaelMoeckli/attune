@@ -127,7 +127,7 @@ function StepRow({
       display: 'flex', alignItems: 'flex-start', gap: 12, padding: '12px 0',
       borderTop: '1px solid var(--rule)',
     }}>
-      <span style={{ width: 14, display: 'flex', justifyContent: 'center', marginTop: 3 }}>
+      <span style={{ width: 16, display: 'flex', justifyContent: 'center', marginTop: 2 }}>
         <StepIcon status={status} />
       </span>
       <div style={{ flex: 1 }}>
@@ -163,20 +163,20 @@ function StepIcon({ status }: { status: StepStatus }) {
   if (status === 'run') {
     return (
       <span style={{
-        display: 'inline-block', width: 10, height: 10,
-        border: '1.5px solid var(--brass)', borderRadius: 5, position: 'relative',
+        display: 'inline-block', width: 14, height: 14,
+        border: '1.5px solid var(--brass)', borderRadius: 7, position: 'relative',
       }}>
         <span className="attune-pulse" style={{
           position: 'absolute', inset: 2,
-          background: 'var(--brass)', borderRadius: 3,
+          background: 'var(--brass)', borderRadius: 4,
         }}/>
       </span>
     );
   }
   return (
     <span style={{
-      display: 'inline-block', width: 10, height: 10,
-      border: '1.5px solid var(--ink-4)', borderRadius: 5,
+      display: 'inline-block', width: 14, height: 14,
+      border: '1.5px solid var(--ink-4)', borderRadius: 7,
     }}/>
   );
 }
