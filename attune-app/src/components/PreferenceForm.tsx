@@ -16,7 +16,7 @@ const TOPIC_OPTIONS = [
   { id: 'technologie',   label: 'Technologie' },
   { id: 'kultur',        label: 'Kultur' },
   { id: 'wissenschaft',  label: 'Wissenschaft' },
-  { id: 'panorama',      label: 'Panorama' },
+  { id: 'gesellschaft',  label: 'Gesellschaft' },
   { id: 'zuerich',       label: 'Zürich' },
 ];
 
