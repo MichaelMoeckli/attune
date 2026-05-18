@@ -31,20 +31,35 @@ const MOCK_ARTICLES: NewsArticle[] = [
 ];
 
 const RSS_FEEDS: Record<string, string[]> = {
-  default:       ['https://www.srf.ch/news/bnf/rss/19032223', 'https://www.nzz.ch/recent.rss'],
+  default:       ['https://www.srf.ch/news/bnf/rss/19032223', 'https://www.nzz.ch/recent.rss',
+                  'https://partner-feeds.publishing.tamedia.ch/rss/tagesanzeiger/front'],
   politik:       ['https://www.srf.ch/news/bnf/rss/1890',     'https://www.nzz.ch/schweiz.rss',
-                  'https://www.srf.ch/news/bnf/rss/1922',     'https://www.nzz.ch/international.rss'],
-  schweiz:       ['https://www.srf.ch/news/bnf/rss/1890',     'https://www.nzz.ch/schweiz.rss'],
-  international: ['https://www.srf.ch/news/bnf/rss/1922',     'https://www.nzz.ch/international.rss'],
-  wirtschaft:    ['https://www.srf.ch/news/bnf/rss/1926',     'https://www.nzz.ch/wirtschaft.rss'],
-  finanzen:      ['https://www.srf.ch/news/bnf/rss/1926',     'https://www.nzz.ch/finanzen.rss'],
-  sport:         ['https://www.srf.ch/sport/bnf/rss/718',     'https://www.nzz.ch/sport.rss'],
-  kultur:        ['https://www.srf.ch/kultur/bnf/rss/454',    'https://www.nzz.ch/kultur.rss'],
-  wissenschaft:  ['https://www.srf.ch/bnf/rss/630',           'https://www.nzz.ch/wissenschaft.rss'],
-  technologie:   ['https://www.srf.ch/bnf/rss/19920122',      'https://www.nzz.ch/technologie.rss'],
-  panorama:      ['https://www.srf.ch/bnf/rss/19920107',      'https://www.nzz.ch/panorama.rss'],
-  // SRF bietet keinen Zürich-spezifischen RSS-Feed; Schweiz-Feed ist die nächstbeste Annäherung.
-  zuerich:       ['https://www.srf.ch/news/bnf/rss/1890',     'https://www.nzz.ch/zuerich.rss'],
+                  'https://www.srf.ch/news/bnf/rss/1922',     'https://www.nzz.ch/international.rss',
+                  'https://partner-feeds.publishing.tamedia.ch/rss/tagesanzeiger/schweiz',
+                  'https://partner-feeds.publishing.tamedia.ch/rss/tagesanzeiger/ausland'],
+  schweiz:       ['https://www.srf.ch/news/bnf/rss/1890',     'https://www.nzz.ch/schweiz.rss',
+                  'https://partner-feeds.publishing.tamedia.ch/rss/tagesanzeiger/schweiz'],
+  international: ['https://www.srf.ch/news/bnf/rss/1922',     'https://www.nzz.ch/international.rss',
+                  'https://partner-feeds.publishing.tamedia.ch/rss/tagesanzeiger/ausland'],
+  wirtschaft:    ['https://www.srf.ch/news/bnf/rss/1926',     'https://www.nzz.ch/wirtschaft.rss',
+                  'https://partner-feeds.publishing.tamedia.ch/rss/tagesanzeiger/wirtschaft'],
+  // Tages-Anzeiger hat keinen eigenständigen Finanzen-Feed; Wirtschaft ist die nächstbeste Annäherung.
+  finanzen:      ['https://www.srf.ch/news/bnf/rss/1926',     'https://www.nzz.ch/finanzen.rss',
+                  'https://partner-feeds.publishing.tamedia.ch/rss/tagesanzeiger/wirtschaft'],
+  sport:         ['https://www.srf.ch/sport/bnf/rss/718',     'https://www.nzz.ch/sport.rss',
+                  'https://partner-feeds.publishing.tamedia.ch/rss/tagesanzeiger/sport'],
+  kultur:        ['https://www.srf.ch/kultur/bnf/rss/454',    'https://www.nzz.ch/kultur.rss',
+                  'https://partner-feeds.publishing.tamedia.ch/rss/tagesanzeiger/kultur'],
+  wissenschaft:  ['https://www.srf.ch/bnf/rss/630',           'https://www.nzz.ch/wissenschaft.rss',
+                  'https://partner-feeds.publishing.tamedia.ch/rss/tagesanzeiger/wissen'],
+  technologie:   ['https://www.srf.ch/bnf/rss/19920122',      'https://www.nzz.ch/technologie.rss',
+                  'https://partner-feeds.publishing.tamedia.ch/rss/tagesanzeiger/digital'],
+  gesellschaft:  ['https://www.srf.ch/bnf/rss/19920107',      'https://www.nzz.ch/panorama.rss',
+                  'https://partner-feeds.publishing.tamedia.ch/rss/tagesanzeiger/leben/gesellschaft'],
+  // SRF bietet keinen Zürich-spezifischen RSS-Feed; Schweiz-Feed ist die nächstbeste
+  // Annäherung. NZZ und Tages-Anzeiger liefern dedizierte Zürich-Feeds.
+  zuerich:       ['https://www.srf.ch/news/bnf/rss/1890',     'https://www.nzz.ch/zuerich.rss',
+                  'https://partner-feeds.publishing.tamedia.ch/rss/tagesanzeiger/zuerich'],
 };
 
 export const TOPIC_UNIVERSE = Object.keys(RSS_FEEDS).filter(t => t !== 'default');

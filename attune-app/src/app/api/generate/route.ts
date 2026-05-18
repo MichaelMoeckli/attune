@@ -6,7 +6,7 @@ export const maxDuration = 60; // Allow up to 60s for show generation
 
 const ALLOWED_TOPICS = new Set([
   'politik', 'international', 'schweiz', 'wirtschaft', 'finanzen',
-  'sport', 'technologie', 'kultur', 'wissenschaft', 'panorama', 'zuerich',
+  'sport', 'technologie', 'kultur', 'wissenschaft', 'gesellschaft', 'zuerich',
 ]);
 const ALLOWED_VOICE_STYLES = new Set(['formal', 'casual', 'energetic']);
 const ALLOWED_LANGUAGES = new Set(['de', 'en']);
