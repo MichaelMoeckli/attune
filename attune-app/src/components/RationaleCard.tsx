@@ -37,7 +37,7 @@ export default function RationaleCard({ config, showResult, onClose }: Rationale
   const profileTopics = Array.from(new Set(
     profileArticles.map(a => a.topic).filter((t): t is string => !!t),
   ));
-  const serendipityTopic = serendipityArticles[0]?.topic;
+  const serendipitySource = serendipityArticles[0]?.source;
 
   const topicMappings: [string, string][] = profileTopics.length > 0
     ? profileTopics.map(t => [cap(t), `Profil-Nachricht aus SRF + NZZ`] as [string, string])
@@ -45,7 +45,7 @@ export default function RationaleCard({ config, showResult, onClose }: Rationale
 
   const mappings: [string, string][] = [
     ...topicMappings,
-    ['Überraschung', serendipityTopic ? `${cap(serendipityTopic)} (ausserhalb Profil)` : 'keine in dieser Sendung'],
+    ['Überraschung', serendipitySource ? `${serendipitySource} (ausserhalb Profil)` : 'keine in dieser Sendung'],
     [`Standort ${config.location || 'Zürich'}`, `Wetter ${config.location || 'Zürich'}`],
     [`Stil '${VOICE_LABELS[config.voiceStyle]?.toLowerCase() ?? config.voiceStyle}'`, `Voice '${config.voiceStyle}'`],
   ];
