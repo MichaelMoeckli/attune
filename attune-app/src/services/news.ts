@@ -64,24 +64,38 @@ const RSS_FEEDS: Record<string, string[]> = {
 
 export const TOPIC_UNIVERSE = Object.keys(RSS_FEEDS).filter(t => t !== 'default');
 
+// Fisher-Yates shuffle (non-mutating). Used to randomise feed order per topic so
+// no single source (SRF / NZZ / TA) permanently wins the first coverage slot in
+// `selectNews`. Round-robin bucket order in fetchFromRSS is driven by feedToTopic
+// insertion order, so shuffling here propagates to which source appears first.
+function shuffle<T>(arr: readonly T[]): T[] {
+  const out = arr.slice();
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
 async function fetchFromRSS(topics: string[]): Promise<NewsArticle[]> {
   const Parser = (await import('rss-parser')).default;
   const parser = new Parser();
 
   // Map each unique feed URL to the first topic that requested it.
   // Multi-topic feeds (e.g. NZZ schweiz.rss) are tagged with whichever topic asked first.
+  // Per-topic shuffle randomises which source (SRF/NZZ/TA) gets the first bucket slot.
   const feedToTopic = new Map<string, string>();
   for (const topic of topics) {
     const key = topic.toLowerCase();
     const list = RSS_FEEDS[key];
     if (list) {
-      for (const url of list) {
+      for (const url of shuffle(list)) {
         if (!feedToTopic.has(url)) feedToTopic.set(url, key);
       }
     }
   }
   if (feedToTopic.size === 0) {
-    for (const url of RSS_FEEDS.default) feedToTopic.set(url, 'default');
+    for (const url of shuffle(RSS_FEEDS.default)) feedToTopic.set(url, 'default');
   }
 
   const feedEntries = Array.from(feedToTopic.entries());
