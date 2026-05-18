@@ -6,8 +6,8 @@ import { getTtsVoiceId, textToSpeech } from '@/services/tts';
 import { pickTrack, type MusicSelection } from '@/services/music';
 import { checkSpokenSources } from './source-check';
 
-const NEWS_ARTICLE_COUNT: Record<number, number> = { 5: 3, 10: 6, 15: 10 };
-const MAX_TOKENS_BY_LENGTH: Record<number, number> = { 5: 300, 10: 600, 15: 900 };
+const NEWS_ARTICLE_COUNT: Record<number, number> = { 5: 2, 10: 4, 15: 6 };
+const MAX_TOKENS_BY_LENGTH: Record<number, number> = { 5: 350, 10: 700, 15: 1100 };
 const MUSIC_TRACK_COUNT: Record<number, number> = { 5: 1, 10: 2, 15: 3 };
 
 function buildSegmentPlan(

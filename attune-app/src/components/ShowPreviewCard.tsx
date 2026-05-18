@@ -9,7 +9,7 @@ interface ShowPreviewCardProps {
   onBack: () => void;
 }
 
-const SPOKEN_MIN_BY_LENGTH: Record<number, number> = { 5: 2, 10: 4, 15: 6 };
+const SPOKEN_MIN_BY_LENGTH: Record<number, number> = { 5: 2, 10: 3, 15: 6 };
 const MUSIC_TRACKS_BY_LENGTH: Record<number, number> = { 5: 1, 10: 2, 15: 3 };
 const MUSIC_MIN_PER_TRACK = 3;
 

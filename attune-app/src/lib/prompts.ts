@@ -74,14 +74,14 @@ const GREETING_LEN: Record<number, string> = {
   15: '3 bis 4 Sätze',
 };
 const NEWS_LEN: Record<number, string> = {
-  5:  'etwa 90 bis 130 Wörter',
-  10: 'etwa 200 bis 260 Wörter',
-  15: 'etwa 350 bis 430 Wörter',
+  5:  'etwa 160 bis 200 Wörter',
+  10: 'etwa 320 bis 400 Wörter',
+  15: 'etwa 660 bis 780 Wörter',
 };
 const NEWS_DEPTH: Record<number, string> = {
-  5:  'Halte dich kurz: nenne pro Meldung das Wesentliche in ein bis zwei Sätzen.',
+  5:  'Gib zu jeder Meldung den Kern und einen Satz Kontext — knapp, aber nicht nur eine Schlagzeile.',
   10: 'Gib zu jeder Meldung den Kern und ein bis zwei Sätze Kontext.',
-  15: 'Geh in die Tiefe: zu jeder Meldung Kontext, Hintergrund und Einordnung in mehreren Sätzen.',
+  15: 'Geh in die Tiefe: zu jeder Meldung Kern, mehrere Sätze Hintergrund und eine Einordnung. Keine zusätzlichen Meldungen erfinden — lieber die vorhandenen ausführlich.',
 };
 const WEATHER_LEN: Record<number, string> = {
   5:  '2 Sätze',

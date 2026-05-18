@@ -33,7 +33,7 @@ const LENGTH_OPTIONS = [
 ];
 
 // Estimated minutes for the spoken portion (no music) by length tier.
-const SPOKEN_MIN_BY_LENGTH: Record<number, number> = { 5: 2, 10: 4, 15: 6 };
+const SPOKEN_MIN_BY_LENGTH: Record<number, number> = { 5: 2, 10: 3, 15: 6 };
 // Music tracks added when "Mit Musik" is on, by length tier.
 const MUSIC_TRACKS_BY_LENGTH: Record<number, number> = { 5: 1, 10: 2, 15: 3 };
 // Approx. minutes added per music track.
@@ -43,9 +43,9 @@ const MUSIC_MIN_PER_TRACK = 3;
 // Sweet-spot topic count: profile coverage + 1 serendipity slot fits comfortably.
 // Ok-range upper bound = slots (so all chosen topics still get one article each).
 const TOPIC_GUIDANCE: Record<number, { slots: number; ideal: [number, number]; ok: [number, number] }> = {
-  5:  { slots: 3,  ideal: [2, 3], ok: [1, 3]  },
-  10: { slots: 6,  ideal: [3, 5], ok: [1, 6]  },
-  15: { slots: 10, ideal: [5, 7], ok: [1, 10] },
+  5:  { slots: 2, ideal: [1, 1], ok: [1, 2] },
+  10: { slots: 4, ideal: [2, 3], ok: [1, 4] },
+  15: { slots: 6, ideal: [3, 5], ok: [1, 6] },
 };
 
 const monoLabel: React.CSSProperties = {
