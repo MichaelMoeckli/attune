@@ -113,11 +113,6 @@ function createAttuneForm() {
     .setChoiceValues(FREQ_OPTS)
     .setRequired(false);
 
-  form.addMultipleChoiceItem()
-    .setTitle('Wie häufig hörst du Podcasts oder Audio-Nachrichten?')
-    .setChoiceValues(FREQ_OPTS)
-    .setRequired(false);
-
   form.addCheckboxItem()
     .setTitle('Wann hörst du typischerweise Audio? (Mehrfachauswahl möglich)')
     .setChoiceValues([
@@ -194,8 +189,7 @@ function createAttuneForm() {
     .setHelpText(LIKERT_HELP)
     .setRows([
       'Die Möglichkeit, die Länge selbst zu wählen, hat mir gefallen.',
-      'Die Auswahl der Sendungslänge war für mich unnötig.',
-      'Ich hätte mir hier mehr Optionen gewünscht.'
+      'Die Auswahl der Sendungslänge war für mich unnötig.'
     ])
     .setColumns(LIKERT_COLS);
 
@@ -204,8 +198,7 @@ function createAttuneForm() {
     .setHelpText(LIKERT_HELP)
     .setRows([
       'Die Wahl der Musikquelle hat mir gefallen.',
-      'Die Wahl der Musikquelle war für mich unnötig.',
-      'Ich hätte mir hier mehr Optionen gewünscht.'
+      'Die Wahl der Musikquelle war für mich unnötig.'
     ])
     .setColumns(LIKERT_COLS);
 
@@ -214,21 +207,22 @@ function createAttuneForm() {
     .setRequired(false);
 
   // ===================================================================
-  //  Sektion 4c – Themenmischung & Sessionende
-  //  (Misst Building Block 3 = Curation-Logik und Building Block 4 = Sessiondesign)
+  //  Sektion 4c – Inhalt & Sessionende
+  //  (Misst Building Block 3 = Curation-Logik und Building Block 4 = Sessiondesign;
+  //   die drei Inhalts-Items adressieren direkt das Dozenten-Feedback vom 07.05.)
   // ===================================================================
   form.addPageBreakItem()
-    .setTitle('Themenmischung & Sessionende')
+    .setTitle('Inhalt & Sessionende')
     .setHelpText('Wie hast du die Auswahl der Inhalte und das Ende der Sendung erlebt?');
 
-  // Building Block 3: Curation-Logik (Diversität, Serendipity, Tageszeit)
+  // Building Block 3: Curation-Logik + Informations-Dichte + Unterhaltung
   form.addGridItem()
-    .setTitle('Themenmischung der Sendung')
+    .setTitle('Inhalt der Sendung')
     .setHelpText(LIKERT_HELP)
     .setRows([
       'Es kamen auch Themen vor, die ich nicht aktiv gewählt hatte.',
-      'Die Themenmischung wirkte ausgewogen, nicht einseitig.',
-      'Die Auswahl passte zum Zeitpunkt, an dem ich gehört habe.'
+      'Mir hat in der Sendung Unterhaltung gefehlt.',
+      'Es waren mir zu viele Informationen auf einmal.'
     ])
     .setColumns(LIKERT_COLS);
 
@@ -259,6 +253,62 @@ function createAttuneForm() {
       'Ich musste viel lernen, bevor ich loslegen konnte.'
     ])
     .setColumns(LIKERT_COLS);
+
+  // ===================================================================
+  //  Sektion 4d – Gesamteindruck (UEQ-S, Schrepp/Hinderks/Thomaschewski 2017)
+  //  8 bipolare Items, 7-stufig — validiertes Kurzinstrument zur User Experience.
+  //  Achtung: abweichende 7er-Skala (statt 5er) ist methodisch korrekt für UEQ-S.
+  // ===================================================================
+  form.addPageBreakItem()
+    .setTitle('Gesamteindruck der App')
+    .setHelpText(
+      'Bitte beurteile die App auf den folgenden Gegensatzpaaren. ' +
+      'Die Skala ist hier ausnahmsweise 7-stufig (1 = ganz links, 7 = ganz rechts). ' +
+      'Pro Paar gibt es keine richtige oder falsche Antwort — wähle den Wert, ' +
+      'der deinem Eindruck am nächsten kommt.'
+    );
+
+  // Pragmatische Qualität (Items 1–4)
+  form.addScaleItem()
+    .setTitle('Die App war ...')
+    .setBounds(1, 7)
+    .setLabels('unangenehm', 'angenehm');
+
+  form.addScaleItem()
+    .setTitle('Die App war ...')
+    .setBounds(1, 7)
+    .setLabels('unverständlich', 'verständlich');
+
+  form.addScaleItem()
+    .setTitle('Die App war ...')
+    .setBounds(1, 7)
+    .setLabels('ineffizient', 'effizient');
+
+  form.addScaleItem()
+    .setTitle('Die App war ...')
+    .setBounds(1, 7)
+    .setLabels('verwirrend', 'übersichtlich');
+
+  // Hedonische Qualität (Items 5–8)
+  form.addScaleItem()
+    .setTitle('Die App war ...')
+    .setBounds(1, 7)
+    .setLabels('langweilig', 'spannend');
+
+  form.addScaleItem()
+    .setTitle('Die App war ...')
+    .setBounds(1, 7)
+    .setLabels('uninteressant', 'interessant');
+
+  form.addScaleItem()
+    .setTitle('Die App war ...')
+    .setBounds(1, 7)
+    .setLabels('konventionell', 'originell');
+
+  form.addScaleItem()
+    .setTitle('Die App war ...')
+    .setBounds(1, 7)
+    .setLabels('herkömmlich', 'neuartig');
 
   // ===================================================================
   //  Sektion 5 – Transparenz (Building Block 5)
@@ -321,12 +371,11 @@ function createAttuneForm() {
   // SDT – Autonomie
   form.addGridItem()
     .setTitle('Selbstbestimmung beim Hören')
-    .setHelpText(LIKERT_HELP + ' — Item 4 ist bewusst negativ formuliert (Reverse-Coding bei der Auswertung beachten).')
+    .setHelpText(LIKERT_HELP)
     .setRows([
       'Ich hatte das Gefühl, selbst zu bestimmen, was ich höre.',
       'Die App hat meine Hörgewünsche respektiert.',
-      'Ich konnte die Sendung an meine Bedürfnisse anpassen.',
-      'Ich fühlte mich teilweise von der App gesteuert.'
+      'Ich konnte die Sendung an meine Bedürfnisse anpassen.'
     ])
     .setColumns(LIKERT_COLS);
 
@@ -353,13 +402,11 @@ function createAttuneForm() {
   // Digital Wellbeing (Vanden Abeele 2021)
   form.addGridItem()
     .setTitle('Wohlbefinden beim Hören')
-    .setHelpText(LIKERT_HELP + ' — Item 5 ist bewusst negativ formuliert (Reverse-Coding bei der Auswertung beachten).')
+    .setHelpText(LIKERT_HELP)
     .setRows([
       'Nach dem Hören fühlte ich mich entspannter.',
       'Das Hören fühlte sich nicht ausbeuterisch an (kein Sog, weiterzuhören).',
-      'Im Vergleich zu Spotify/TikTok/YouTube fühlte sich das Hören gesünder an.',
-      'Die App hat meine Aufmerksamkeit respektvoll behandelt.',
-      'Nach dem Hören fühlte ich mich angespannter als vorher.'
+      'Im Vergleich zu Spotify/TikTok/YouTube fühlte sich das Hören gesünder an.'
     ])
     .setColumns(LIKERT_COLS);
 
@@ -379,7 +426,6 @@ function createAttuneForm() {
     .setTitle('Werte der App')
     .setHelpText(LIKERT_HELP)
     .setRows([
-      'Die App hat meine Werte (Ruhe, Vielfalt, Selbstbestimmung) respektiert.',
       'Die App vermittelte mir das Gefühl, dass mein Wohlbefinden ihr Ziel ist.'
     ])
     .setColumns(LIKERT_COLS);
@@ -397,7 +443,8 @@ function createAttuneForm() {
     .setRows([
       'Mir ist bewusst, dass personalisierte Medien meine Sicht einschränken können.',
       'Bei dieser App hatte ich das Gefühl, in einer Themenblase zu landen.',
-      'Die Themenauswahl wirkte ausgewogen, nicht einseitig.'
+      'Die Themenauswahl wirkte ausgewogen, nicht einseitig.',
+      'Ich hatte das Gefühl, auch Informationen ausserhalb meiner gewohnten Themen-Bubble zu bekommen.'
     ])
     .setColumns(LIKERT_COLS);
 
@@ -405,7 +452,6 @@ function createAttuneForm() {
     .setTitle('Verzerrungen (Bias) in der KI-Moderation')
     .setHelpText(LIKERT_HELP)
     .setRows([
-      'Mir ist bewusst, dass KI-generierte Texte Verzerrungen enthalten können.',
       'In der Moderation gab es Aussagen, die mir voreingenommen vorkamen.',
       'Eine KI sollte ihre Quellen und Grenzen transparent machen.'
     ])
@@ -416,7 +462,6 @@ function createAttuneForm() {
     .setHelpText(LIKERT_HELP)
     .setRows([
       'Es war mir klar, was die App leistet – und was nicht.',
-      'Es war mir bewusst, dass die Moderation KI-generiert ist.',
       'Ich würde der KI nicht blind vertrauen.'
     ])
     .setColumns(LIKERT_COLS);

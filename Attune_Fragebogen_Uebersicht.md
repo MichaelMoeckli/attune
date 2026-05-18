@@ -6,6 +6,8 @@ Diese Übersicht zeigt alle Items des Fragebogens in lesbarer Form, gruppiert na
 
 Gesamtumfang: ~55 Items, geschätzte Bearbeitungszeit 15–20 Minuten.
 
+**Update 2026-05-18 (Dozenten-Feedback vom 07.05.):** UEQ-S Kurzform (8 bipolare Items, validiert nach Schrepp/Hinderks/Thomaschewski 2017) ergänzt die SUS-Kurzform; drei vom Dozenten konkret genannte Items eingebaut („Mir hat Unterhaltung gefehlt", „Es waren mir zu viele Informationen", „auch Informationen ausserhalb meiner Bubble"). Gesamtlänge bleibt unverändert: 11 schwächere oder redundante Items wurden im Gegenzug entfernt (Podcasts-Häufigkeit, 2× „mehr Optionen gewünscht", 2 Reverse-Items, 1 VSD-Doppelung, daypart-Item, Themenmischung-Duplikat, generisches Bias-Awareness-Item, „Moderation ist KI-generiert"). Achtung: UEQ-S ist abweichend 7-stufig — methodisch korrekt, im Form-Block erklärt.
+
 ---
 
 ## So erstellst du die Google Form
@@ -40,7 +42,6 @@ Hintergrund-Items zur Einordnung der Antworten. Die letzten beiden Items adressi
 - Häufigkeit klassisches Radio (UKW/DAB) – 5er-Skala nie–täglich
 - Häufigkeit Musik-Streaming (Spotify, Apple Music) – 5er-Skala
 - Häufigkeit algorithmisch kuratierte Plattformen (TikTok, YouTube, Reels) – 5er-Skala
-- Häufigkeit Podcasts / Audio-Nachrichten – 5er-Skala
 - Audio-Hörzeiten (Mehrfachauswahl: morgens, mittags, abends, nachts, beim Pendeln, beim Arbeiten/Lernen, beim Sport, beim Kochen/Haushalt)
 - Wichtigkeit von Nachrichten im Medienalltag (Likert 1–5)
 - „Festgehalten"-Gefühl durch Algorithmen (Likert 1–5) — *Vanden Abeele 2021, Reviglio & Agosti 2020*
@@ -68,11 +69,24 @@ Konstruktion nach dem Schema „gefällt / unnötig / Wunsch", wie in deiner Mem
 - *Plus offenes Wunsch-Feld*
 
 **Sendungslänge** (Building Block 4)
-- gefällt mir / war für mich unnötig / mehr Optionen gewünscht
+- gefällt mir / war für mich unnötig
 
 **Musikquelle** (Building Block 2)
-- gefällt mir / war für mich unnötig / mehr Optionen gewünscht
+- gefällt mir / war für mich unnötig
 - *Plus offenes Feld: Welche Einstellungsmöglichkeit hat dir gefehlt?*
+
+## Sektion 4c – Inhalt & Sessionende (Building Block 3 + 4)
+
+Eigene Sektion für die Inhaltskuratierung und das Sessiondesign. Drei der Items adressieren direkt das Dozenten-Feedback vom 07.05. (Unterhaltung, Informationsdichte).
+
+**Inhalt der Sendung** (Likert 1–5)
+- Es kamen auch Themen vor, die ich nicht aktiv gewählt hatte. *(Serendipity, BB3)*
+- Mir hat in der Sendung Unterhaltung gefehlt. *(Dozent 07.05.)*
+- Es waren mir zu viele Informationen auf einmal. *(Dozent 07.05.)*
+
+**Sessionende und Pausencharakter** (Likert 1–5)
+- Das klare Ende der Sendung fand ich angenehm.
+- Es hat mir gefehlt, dass danach nichts mehr automatisch weiterlief. *(Reverse-Coding)*
 
 ## Sektion 4b – Bedienbarkeit (SUS-Kurzform, Validierungsteil 2b)
 
@@ -84,6 +98,22 @@ Konstruktion nach dem Schema „gefällt / unnötig / Wunsch", wie in deiner Mem
 - Die meisten Personen würden sich schnell zurechtfinden.
 - Ich fühlte mich beim Bedienen sicher.
 - Ich musste viel lernen, bevor ich loslegen konnte.
+
+## Sektion 4d – Gesamteindruck (UEQ-S, Validierungsteil 2c)
+
+8 bipolare Items als 7-stufiges Semantisches Differential nach Schrepp, Hinderks & Thomaschewski (2017). Validiertes Kurzinstrument zur User Experience, ergänzt die SUS um hedonische Qualitätsaspekte (Stimulation, Originalität, Neuartigkeit). Skala: 1 = linkes Adjektiv, 7 = rechtes Adjektiv.
+
+**Pragmatische Qualität**
+- unangenehm — angenehm
+- unverständlich — verständlich
+- ineffizient — effizient
+- verwirrend — übersichtlich
+
+**Hedonische Qualität**
+- langweilig — spannend
+- uninteressant — interessant
+- konventionell — originell
+- herkömmlich — neuartig
 
 ## Sektion 5 – Transparenz (Building Block 5)
 
@@ -106,6 +136,7 @@ Items abgeleitet aus den Konstrukten von Kap. 2.3 — *nicht* aus generischen We
 - Ich hatte das Gefühl, selbst zu bestimmen, was ich höre.
 - Die App hat meine Hörgewünsche respektiert.
 - Ich konnte die Sendung an meine Bedürfnisse anpassen.
+*(Reverse-Item „von der App gesteuert" entfernt am 2026-05-18, um Länge zu erhalten.)*
 
 ### Kompetenz — *SDT Kompetenz*
 - Ich konnte die App effektiv nutzen.
@@ -119,7 +150,7 @@ Items abgeleitet aus den Konstrukten von Kap. 2.3 — *nicht* aus generischen We
 - Nach dem Hören fühlte ich mich entspannter.
 - Das Hören fühlte sich nicht ausbeuterisch an (kein Sog, weiterzuhören).
 - Im Vergleich zu Spotify/TikTok/YouTube fühlte sich das Hören gesünder an.
-- Die App hat meine Aufmerksamkeit respektvoll behandelt.
+*(2026-05-18: „Aufmerksamkeit respektvoll" + zweites Reverse-Item entfernt — Aufmerksamkeitsthema ist über VSD-Item und über die Reverse-Items in Wellbeing-Bias-Sektion abgedeckt.)*
 
 ### Kontrolle über die Personalisierung — *Algorithmische Souveränität (Reviglio & Agosti 2020)*
 - Ich verstand, warum mir bestimmte Inhalte vorgeschlagen wurden.
@@ -127,8 +158,8 @@ Items abgeleitet aus den Konstrukten von Kap. 2.3 — *nicht* aus generischen We
 - Ich fühlte mich nicht von einem Algorithmus „gelenkt".
 
 ### Werte der App — *Value-Sensitive Design (Hendry, Friedman & Ballard 2021)*
-- Die App hat meine Werte (Ruhe, Vielfalt, Selbstbestimmung) respektiert.
 - Die App vermittelte mir das Gefühl, dass mein Wohlbefinden ihr Ziel ist.
+*(Doppelitem zu „Ruhe/Vielfalt/Selbstbestimmung" entfernt am 2026-05-18; SDT-Items decken Selbstbestimmung, Diversität wird in Sek. 7 erhoben.)*
 
 ## Sektion 7 – Awareness: Bubble, Bias, Grenzen
 
@@ -138,15 +169,14 @@ Reflexions-Items, die explizit nicht über die Wirkung gehen, sondern über die 
 - Mir ist bewusst, dass personalisierte Medien meine Sicht einschränken können.
 - Bei dieser App hatte ich das Gefühl, in einer Themenblase zu landen.
 - Die Themenauswahl wirkte ausgewogen, nicht einseitig.
+- Ich hatte das Gefühl, auch Informationen ausserhalb meiner gewohnten Themen-Bubble zu bekommen. *(Dozent 07.05.)*
 
 ### Verzerrungen in der KI-Moderation
-- Mir ist bewusst, dass KI-generierte Texte Verzerrungen enthalten können.
 - In der Moderation gab es Aussagen, die mir voreingenommen vorkamen.
 - Eine KI sollte ihre Quellen und Grenzen transparent machen.
 
 ### Grenzen der App
 - Es war mir klar, was die App leistet – und was nicht.
-- Es war mir bewusst, dass die Moderation KI-generiert ist.
 - Ich würde der KI nicht blind vertrauen.
 
 ## Sektion 8 – Offene Rückmeldung
@@ -170,19 +200,21 @@ Dankes-Text mit deiner Kontaktadresse für Rückfragen.
 | Konstrukt | Sektion | Anzahl Items | Quelle |
 |---|---|---|---|
 | Machbarkeit | 3 | 8 | Funktionaler Nachweis (BB1–BB4) |
+| Akzeptanz pro Einstellung | 4 | 7 + 2 offen | eigenkonstruiert (gefällt/unnötig/Wunsch) |
+| Inhalt & Sessionende (BB3+BB4) | 4c | 5 | eigenkonstruiert + Dozent 07.05. |
 | SUS / Usability allgemein | 4b | 6 | Brooke 1996, Bangor et al. 2008 |
-| Akzeptanz pro Einstellung | 4 | 9 + 2 offen | eigenkonstruiert (gefällt/unnötig/Wunsch) |
+| UEQ-S (User Experience kurz) | 4d | 8 (bipolar, 7-stufig) | Schrepp, Hinderks & Thomaschewski 2017 |
 | Transparenz | 5 | 3 + 4 | BB5; eigenkonstruiert |
 | SDT Autonomie | 6 | 3 | Ryan & Deci 2000 |
 | SDT Kompetenz | 6 | 2 | Ryan & Deci 2000 |
 | SDT Verbundenheit | 6 | 2 | Ryan & Deci 2000; Peters et al. 2018 |
-| Digital Wellbeing | 6 | 4 | Vanden Abeele 2021 |
+| Digital Wellbeing | 6 | 3 | Vanden Abeele 2021 |
 | Algorithmische Souveränität | 6 | 3 | Reviglio & Agosti 2020 |
-| Value-Sensitive Design | 6 | 2 | Hendry, Friedman & Ballard 2021 |
-| Bubble | 7 | 3 | Awareness-Konstrukt (eigenkonstruiert) |
-| Bias | 7 | 3 | Awareness-Konstrukt (eigenkonstruiert) |
-| Grenzen | 7 | 3 | Awareness-Konstrukt (eigenkonstruiert) |
-| Mediennutzung allgemein | 2 | 7 | Hintergrund / Awareness-Vorblock |
+| Value-Sensitive Design | 6 | 1 | Hendry, Friedman & Ballard 2021 |
+| Bubble | 7 | 4 | Awareness-Konstrukt + Dozent 07.05. |
+| Bias | 7 | 2 | Awareness-Konstrukt (eigenkonstruiert) |
+| Grenzen | 7 | 2 | Awareness-Konstrukt (eigenkonstruiert) |
+| Mediennutzung allgemein | 2 | 6 | Hintergrund / Awareness-Vorblock |
 | Demografie | 1 | 5 | Standard |
 | Offene Rückmeldung | 8 | 5 | qualitativ |
 

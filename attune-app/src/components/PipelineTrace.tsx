@@ -1,6 +1,7 @@
 'use client';
 
 import type { PipelineProgress } from '@/lib/types';
+import HelpButton from './HelpButton';
 
 type StepStatus = 'wait' | 'run' | 'done';
 
@@ -47,9 +48,21 @@ export default function PipelineTrace({ progress, error }: PipelineTraceProps) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
       <div>
         <div style={{
-          fontFamily: 'var(--font-mono)', fontSize: 10, textTransform: 'uppercase',
-          letterSpacing: '0.16em', color: 'var(--ink-3)', marginBottom: 8,
-        }}>pipeline läuft</div>
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          gap: 10, marginBottom: 8,
+        }}>
+          <div style={{
+            fontFamily: 'var(--font-mono)', fontSize: 10, textTransform: 'uppercase',
+            letterSpacing: '0.16em', color: 'var(--ink-3)',
+          }}>pipeline läuft</div>
+          <HelpButton label="Was passiert hier?">
+            Nichts zu tun — kurz warten. Attune holt jetzt live Nachrichten und Wetter,
+            lässt Claude die Moderationstexte schreiben und schickt diese durch
+            ElevenLabs für die Stimme. Jeder Schritt ist eine echte API-Anfrage —
+            kein synthetischer Ladebalken. Erscheint ein Fehler, klick im Browser auf
+            «Zurück» (oder lade neu) und melde dich bei moeckmic@students.zhaw.ch.
+          </HelpButton>
+        </div>
         <h1 style={{
           fontFamily: 'var(--font-serif)', fontWeight: 400, fontSize: 26,
           lineHeight: 1.1, letterSpacing: 'var(--tracking-tight)', color: 'var(--ink)',

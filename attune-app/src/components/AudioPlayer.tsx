@@ -4,6 +4,7 @@ import { useRef, useState, useEffect, useCallback, useMemo } from 'react';
 import type { ShowResult, Segment } from '@/lib/types';
 import SpotifyPlayerComponent from './SpotifyPlayer';
 import SourceList from './SourceList';
+import HelpButton from './HelpButton';
 import type { NewsArticle } from '@/lib/types';
 
 const SEGMENT_LABELS: Record<string, string> = {
@@ -168,11 +169,23 @@ export default function AudioPlayer({ showResult, spotifyConnected, onEnded, onO
       <div>
         <div style={{
           display: 'flex', alignItems: 'baseline', justifyContent: 'space-between',
+          gap: 10,
         }}>
-          <span style={{
-            fontFamily: 'var(--font-mono)', fontSize: 10, textTransform: 'uppercase',
-            letterSpacing: '0.16em', color: 'var(--ink-3)',
-          }}>sendung läuft</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+            <span style={{
+              fontFamily: 'var(--font-mono)', fontSize: 10, textTransform: 'uppercase',
+              letterSpacing: '0.16em', color: 'var(--ink-3)',
+            }}>sendung läuft · Schritt 3 / 4</span>
+            <HelpButton label="Was ist zu tun?">
+              Lehn dich zurück und hör die Sendung vollständig durch — bitte mit
+              Kopfhörern oder in einer ruhigen Umgebung. Du kannst zwischen Segmenten
+              springen (◀ ▶) oder pausieren, aber für die Studie ist es wichtig,
+              dass du die ganze Sendung hörst. Unten findest du den «Quellen»-Bereich
+              (welche Artikel die Nachricht stützen) und das «Transkript» (der vollständige
+              gesprochene Text). Wenn die Sendung endet, erscheint automatisch der
+              Fragebogen-Link.
+            </HelpButton>
+          </span>
           {duration > 0 && (
             <span style={{
               fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--ink)',

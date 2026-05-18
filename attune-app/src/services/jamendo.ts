@@ -16,30 +16,19 @@ function getClientId(): string {
   return process.env.JAMENDO_CLIENT_ID!;
 }
 
-const SEARCH_QUERIES = [
-  'chill',
-  'ambient',
-  'acoustic',
-  'pop',
-  'indie',
-  'lounge',
-  'electronic',
-  'jazz',
-  'funk',
-  'soul',
-];
+const POP_TAGS = ['pop', 'synthpop', 'popdance', 'electropop'];
 
 export async function getRandomTrack(): Promise<JamendoTrack | null> {
-  const query = SEARCH_QUERIES[Math.floor(Math.random() * SEARCH_QUERIES.length)];
-  const offset = Math.floor(Math.random() * 20);
+  const tag = POP_TAGS[Math.floor(Math.random() * POP_TAGS.length)];
+  const offset = Math.floor(Math.random() * 41);
 
   const params = new URLSearchParams({
     client_id: getClientId(),
     format: 'json',
-    limit: '5',
+    limit: '10',
     offset: String(offset),
-    search: query,
-    order: 'popularity_month',
+    tags: tag,
+    order: 'popularity_total',
     audioformat: 'mp32',
   });
 
@@ -59,7 +48,7 @@ export async function getRandomTrack(): Promise<JamendoTrack | null> {
 
     const results = data.results;
     if (!results || results.length === 0) {
-      console.warn('[jamendo] No tracks found for query:', query);
+      console.warn('[jamendo] No tracks found for tag:', tag);
       return null;
     }
 

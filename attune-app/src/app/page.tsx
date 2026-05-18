@@ -20,7 +20,7 @@ import { WELCOME_SEEN_KEY, PARTICIPANT_ID_KEY } from '@/lib/study';
 type AppState = 'loading' | 'welcome' | 'participant-id' | 'idle' | 'preview' | 'generating' | 'ready' | 'ended';
 
 const isMockMode = process.env.NEXT_PUBLIC_MOCK_MODE === 'true';
-const TTS_MODE_KEY = 'attune.useMockTts';
+const TTS_MODE_KEY = 'attune.useMockTts.v2';
 
 const initialProgress: PipelineProgress = {
   news: 'wait',
@@ -72,7 +72,8 @@ export default function Home() {
   const [spotifyConnected, setSpotifyConnected] = useState(false);
   const [showRationale, setShowRationale] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [useMockTts, setUseMockTts] = useState<boolean>(true);
+  const [useMockTts, setUseMockTts] = useState<boolean>(false);
+  const [hydrated, setHydrated] = useState(false);
   const [progress, setProgress] = useState<PipelineProgress>(initialProgress);
 
   const endTimeRef = useRef('');
@@ -93,18 +94,20 @@ export default function Home() {
     }
   }, []);
 
-  // Hydrate TTS mode from localStorage; default to mock if unset.
+  // Hydrate TTS mode from localStorage; default to ElevenLabs (real) if unset.
+  // Defer reading until after mount so SSR and first client render match.
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const stored = localStorage.getItem(TTS_MODE_KEY);
     if (stored === 'true') setUseMockTts(true);
     else if (stored === 'false') setUseMockTts(false);
+    setHydrated(true);
   }, []);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || !hydrated) return;
     localStorage.setItem(TTS_MODE_KEY, String(useMockTts));
-  }, [useMockTts]);
+  }, [useMockTts, hydrated]);
 
   // Welcome → participant-id (or idle, if ID was set previously somehow)
   const handleWelcomeContinue = () => {
@@ -211,7 +214,7 @@ export default function Home() {
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--paper)', color: 'var(--ink)' }}>
-      {(isMockMode || useMockTts) && <MockBanner ttsMode={useMockTts ? 'mock' : 'real'} />}
+      {hydrated && (isMockMode || useMockTts) && <MockBanner ttsMode={useMockTts ? 'mock' : 'real'} />}
 
       <main style={{
         maxWidth: 520, margin: '0 auto',
@@ -294,8 +297,19 @@ export default function Home() {
             )}
 
             <div style={{ borderTop: '1px solid var(--rule)', paddingTop: 20, display: 'flex', flexDirection: 'column', gap: 20 }}>
-              <TtsModeToggle value={useMockTts} onChange={setUseMockTts} />
               <ApiDisclaimer />
+              <details style={{ marginTop: 4 }}>
+                <summary style={{
+                  fontFamily: 'var(--font-mono)', fontSize: 10, textTransform: 'uppercase',
+                  letterSpacing: '0.16em', color: 'var(--ink-3)', cursor: 'pointer',
+                  listStyle: 'none', userSelect: 'none',
+                }}>
+                  Erweiterte Einstellungen
+                </summary>
+                <div style={{ marginTop: 12 }}>
+                  <TtsModeToggle value={useMockTts} onChange={setUseMockTts} />
+                </div>
+              </details>
             </div>
             <SpotifyConnect onConnectionChange={setSpotifyConnected} />
           </>

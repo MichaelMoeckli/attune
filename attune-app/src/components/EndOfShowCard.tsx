@@ -1,6 +1,7 @@
 'use client';
 
 import { buildSurveyUrl, isSurveyConfigured } from '@/lib/study';
+import HelpButton from './HelpButton';
 
 interface EndOfShowCardProps {
   durationMin: number;
@@ -61,9 +62,21 @@ export default function EndOfShowCard({ durationMin, endTime, onNewShow, onEditP
           padding: '16px 16px 18px',
         }}>
           <div style={{
-            fontFamily: 'var(--font-mono)', fontSize: 10, textTransform: 'uppercase',
-            letterSpacing: '0.16em', color: 'var(--ink-3)',
-          }}>Pilotstudie</div>
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10,
+          }}>
+            <div style={{
+              fontFamily: 'var(--font-mono)', fontSize: 10, textTransform: 'uppercase',
+              letterSpacing: '0.16em', color: 'var(--ink-3)',
+            }}>Pilotstudie · Schritt 4 / 4</div>
+            <HelpButton label="Fragebogen">
+              Letzter Schritt der Studie: Klick auf «Fragebogen jetzt ausfüllen» —
+              der Link öffnet sich in einem neuen Tab. Gib dort als allererstes
+              deine Teilnehmer-ID <strong>{participantId}</strong> ein (Pflichtfeld);
+              danach folgen Fragen zu deinem Eindruck der Sendung. Plane ca. 15–20&nbsp;Min
+              ein und füll den Fragebogen am besten direkt jetzt aus, solange die
+              Sendung frisch im Kopf ist.
+            </HelpButton>
+          </div>
           <p style={{
             fontFamily: 'var(--font-sans)', fontSize: 14, color: 'var(--ink-2)',
             margin: 0, lineHeight: 1.5,

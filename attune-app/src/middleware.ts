@@ -6,6 +6,11 @@ const PUBLIC_PATHS = new Set(['/unlock', '/api/unlock']);
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  if (process.env.NODE_ENV === 'development') {
+    return NextResponse.next();
+  }
+
   if (PUBLIC_PATHS.has(pathname)) return NextResponse.next();
 
   const token = request.cookies.get(SESSION_COOKIE_NAME)?.value;

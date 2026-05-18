@@ -1,6 +1,7 @@
 'use client';
 
 import type { ShowConfig } from '@/lib/types';
+import HelpButton from './HelpButton';
 
 interface ShowPreviewCardProps {
   config: ShowConfig;
@@ -38,9 +39,21 @@ export default function ShowPreviewCard({ config, onConfirm, onBack }: ShowPrevi
       {/* Header */}
       <div>
         <div style={{
-          fontFamily: 'var(--font-mono)', fontSize: 10, textTransform: 'uppercase',
-          letterSpacing: '0.16em', color: 'var(--ink-3)', marginBottom: 8,
-        }}>vorschau</div>
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          gap: 10, marginBottom: 8,
+        }}>
+          <div style={{
+            fontFamily: 'var(--font-mono)', fontSize: 10, textTransform: 'uppercase',
+            letterSpacing: '0.16em', color: 'var(--ink-3)',
+          }}>vorschau</div>
+          <HelpButton label="Was ist zu tun?">
+            Das ist die geplante Sendungs-Struktur — keine Wiedergabe, nur ein Plan.
+            Prüf kurz, ob die Segmente und die Länge stimmen. Wenn ja: «Sendung starten»
+            tippen — danach werden Nachrichten, Wetter und Stimmen live erzeugt
+            (dauert je nach Länge ca. 20–60&nbsp;Sek). Mit «Zurück zum Profil»
+            kannst du noch Änderungen machen.
+          </HelpButton>
+        </div>
         <h1 style={{
           fontFamily: 'var(--font-serif)', fontWeight: 400, fontSize: 26,
           lineHeight: 1.1, letterSpacing: 'var(--tracking-tight)', color: 'var(--ink)',

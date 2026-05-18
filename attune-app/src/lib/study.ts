@@ -21,7 +21,7 @@ export const WELCOME_SEEN_KEY = 'attune.welcomeSeen';
 export const PARTICIPANT_ID_KEY = 'attune.participantId';
 
 export const SURVEY_URL_TEMPLATE =
-  'https://docs.google.com/forms/d/e/1FAIpQLSciCh33WOqHj-yBL-GjUL5lk_s_d1UWX-aXnq7059pIo7W3dg/viewform?usp=pp_url&entry.1643399044=__PID__';
+  'https://docs.google.com/forms/d/e/1FAIpQLSes8sQkAptTIUvRHpllyePc_2lrdqgL64mtDaV0lEZT8EEQFw/viewform?usp=pp_url&entry.791515632=__PID__';
 
 export function buildSurveyUrl(participantId: string): string {
   return SURVEY_URL_TEMPLATE.replace('__PID__', encodeURIComponent(participantId));

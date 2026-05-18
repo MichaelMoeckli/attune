@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import type { ShowConfig } from '@/lib/types';
+import HelpButton from './HelpButton';
 
 const PREFS_KEY = 'attune-prefs';
 
@@ -129,6 +130,24 @@ export default function PreferenceForm({ onSubmit, isGenerating, defaultConfig }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      {/* Section header with overall help */}
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10,
+        flexWrap: 'wrap',
+      }}>
+        <div style={{
+          fontFamily: 'var(--font-mono)', fontSize: 10, textTransform: 'uppercase',
+          letterSpacing: '0.16em', color: 'var(--ink-3)',
+        }}>Schritt 2 / 4 · Dein Profil</div>
+        <HelpButton label="Was ist zu tun?">
+          Stell dein Profil zusammen: Themen, Standort, Stil, Länge und ob Musik
+          dabei sein soll. Es gibt keine richtige Wahl — wähle so, wie du heute
+          tatsächlich Radio hören würdest. Jede einzelne Einstellung hat unten
+          ein <strong>?</strong>, wenn du mehr Details brauchst. Wenn alles passt,
+          unten auf «Sendung vorbereiten» tippen.
+        </HelpButton>
+      </div>
+
       {/* Topics */}
       {(() => {
         const guidance = TOPIC_GUIDANCE[targetLengthMin] ?? TOPIC_GUIDANCE[10];
@@ -140,9 +159,17 @@ export default function PreferenceForm({ onSubmit, isGenerating, defaultConfig }
           <div>
             <div style={{
               display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
-              marginBottom: 8,
+              marginBottom: 8, gap: 8,
             }}>
-              <label style={{ ...monoLabel, marginBottom: 0 }}>Themen</label>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <label style={{ ...monoLabel, marginBottom: 0 }}>Themen</label>
+                <HelpButton label="Themen wählen">
+                  Tippe alle Themen an, die dich heute interessieren — Mehrfachauswahl
+                  ist gewollt. Jedes gewählte Thema bekommt mindestens eine Nachricht.
+                  Die Empfehlung rechts zeigt, wie viele zur gewählten Sendelänge passen;
+                  wählst du mehr, fallen einzelne Themen für diese Sendung raus.
+                </HelpButton>
+              </div>
               <span style={{
                 fontFamily: 'var(--font-mono)', fontSize: 10,
                 color: indicatorColor, letterSpacing: '0.04em',
@@ -183,7 +210,14 @@ export default function PreferenceForm({ onSubmit, isGenerating, defaultConfig }
 
       {/* Location */}
       <div>
-        <label htmlFor="r25-location" style={monoLabel}>Standort</label>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+          <label htmlFor="r25-location" style={{ ...monoLabel, marginBottom: 0 }}>Standort</label>
+          <HelpButton label="Standort">
+            Wofür soll der Wetterbericht gelten? Gib eine Stadt ein (z.&nbsp;B. Zürich,
+            Winterthur, Bern). Der Standort wird nur für die Wetter-API genutzt — er
+            wird nicht gespeichert oder mit deiner Teilnehmer-ID verknüpft.
+          </HelpButton>
+        </div>
         <input
           id="r25-location"
           type="text"
@@ -201,7 +235,15 @@ export default function PreferenceForm({ onSubmit, isGenerating, defaultConfig }
 
       {/* Voice style */}
       <div>
-        <label style={monoLabel}>Moderationsstil</label>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+          <label style={{ ...monoLabel, marginBottom: 0 }}>Moderationsstil</label>
+          <HelpButton label="Moderationsstil">
+            So spricht die Moderation: «Seriös» klingt wie öffentlich-rechtliches Radio
+            (SRF), «Locker» wie ein Privatsender im Tagesprogramm, «Energisch» mit mehr
+            Begeisterung und Dynamik. Wähle den Stil, in dem du dich heute am ehesten
+            wohlfühlst.
+          </HelpButton>
+        </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
           {VOICE_STYLES.map(s => (
             <button key={s.id} onClick={() => setVoiceStyle(s.id)} style={{
@@ -218,7 +260,15 @@ export default function PreferenceForm({ onSubmit, isGenerating, defaultConfig }
 
       {/* Show length */}
       <div>
-        <label style={monoLabel}>Sendelänge</label>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+          <label style={{ ...monoLabel, marginBottom: 0 }}>Sendelänge</label>
+          <HelpButton label="Sendelänge">
+            Wie lange soll die Sendung dauern? Gemeint ist die <em>gesprochene</em>
+            Zeit — mit Musik kommt pro Song rund 3&nbsp;Min&nbsp;dazu. Für die Studie
+            empfehle ich «10&nbsp;Min» (Standard); bitte plane diese Zeit am Stück
+            ein und hör die Sendung in Ruhe zu Ende.
+          </HelpButton>
+        </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
           {LENGTH_OPTIONS.map(o => (
             <button key={o.id} onClick={() => setTargetLengthMin(o.id)} style={{
@@ -235,7 +285,15 @@ export default function PreferenceForm({ onSubmit, isGenerating, defaultConfig }
 
       {/* Music toggle */}
       <div>
-        <label style={monoLabel}>Musik</label>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+          <label style={{ ...monoLabel, marginBottom: 0 }}>Musik</label>
+          <HelpButton label="Musik">
+            «Mit Musik» mischt eine kleine Anzahl Songs zwischen die Moderations-Blöcke
+            (genaue Zahl unten in der Vorschau). «Ohne» liefert nur Sprache —
+            kürzer und kompakter. Falls du Spotify weiter unten verbindest, werden
+            echte Tracks abgespielt, sonst kurze Platzhalter-Jingles.
+          </HelpButton>
+        </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 6 }}>
           <button onClick={() => setIncludeMusic(true)} style={{
             ...chip(includeMusic),
