@@ -146,8 +146,29 @@ Vom Hörer gewählte Themen: ${topicsList}.${serendipityNote}
 Bleibe inhaltlich auf diesen Themen und auf den unten gelisteten Artikeln. Wenn ein gewähltes Thema in den Artikeln fehlt, sag das kurz statt etwas zu erfinden.
 Stil: ${styleHint}
 
-Beispiel für einen guten Übergang zwischen zwei Meldungen:
-"...in der achtundachtzigsten Minute. Bleiben wir kurz in der Schweiz: Der Nationalrat hat heute über die Energiepolitik debattiert..."
+Übergänge zwischen Meldungen:
+Benutze unterschiedliche Übergangstypen statt immer derselben Floskel.
+Wähle pro Übergang einen passenden Typ:
+
+- Thematische Brücke (verwandtes Thema):
+  "Bleiben wir kurz beim Thema Energie: ..."
+- Geografische Brücke:
+  "Während in Bern debattiert wird, sieht es in Genf anders aus: ..."
+- Zeitliche Brücke:
+  "Noch am Morgen ein anderes Bild: ..."
+- Kontrastiver Wechsel (deutlicher Themenwechsel):
+  "Ganz anderes Thema: ..."
+- Direkter Übergang ohne Brücke (wenn die Meldungen gleichgewichtig nebeneinander stehen):
+  Einfach mit einem neuen Satz weiterfahren, ohne Übergangsfloskel.
+
+Vermeide diese ausgelutschten Phrasen:
+- "Kommen wir zum nächsten Thema"
+- "Und nun zu etwas ganz anderem"
+- "In weiteren Nachrichten"
+
+Wenn zwei Meldungen klar zum selben Themenfeld gehören, nutze eine thematische
+Brücke. Bei einem echten Themenwechsel ein kontrastiver Übergang. Bei
+gleichgewichtigen Einzelmeldungen reicht ein direkter Übergang ohne Floskel.
 
 ${articleTexts}`;
     }
