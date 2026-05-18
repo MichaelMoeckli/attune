@@ -265,5 +265,24 @@ export function selectNews(opts: SelectNewsOptions): NewsArticle[] {
 
   // Daypart total cap, then final maxArticles slice.
   const dayparted = applyDaypart(selected, now);
-  return dayparted.slice(0, maxArticles);
+  const capped = dayparted.slice(0, maxArticles);
+
+  // Stable group-by-topic: respect config.topics order; serendipity / untagged → end.
+  // Within each group, keep the original (relevance/date) order from selectNews passes.
+  const groups = new Map<string, NewsArticle[]>();
+  const tail: NewsArticle[] = [];
+  for (const topic of topics) groups.set(topic.toLowerCase(), []);
+
+  for (const a of capped) {
+    if (a.selectionReason === 'serendipity' || !a.topic) {
+      tail.push(a);
+      continue;
+    }
+    const key = a.topic.toLowerCase();
+    const bucket = groups.get(key);
+    if (bucket) bucket.push(a);
+    else tail.push(a);
+  }
+
+  return [...Array.from(groups.values()).flat(), ...tail];
 }

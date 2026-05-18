@@ -8,6 +8,17 @@ const STYLE_ENV_VAR: Record<VoiceStyle, string> = {
   energetic: 'ELEVENLABS_VOICE_ID_ENERGETIC',
 };
 
+const VOICE_SETTINGS_BY_STYLE: Record<VoiceStyle, {
+  stability: number;
+  similarity_boost: number;
+  style: number;
+  use_speaker_boost: boolean;
+}> = {
+  formal:    { stability: 0.55, similarity_boost: 0.75, style: 0.20, use_speaker_boost: true },
+  casual:    { stability: 0.40, similarity_boost: 0.75, style: 0.45, use_speaker_boost: true },
+  energetic: { stability: 0.30, similarity_boost: 0.80, style: 0.65, use_speaker_boost: true },
+};
+
 function resolveVoiceId(voiceStyle?: VoiceStyle): string | undefined {
   if (voiceStyle) {
     const styleVoiceId = process.env[STYLE_ENV_VAR[voiceStyle]];
@@ -58,12 +69,14 @@ export async function textToSpeech(
     const { ElevenLabsClient } = await import('elevenlabs');
 
     const client = new ElevenLabsClient({ apiKey });
+    const voiceSettings = VOICE_SETTINGS_BY_STYLE[voiceStyle ?? 'casual'];
     const audioStream = await client.textToSpeech.convert(
       voiceId || DEFAULT_VOICE_ID,
       {
         text,
         model_id: 'eleven_multilingual_v2',
         output_format: 'mp3_44100_128',
+        voice_settings: voiceSettings,
       },
     );
 
