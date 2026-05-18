@@ -139,7 +139,9 @@ Beispiel-Schluss einer Begrüssung: "...heute Morgen mit einer kompakten Sendung
       const serendipityNote = serendipity
         ? `\nHinweis: Eine Meldung (${serendipity.topic ?? 'überraschend'}) liegt bewusst ausserhalb der gewählten Themen — als kurzer Blick über den Tellerrand. Behandle sie wie die anderen Meldungen, ohne extra darauf hinzuweisen.`
         : '';
-      return `Fasse die folgenden Nachrichten als Radiobeitrag zusammen (${NEWS_LEN[len] ?? 'etwa 200 Wörter'}).
+      return `Kontext: Du bist mitten in einer laufenden Sendung. Die Begrüssung der Hörer ist in einem vorherigen Segment bereits erfolgt. Beginne NICHT mit "Guten Tag", "Willkommen bei Attune", "Hallo" oder einer ähnlichen Anrede. Steige direkt in die Nachrichten ein.
+
+Fasse die folgenden Nachrichten als Radiobeitrag zusammen (${NEWS_LEN[len] ?? 'etwa 200 Wörter'}).
 ${NEWS_DEPTH[len] ?? ''}
 Mache daraus einen fliessenden, gesprochenen Text — keine Aufzählung. Verbinde die Nachrichten mit natürlichen Übergängen.
 Vom Hörer gewählte Themen: ${topicsList}.${serendipityNote}
@@ -175,7 +177,9 @@ ${articleTexts}`;
 
     case 'weather': {
       const weather = data as WeatherData;
-      return `Erstelle einen Wetterbericht für Attune (${WEATHER_LEN[len] ?? '3 bis 4 Sätze'}).
+      return `Kontext: Du bist mitten in einer laufenden Sendung — direkt nach den Nachrichten. Die Begrüssung der Hörer ist in einem vorherigen Segment bereits erfolgt. Beginne NICHT mit "Guten Tag", "Willkommen bei Attune", "Hallo" oder einer ähnlichen Anrede. Steige direkt in den Wetterbericht ein.
+
+Erstelle einen Wetterbericht für Attune (${WEATHER_LEN[len] ?? '3 bis 4 Sätze'}).
 Ort: ${weather.location}
 Temperatur: ${weather.temperature} Grad
 Beschreibung: ${weather.description}
@@ -187,7 +191,9 @@ Beispiel: "In Zürich erwartet uns heute leichter Regen bei zwölf Grad. Der Win
     }
 
     case 'farewell':
-      return `Schreibe eine Verabschiedung für Attune (${FAREWELL_LEN[len] ?? '2 Sätze'}).
+      return `Kontext: Die Sendung neigt sich dem Ende zu. Die Hörer wurden zu Beginn der Sendung bereits begrüsst. Beginne NICHT mit "Guten Tag", "Willkommen bei Attune", "Hallo" oder einer ähnlichen Anrede — schreibe nur die Verabschiedung.
+
+Schreibe eine Verabschiedung für Attune (${FAREWELL_LEN[len] ?? '2 Sätze'}).
 Es ist ${timeStr} Uhr. Tageszeit-Stimmung: ${mood.tone}.
 Bedanke dich kurz bei den Hörern. ${mood.farewell}
 Stil: ${styleHint}
