@@ -1,4 +1,5 @@
 import type { NewsArticle } from '@/lib/types';
+import { getZurichHour } from '@/lib/prompts';
 
 const MOCK_ARTICLES: NewsArticle[] = [
   {
@@ -203,7 +204,7 @@ export function pickSerendipity(
  * Morning 06–10: 6, midday 10–17: 10, evening 17–22: 8, night 22–06: 4.
  */
 export function applyDaypart(articles: NewsArticle[], now: Date): NewsArticle[] {
-  const hour = now.getHours();
+  const hour = getZurichHour(now);
   let cap: number;
   if (hour >= 6 && hour < 10) cap = 6;
   else if (hour >= 10 && hour < 17) cap = 10;

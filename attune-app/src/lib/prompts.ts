@@ -39,6 +39,17 @@ GUT (nennt nur Quellen, die tatsächlich in den Artikeln als Quelle stehen):
 // --- Time-of-day mood (Kap. 3.3.3 / Vanden Abeele 2021) ---
 // Programmatic tonality nudge derived from the hour, used in greeting/farewell prompts.
 
+// Hour in Europe/Zurich, regardless of the server's own timezone (Vercel runs in UTC).
+export function getZurichHour(date: Date): number {
+  return Number(
+    new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Europe/Zurich',
+      hour: '2-digit',
+      hour12: false,
+    }).format(date),
+  );
+}
+
 export type TimeOfDay = 'morning' | 'midday' | 'afternoon' | 'evening' | 'night';
 
 export function getTimeOfDay(hour: number): TimeOfDay {
@@ -100,9 +111,9 @@ export function buildSegmentPrompt(
   config: ShowConfig,
 ): string {
   const now = new Date();
-  const timeStr = now.toLocaleTimeString('de-CH', { hour: '2-digit', minute: '2-digit' });
-  const dayStr = now.toLocaleDateString('de-CH', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-  const mood = applyTimeOfDayMood(now.getHours());
+  const timeStr = now.toLocaleTimeString('de-CH', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Zurich' });
+  const dayStr = now.toLocaleDateString('de-CH', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Zurich' });
+  const mood = applyTimeOfDayMood(getZurichHour(now));
 
   const styleMap = {
     formal: 'Professionell und seriös, wie bei SRF.',
