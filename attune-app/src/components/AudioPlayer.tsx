@@ -16,6 +16,11 @@ const SEGMENT_LABELS: Record<string, string> = {
   farewell: 'Verabschiedung',
 };
 
+// Short pause between segments — gives the listener a moment to "land" before
+// the next block starts (radio convention, also matches the prompt-level pauses
+// inserted between individual news items). Manual skip bypasses this.
+const SEGMENT_GAP_MS = 800;
+
 interface AudioPlayerProps {
   showResult: ShowResult;
   spotifyConnected: boolean;
@@ -38,6 +43,14 @@ export default function AudioPlayer({ showResult, spotifyConnected, onEnded, onO
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const isBrowserTts = useRef(false);
   const hasStartedRef = useRef(false);
+  const gapTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const clearGapTimer = useCallback(() => {
+    if (gapTimerRef.current) {
+      clearTimeout(gapTimerRef.current);
+      gapTimerRef.current = null;
+    }
+  }, []);
 
   const playableSegments = useMemo(
     () => showResult.segments.filter(s => s.audioUrl || s.spotifyUri),
@@ -47,6 +60,7 @@ export default function AudioPlayer({ showResult, spotifyConnected, onEnded, onO
   const isSpotifySegment = !!(currentSegment?.spotifyUri && spotifyConnected);
 
   const playSegment = useCallback((index: number) => {
+    clearGapTimer();
     if (index >= playableSegments.length) {
       setIsPlaying(false);
       setCurrentIndex(-1);
@@ -71,7 +85,11 @@ export default function AudioPlayer({ showResult, spotifyConnected, onEnded, onO
       isBrowserTts.current = true;
       const utt = new SpeechSynthesisUtterance(segment.text);
       utt.lang = 'de-DE';
-      utt.onend = () => { isBrowserTts.current = false; playSegment(index + 1); };
+      utt.onend = () => {
+        isBrowserTts.current = false;
+        // Short pause before the next segment kicks in.
+        gapTimerRef.current = setTimeout(() => playSegment(index + 1), SEGMENT_GAP_MS);
+      };
       utteranceRef.current = utt;
       window.speechSynthesis.speak(utt);
       return;
@@ -81,7 +99,10 @@ export default function AudioPlayer({ showResult, spotifyConnected, onEnded, onO
     if (!audio || !segment.audioUrl) { playSegment(index + 1); return; }
     audio.src = segment.audioUrl;
     audio.play().catch(e => console.warn('[AudioPlayer]', e));
-  }, [playableSegments, spotifyConnected, onEnded]);
+  }, [playableSegments, spotifyConnected, onEnded, clearGapTimer]);
+
+  // Cleanup any pending gap timer on unmount.
+  useEffect(() => clearGapTimer, [clearGapTimer]);
 
   useEffect(() => {
     if (playableSegments.length > 0 && currentIndex === -1 && !hasStartedRef.current) {
@@ -104,6 +125,7 @@ export default function AudioPlayer({ showResult, spotifyConnected, onEnded, onO
 
   const skipNext = () => {
     if (currentIndex < playableSegments.length - 1) {
+      clearGapTimer();
       if (isBrowserTts.current) window.speechSynthesis.cancel();
       playSegment(currentIndex + 1);
     }
@@ -111,6 +133,7 @@ export default function AudioPlayer({ showResult, spotifyConnected, onEnded, onO
 
   const skipPrev = () => {
     if (currentIndex > 0) {
+      clearGapTimer();
       if (isBrowserTts.current) window.speechSynthesis.cancel();
       playSegment(currentIndex - 1);
     }
@@ -147,7 +170,11 @@ export default function AudioPlayer({ showResult, spotifyConnected, onEnded, onO
     }}>
       <audio
         ref={audioRef}
-        onEnded={() => playSegment(currentIndex + 1)}
+        onEnded={() => {
+          const next = currentIndex + 1;
+          // Short pause before the next segment kicks in.
+          gapTimerRef.current = setTimeout(() => playSegment(next), SEGMENT_GAP_MS);
+        }}
         onTimeUpdate={handleTimeUpdate}
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
