@@ -275,6 +275,7 @@ export default function AudioPlayer({ showResult, spotifyConnected, onEnded, onO
           }}>transkript</div>
           <p style={{
             fontFamily: 'var(--font-serif)', fontSize: 14, lineHeight: 1.5, color: 'var(--ink-2)',
+            whiteSpace: 'pre-line',
           }}>
             {currentSegment.text}
           </p>

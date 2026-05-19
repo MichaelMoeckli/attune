@@ -24,9 +24,9 @@ export default function WelcomeScreen({ onContinue }: WelcomeScreenProps) {
         fontFamily: 'var(--font-sans)', fontSize: 15, lineHeight: 1.6, color: 'var(--ink-2)',
       }}>
         Du nimmst an der Pilotstudie zu Attune teil — einem vollautomatisierten
-        KI-Radio, das nicht auf Verweildauer, sondern auf <em>dein Wohlbefinden</em>
-        optimiert. Die Studie ist Teil meiner Bachelorarbeit am Institut für
-        Wirtschaftsinformatik der ZHAW.
+        KI-Radio, das nicht auf die Verweildauer, sondern auf{' '}
+        <em>dein Wohlbefinden</em> optimiert ist. Die Studie ist Teil meiner
+        Bachelorarbeit am Institut für Wirtschaftsinformatik der ZHAW.
       </p>
 
       <div style={{
@@ -34,14 +34,14 @@ export default function WelcomeScreen({ onContinue }: WelcomeScreenProps) {
         borderLeft: '2px solid var(--rule)', padding: '4px 0 4px 14px',
       }}>
         <Step n="1" title="Teilnehmer-ID eintragen">
-          Du hast vom Dozenten eine ID erhalten. Trage sie gleich ein —
-          du brauchst sie später auch im Fragebogen.
+          Du hast vom Dozenten eine ID erhalten. Trage sie gleich ein:
+          Du brauchst sie später auch im Fragebogen.
         </Step>
         <Step n="2" title="Kurzes Onboarding">
           Wähle deine Themen, die Sendungslänge und die Musikquelle.
         </Step>
         <Step n="3" title="Sendung anhören">
-          Lehn dich zurück und hör eine vollständige Sendung in Ruhe an
+          Lehne dich zurück und höre dir eine vollständige Sendung in Ruhe an
           (ca. 5–15 Min). Bitte mit Kopfhörern oder in einer ruhigen Umgebung.
         </Step>
         <Step n="4" title="Fragebogen ausfüllen">
@@ -57,8 +57,8 @@ export default function WelcomeScreen({ onContinue }: WelcomeScreenProps) {
         margin: 0,
       }}>
         Deine Antworten und Profildaten werden ausschliesslich pseudonym über
-        deine ID ausgewertet. Die Zuordnungsliste «Name → ID» liegt nur beim
-        Dozenten.
+        deine ID ausgewertet. Die Zuordnungsliste «Name → ID» befindet sich
+        ausschliesslich beim Dozenten.
       </p>
 
       <button

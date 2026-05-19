@@ -70,10 +70,14 @@ export async function textToSpeech(
 
     const client = new ElevenLabsClient({ apiKey });
     const voiceSettings = VOICE_SETTINGS_BY_STYLE[voiceStyle ?? 'casual'];
+    // Insert an audible pause at paragraph boundaries. The LLM separates news
+    // items with a blank line; ElevenLabs v2 honours <break> tags up to ~3s.
+    // 0.7s is long enough to feel like a real radio beat without dragging.
+    const ttsText = text.replace(/\n\s*\n+/g, ' <break time="0.7s" /> ');
     const audioStream = await client.textToSpeech.convert(
       voiceId || DEFAULT_VOICE_ID,
       {
-        text,
+        text: ttsText,
         model_id: 'eleven_multilingual_v2',
         output_format: 'mp3_44100_128',
         voice_settings: voiceSettings,

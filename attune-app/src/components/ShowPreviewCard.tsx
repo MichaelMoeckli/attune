@@ -105,8 +105,8 @@ export default function ShowPreviewCard({ config, onConfirm, onBack }: ShowPrevi
         fontSize: 14.5, lineHeight: 1.55, color: 'var(--reason)',
         borderLeft: '2px solid var(--reason-rule)', padding: '6px 0 6px 14px',
       }}>
-        Diese Sendung enthält ein unerwartetes Thema (Serendipity) gegen Einseitigkeit.
-        Du kannst die Diversifikation im Profil ausschalten.
+        Diese Sendung enthält bewusst ein Thema ausserhalb deiner Auswahl
+        («Serendipity») — als kleiner Gegenpol zur Filterblase.
       </div>
 
       {/* Actions */}

@@ -148,6 +148,11 @@ Vom Hörer gewählte Themen: ${topicsList}.${serendipityNote}
 Bleibe inhaltlich auf diesen Themen und auf den unten gelisteten Artikeln. Wenn ein gewähltes Thema in den Artikeln fehlt, sag das kurz statt etwas zu erfinden.
 Stil: ${styleHint}
 
+Absatzstruktur (wichtig für die Hörbarkeit):
+Trenne jede einzelne Meldung durch einen Absatzumbruch (Leerzeile) von der nächsten.
+Innerhalb einer Meldung kein Absatzumbruch. Die Leerzeile markiert eine kurze Sprechpause
+und gibt dem Hörer Zeit, das Gehörte einzuordnen, bevor das nächste Thema beginnt.
+
 Übergänge zwischen Meldungen:
 Benutze unterschiedliche Übergangstypen statt immer derselben Floskel.
 Wähle pro Übergang einen passenden Typ:

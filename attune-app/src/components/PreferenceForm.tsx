@@ -194,9 +194,9 @@ export default function PreferenceForm({ onSubmit, isGenerating, defaultConfig }
               borderLeft: '2px solid var(--reason-rule)', padding: '5px 0 5px 12px',
               marginTop: 12,
             }}>
-              Jedes gewählte Thema bekommt zuerst eine Meldung. Wenn Platz bleibt, kommt
-              eine Überraschung ausserhalb deiner Auswahl dazu, danach zweite Meldungen
-              pro Thema.
+              Zunächst erhält jedes gewählte Thema eine Meldung. Wenn noch Platz ist,
+              kommt eine Überraschung ausserhalb deiner Auswahl dazu, danach folgt eine
+              zweite Meldung pro Thema.
               {tooMany && (
                 <>
                   {' '}<span style={{ color: 'var(--warn)' }}>
@@ -217,8 +217,8 @@ export default function PreferenceForm({ onSubmit, isGenerating, defaultConfig }
           <label htmlFor="r25-location" style={{ ...monoLabel, marginBottom: 0 }}>Standort</label>
           <HelpButton label="Standort">
             Wofür soll der Wetterbericht gelten? Gib eine Stadt ein (z.&nbsp;B. Zürich,
-            Winterthur, Bern). Der Standort wird nur für die Wetter-API genutzt — er
-            wird nicht gespeichert oder mit deiner Teilnehmer-ID verknüpft.
+            Winterthur, Bern). Der Standort wird nur für die Wetter-API genutzt und wird
+            weder gespeichert noch mit deiner Teilnehmer-ID verknüpft.
           </HelpButton>
         </div>
         <input
@@ -297,8 +297,7 @@ export default function PreferenceForm({ onSubmit, isGenerating, defaultConfig }
           <HelpButton label="Musik">
             «Mit Musik» mischt eine kleine Anzahl Songs zwischen die Moderations-Blöcke
             (genaue Zahl unten in der Vorschau). «Ohne» liefert nur Sprache —
-            kürzer und kompakter. Falls du Spotify weiter unten verbindest, werden
-            echte Tracks abgespielt, sonst kurze Platzhalter-Jingles.
+            kürzer und kompakter.
           </HelpButton>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 6 }}>
@@ -329,7 +328,7 @@ export default function PreferenceForm({ onSubmit, isGenerating, defaultConfig }
           marginTop: 12,
         }}>
           {includeMusic
-            ? `Mit Musik dauert die Sendung etwa ${SPOKEN_MIN_BY_LENGTH[targetLengthMin] + MUSIC_TRACKS_BY_LENGTH[targetLengthMin] * MUSIC_MIN_PER_TRACK} Min — die Songs verlängern sie um rund ${MUSIC_TRACKS_BY_LENGTH[targetLengthMin] * MUSIC_MIN_PER_TRACK} Min.`
+            ? `Ohne Musik dauert die Sendung etwa ${SPOKEN_MIN_BY_LENGTH[targetLengthMin]} Min. Die Songs verlängern sie um rund ${MUSIC_TRACKS_BY_LENGTH[targetLengthMin] * MUSIC_MIN_PER_TRACK} Min — gesamt also ca. ${SPOKEN_MIN_BY_LENGTH[targetLengthMin] + MUSIC_TRACKS_BY_LENGTH[targetLengthMin] * MUSIC_MIN_PER_TRACK} Min.`
             : `Reine Sprache — etwa ${SPOKEN_MIN_BY_LENGTH[targetLengthMin]} Min, kompakter ohne Musikpausen.`}
         </div>
       </div>

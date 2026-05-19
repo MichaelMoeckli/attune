@@ -304,9 +304,16 @@ export default function Home() {
                   letterSpacing: '0.16em', color: 'var(--ink-3)', cursor: 'pointer',
                   listStyle: 'none', userSelect: 'none',
                 }}>
-                  Erweiterte Einstellungen
+                  Erweiterte Einstellungen · nur für Entwickler
                 </summary>
-                <div style={{ marginTop: 12 }}>
+                <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  <p style={{
+                    fontFamily: 'var(--font-sans)', fontSize: 12.5, lineHeight: 1.5,
+                    color: 'var(--ink-3)', margin: 0,
+                  }}>
+                    Dieser Abschnitt ist nur für Entwickler gedacht. Für die Studie
+                    bitte unverändert lassen («Real (ElevenLabs)»).
+                  </p>
                   <TtsModeToggle value={useMockTts} onChange={setUseMockTts} />
                 </div>
               </details>
