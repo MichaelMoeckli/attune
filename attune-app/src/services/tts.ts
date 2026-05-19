@@ -70,10 +70,22 @@ export async function textToSpeech(
 
     const client = new ElevenLabsClient({ apiKey });
     const voiceSettings = VOICE_SETTINGS_BY_STYLE[voiceStyle ?? 'casual'];
-    // Insert an audible pause at paragraph boundaries. The LLM separates news
-    // items with a blank line; ElevenLabs v2 honours <break> tags up to ~3s.
-    // 0.7s is long enough to feel like a real radio beat without dragging.
-    const ttsText = text.replace(/\n\s*\n+/g, ' <break time="0.7s" /> ');
+    // Normalize whitespace before handing text to ElevenLabs. Without this,
+    // stray single newlines inside a paragraph (which the LLM occasionally
+    // emits when wrapping long sentences) get read as ambiguous prosodic cues
+    // and produce inconsistent micro-pauses mid-sentence.
+    //   1. CRLF → LF so the paragraph regex behaves identically on any host.
+    //   2. Blank-line paragraph break → explicit <break> tag. The LLM uses a
+    //      blank line between news items (see prompts.ts); 1.0s reads as a
+    //      deliberate radio beat between topics without dragging.
+    //   3. Any remaining single newline → space (intra-paragraph wrap).
+    //   4. Collapse horizontal whitespace runs.
+    const ttsText = text
+      .replace(/\r\n?/g, '\n')
+      .replace(/\n[ \t]*\n+/g, ' <break time="1.0s" /> ')
+      .replace(/\n+/g, ' ')
+      .replace(/[ \t]{2,}/g, ' ')
+      .trim();
     const audioStream = await client.textToSpeech.convert(
       voiceId || DEFAULT_VOICE_ID,
       {
