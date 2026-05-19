@@ -70,22 +70,22 @@ export default function EndOfShowCard({ durationMin, endTime, onNewShow, onEditP
             }}>Pilotstudie · Schritt 4 / 4</div>
             <HelpButton label="Fragebogen">
               Letzter Schritt der Studie: Klick auf «Fragebogen jetzt ausfüllen» —
-              der Link öffnet sich in einem neuen Tab. Gib dort als allererstes
-              deine Teilnehmer-ID <strong>{participantId}</strong> ein (Pflichtfeld);
-              danach folgen Fragen zu deinem Eindruck der Sendung. Plane ca. 15–20&nbsp;Min
-              ein und füll den Fragebogen am besten direkt jetzt aus, solange die
-              Sendung frisch im Kopf ist.
+              der Link öffnet sich in einem neuen Tab. Deine Teilnehmer-ID{' '}
+              <strong>{participantId}</strong> ist bereits vorausgefüllt — bitte
+              nur kurz kontrollieren. Danach folgen Fragen zu deinem Eindruck der
+              Sendung. Plane ca. 15–20&nbsp;Min ein und füll den Fragebogen am
+              besten direkt jetzt aus, solange die Sendung frisch im Kopf ist.
             </HelpButton>
           </div>
           <p style={{
             fontFamily: 'var(--font-sans)', fontSize: 14, color: 'var(--ink-2)',
             margin: 0, lineHeight: 1.5,
           }}>
-            Bitte fülle jetzt den Fragebogen aus. Deine Teilnehmer-ID ist{' '}
+            Bitte fülle jetzt den Fragebogen aus. Deine Teilnehmer-ID{' '}
             <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--ink)', fontWeight: 600 }}>
               {participantId}
             </span>
-            {' '}— sie ist das erste Pflichtfeld.
+            {' '}ist bereits vorausgefüllt — bitte nur kontrollieren.
           </p>
           {surveyReady && surveyUrl ? (
             <a

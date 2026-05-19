@@ -145,7 +145,7 @@ Fasse die folgenden Nachrichten als Radiobeitrag zusammen (${NEWS_LEN[len] ?? 'e
 ${NEWS_DEPTH[len] ?? ''}
 Mache daraus einen fliessenden, gesprochenen Text — keine Aufzählung. Verbinde die Nachrichten mit natürlichen Übergängen.
 Vom Hörer gewählte Themen: ${topicsList}.${serendipityNote}
-Bleibe inhaltlich auf diesen Themen und auf den unten gelisteten Artikeln. Wenn ein gewähltes Thema in den Artikeln fehlt, sag das kurz statt etwas zu erfinden.
+Bleibe inhaltlich auf diesen Themen und auf den unten gelisteten Artikeln. Wenn ein gewähltes Thema in den Artikeln fehlt, lass es einfach weg — erwähne nicht, dass es fehlt, und erfinde auf keinen Fall Inhalte dazu.
 Stil: ${styleHint}
 
 Absatzstruktur (wichtig für die Hörbarkeit):
