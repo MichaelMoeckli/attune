@@ -34,8 +34,8 @@ export default function WelcomeScreen({ onContinue }: WelcomeScreenProps) {
         borderLeft: '2px solid var(--rule)', padding: '4px 0 4px 14px',
       }}>
         <Step n="1" title="Teilnehmer-ID eintragen">
-          Du hast vom Dozenten eine ID erhalten. Trage sie gleich ein:
-          Du brauchst sie später auch im Fragebogen.
+          Du hast vom Dozenten eine ID erhalten. Trage sie gleich ein —
+          sie wird später automatisch in den Fragebogen übernommen.
         </Step>
         <Step n="2" title="Kurzes Onboarding">
           Wähle deine Themen, die Sendungslänge und die Musikquelle.
