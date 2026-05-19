@@ -46,7 +46,7 @@ export default function WelcomeScreen({ onContinue }: WelcomeScreenProps) {
         </Step>
         <Step n="4" title="Fragebogen ausfüllen">
           Am Ende erscheint ein Button «Fragebogen jetzt ausfüllen».
-          Plane dafür weitere 15–20 Minuten ein.
+          Plane dafür weitere 20–25 Minuten ein.
         </Step>
       </div>
 
