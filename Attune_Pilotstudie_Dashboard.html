@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Attune · Pilotstudie – Auswertung</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --teal:#2f6f6d; --teal-d:#21504e; --teal-l:#5a9b98; --sand:#c9a66b; --amber:#d98a3d;
+    --ink:#1d2b2a; --muted:#6b7a78; --line:#e4ebea; --bg:#f4f7f6; --card:#ffffff; --good:#3a8f6f;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 22px 80px}
+  header.hero{background:linear-gradient(135deg,var(--teal-d),var(--teal) 60%,var(--teal-l));
+       color:#fff;padding:34px 0 26px;margin-bottom:-44px}
+  .hero .wrap{padding-bottom:0}
+  .eyebrow{letter-spacing:.18em;text-transform:uppercase;font-size:11px;opacity:.85;font-weight:600}
+  h1{margin:.25rem 0 .35rem;font-size:30px;font-weight:700;letter-spacing:-.02em}
+  .sub{opacity:.92;font-size:14.5px;max-width:760px}
+  .pill{display:inline-block;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);
+       padding:3px 10px;border-radius:999px;font-size:12px;margin-top:10px;margin-right:6px}
+  nav.tabs{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;gap:6px;
+       background:var(--card);border:1px solid var(--line);border-radius:14px;padding:7px;
+       margin:64px 0 22px;box-shadow:0 6px 24px rgba(20,60,58,.07)}
+  .tabs button{flex:1 1 auto;border:0;background:transparent;color:var(--muted);font-weight:600;
+       font-size:13.5px;padding:10px 12px;border-radius:9px;cursor:pointer;transition:.18s;white-space:nowrap}
+  .tabs button:hover{color:var(--teal);background:#eef4f3}
+  .tabs button.active{background:var(--teal);color:#fff;box-shadow:0 4px 12px rgba(47,111,109,.35)}
+  section.tab{display:none;animation:fade .35s ease}
+  section.tab.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .grid{display:grid;gap:18px}
+  .g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  @media(max-width:820px){.g2,.g3,.g4{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 22px;
+       box-shadow:0 4px 18px rgba(20,60,58,.05)}
+  .card h3{margin:0 0 4px;font-size:15.5px} .card .hint{color:var(--muted);font-size:12.5px;margin:0 0 14px}
+  .kpi{display:flex;flex-direction:column;justify-content:space-between;min-height:120px}
+  .kpi .big{font-size:38px;font-weight:750;letter-spacing:-.02em;line-height:1;color:var(--teal-d)}
+  .kpi .lab{font-size:12.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+  .kpi .note{font-size:12.5px;color:var(--muted);margin-top:6px}
+  .chip{font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;display:inline-block}
+  .chip.good{background:#e3f1ea;color:var(--good)} .chip.warn{background:#fbeede;color:var(--amber)}
+  .cbox{position:relative;height:300px} .cbox.tall{height:380px} .cbox.short{height:230px}
+  canvas{max-height:100%}
+  .lead{font-size:14.5px;color:#33403e;background:#eef4f3;border-left:4px solid var(--teal);
+       padding:13px 16px;border-radius:0 10px 10px 0;margin:0 0 18px}
+  .lead b{color:var(--teal-d)}
+  .qcol h4{margin:2px 0 12px;font-size:14px;display:flex;align-items:center;gap:8px}
+  .qbar{margin-bottom:13px}
+  .qbar .top{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:4px}
+  .qbar .top .c{color:var(--muted)}
+  .track{height:8px;background:#eef2f1;border-radius:6px;overflow:hidden}
+  .track > i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--teal-l),var(--teal))}
+  .quote{font-size:12px;color:var(--muted);font-style:italic;margin:4px 0 0;padding-left:10px;border-left:2px solid var(--line)}
+  .qcol.neg .track>i{background:linear-gradient(90deg,#e6b97a,var(--sand))}
+  .qcol.wish .track>i{background:linear-gradient(90deg,#7fb0ad,var(--teal-l))}
+  .callout{background:#fdf3e7;border:1px solid #f0d7b3;border-radius:14px;padding:16px 18px;margin-top:18px}
+  .callout b{color:var(--amber)}
+  .detail{margin-top:14px;border-top:1px dashed var(--line);padding-top:12px;display:none}
+  .detail.show{display:block}
+  .itemrow{display:flex;align-items:center;gap:10px;font-size:13px;margin:7px 0}
+  .itemrow .nm{flex:1} .itemrow .track{flex:0 0 130px}
+  .itemrow .v{font-variant-numeric:tabular-nums;font-weight:700;color:var(--teal-d);width:34px;text-align:right}
+  .muted{color:var(--muted)} .tiny{font-size:11.5px}
+  footer{margin-top:30px;color:var(--muted);font-size:12px;text-align:center}
+  .legendk{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:8px}
+  .legendk i{width:11px;height:11px;border-radius:3px;display:inline-block;margin-right:5px;vertical-align:-1px}
+  .heatwrap{overflow-x:auto}
+  table.heat{border-collapse:collapse;font-size:10.5px;margin-top:4px}
+  table.heat th{font-weight:600;color:var(--muted);padding:3px 4px;text-align:right;white-space:nowrap}
+  table.heat th.col{text-align:center;transform:rotate(-32deg);transform-origin:bottom left;height:78px;vertical-align:bottom}
+  table.heat td{width:26px;height:26px;text-align:center;color:#1d2b2a;border:1px solid #fff;
+       font-variant-numeric:tabular-nums;cursor:default;border-radius:4px}
+  table.heat td:hover{outline:2px solid var(--teal-d)}
+  .finding{border-left:4px solid var(--teal);background:#eef4f3;border-radius:0 10px 10px 0;
+       padding:11px 14px;margin-bottom:13px;overflow:hidden}
+  .finding .d{font-weight:750;color:var(--teal-d);font-size:18px;float:right;margin-left:8px}
+  .finding h5{margin:0 0 3px;font-size:13.5px} .finding p{margin:0;font-size:12.5px;color:#33403e}
+  .finding.amber{border-color:var(--amber);background:#fdf3e7}
+  .finding.amber .d{color:var(--amber)}
+  select{padding:9px 12px;border:1px solid var(--line);border-radius:9px;font-size:14px;font-weight:600;color:var(--teal-d);background:#fff}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Bachelorarbeit ZHAW · Wirtschaftsinformatik</div>
+    <h1>Attune — Pilotstudie</h1>
+    <div class="sub">Nutzerzentrierte Personalisierung im vollautomatisierten Radio als wohlbefindens-orientiertes
+      Gegenmodell zu engagement-getriebenen Medien. Interaktive Auswertung der Pilot-Befragung.</div>
+    <div>
+      <span class="pill">n = 25 (nach Einwilligung)</span>
+      <span class="pill">deskriptiv + qualitativ</span>
+      <span class="pill">einmalige Nutzung</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="tabs" id="tabs">
+    <button data-t="ov" class="active">Übersicht</button>
+    <button data-t="sample">Stichprobe</button>
+    <button data-t="feas">Machbarkeit</button>
+    <button data-t="use">Usability</button>
+    <button data-t="effect">Wirkung</button>
+    <button data-t="qual">Qualitativ</button>
+    <button data-t="links">Zusammenhänge</button>
+  </nav>
+
+  <!-- ÜBERSICHT -->
+  <section class="tab active" id="ov">
+    <div class="grid g4" style="margin-bottom:18px">
+      <div class="card kpi"><span class="lab">Teilnehmende</span><span class="big">25</span>
+        <span class="note">von 27 Antworten · 2 ohne Einwilligung</span></div>
+      <div class="card kpi"><span class="lab">Fehlerfrei gelaufen</span><span class="big">22<span class="muted" style="font-size:20px">/25</span></span>
+        <span class="note"><span class="chip good">88 %</span> · 3× kleinere Probleme</span></div>
+      <div class="card kpi"><span class="lab">SUS-angelehnt</span><span class="big">82.5</span>
+        <span class="note"><span class="chip good">sehr gut</span> · adaptiert, 6 Items</span></div>
+      <div class="card kpi"><span class="lab">Weiternutzung „Ja"</span><span class="big">14<span class="muted" style="font-size:20px">/25</span></span>
+        <span class="note"><span class="chip warn">geteilt</span> · 11× eher nicht</span></div>
+    </div>
+    <div class="lead">Drei Kernbotschaften: <b>Bedienbarkeit</b> ist die klare Stärke, die Wirkung ist am höchsten bei
+      den autonomie- und kompetenznahen Konstrukten (<b>Selbstbestimmung, Kompetenz</b>), und die Akzeptanz ist
+      weniger eine Usability- als eine <b>Werte- und Distributionsfrage</b> (KI-Skepsis, fehlende native App).</div>
+    <div class="card">
+      <h3>Wirkungs-Konstrukte im Überblick</h3>
+      <p class="hint">Skalenmittelwerte 1–5 · gestrichelte Linie = Skalenmitte (3) · Klick auf einen Balken im Tab „Wirkung" zeigt die Einzelitems</p>
+      <div class="cbox tall"><canvas id="ovChart"></canvas></div>
+    </div>
+  </section>
+
+  <!-- STICHPROBE -->
+  <section class="tab" id="sample">
+    <div class="grid g3" style="margin-bottom:18px">
+      <div class="card"><h3>Alter</h3><p class="hint">Jahre</p><div class="cbox short"><canvas id="ageChart"></canvas></div></div>
+      <div class="card"><h3>Geschlecht</h3><p class="hint">Selbstauskunft</p><div class="cbox short"><canvas id="sexChart"></canvas></div></div>
+      <div class="card kpi"><span class="lab">ZHAW-Experiment</span><span class="big">24<span class="muted" style="font-size:20px">/25</span></span>
+        <span class="note">überwiegend Studierende → nicht repräsentativ</span></div>
+    </div>
+    <div class="card">
+      <h3>Mediennutzung der Stichprobe</h3>
+      <p class="hint">Wie häufig werden die jeweiligen Medien genutzt? (gestapelte Anzahl)</p>
+      <div class="cbox"><canvas id="mediaChart"></canvas></div>
+    </div>
+    <div class="lead" style="margin-top:18px">Die Teilnehmenden nutzen <b>klassisches Radio selten</b>, aber
+      <b>algorithmische Plattformen häufig</b> — sie bewerten Attune also vor dem Erfahrungshintergrund
+      engagement-getriebener Medien.</div>
+  </section>
+
+  <!-- MACHBARKEIT -->
+  <section class="tab" id="feas">
+    <div class="grid g2" style="margin-bottom:18px">
+      <div class="card"><h3>Lief die App fehlerfrei?</h3><p class="hint">Selbstbericht der Teilnehmenden</p>
+        <div class="cbox short"><canvas id="runChart"></canvas></div></div>
+      <div class="card kpi"><span class="lab">Gemeldete Einzelprobleme</span>
+        <ul style="margin:10px 0 0;padding-left:18px;font-size:13px;color:#33403e">
+          <li>Musik-Ruckeln beim ersten Song</li>
+          <li>Falsche Endzeit-Anzeige</li>
+          <li>Jingle startete erst nach Pause/Play</li></ul>
+        <span class="note">Einzelfälle, kein systematisches Muster</span></div>
+    </div>
+    <div class="card">
+      <h3>Technische Qualität</h3><p class="hint">Mittelwert 1–5 (1 = sehr schlecht, 5 = sehr gut) · Tooltip zeigt SD</p>
+      <div class="cbox"><canvas id="techChart"></canvas></div>
+    </div>
+    <div class="lead" style="margin-top:18px">Machbarkeit aus Nutzersicht <b>erbracht</b>. Audioqualität und Verständlichkeit
+      stark; <b>Natürlichkeit der Stimme und Übergänge</b> (≈ 3.7) sind die technischen Schwachstellen — deckt sich mit den Freitexten.</div>
+  </section>
+
+  <!-- USABILITY -->
+  <section class="tab" id="use">
+    <div class="card" style="margin-bottom:18px">
+      <h3>SUS-angelehnter Bedienbarkeits-Index</h3>
+      <p class="hint">6 Items angelehnt an Brooke (1996) · negative Items umgepolt · <b>kein</b> standardkonformer 0–100-Score</p>
+      <div style="display:flex;align-items:center;gap:22px;flex-wrap:wrap">
+        <div style="text-align:center"><div class="big" style="font-size:54px;font-weight:750;color:var(--teal-d)">82.5</div>
+          <div class="tiny muted">M · SD = 12.7 · Bereich 0–100</div></div>
+        <div style="flex:1;min-width:220px">
+          <div class="track" style="height:14px"><i style="width:82.5%"></i></div>
+          <div class="legendk"><span>0</span><span style="margin-left:auto">100</span></div>
+          <div class="tiny muted">Einordnung (Bangor et al. 2008): &gt; 80 ≈ „excellent / A". Wegen 6 statt 10 Items nicht direkt mit Standard-SUS vergleichbar.</div>
+        </div>
+      </div>
+    </div>
+    <div class="grid g2">
+      <div class="card"><h3>Bedienbarkeit – Einzelitems</h3><p class="hint">Rohwerte 1–5 · (R) = negativ formuliert, niedrig = gut</p>
+        <div class="cbox"><canvas id="susChart"></canvas></div></div>
+      <div class="card"><h3>Gesamteindruck „Die App war …"</h3><p class="hint">Semantisches Differential 1–7 · höher = positiver Pol</p>
+        <div class="cbox"><canvas id="diffChart"></canvas></div></div>
+    </div>
+    <div class="card" style="margin-top:18px"><h3>Einstellungsmöglichkeiten &amp; Sessionende</h3>
+      <p class="hint">Eigenkonstruierte Items 1–5 · (neg) = gegenläufig formuliert</p>
+      <div class="cbox"><canvas id="setChart"></canvas></div></div>
+    <div class="lead" style="margin-top:18px">Bedienbarkeit ist die <b>stärkste Dimension</b>. Selbst-Wahl von Thema und
+      Länge wird breit geschätzt; das <b>klare Sendungsende</b> wird angenommen (kein Wunsch nach Autoplay) — das
+      wohlbefindens-orientierte Session-Design greift.</div>
+  </section>
+
+  <!-- WIRKUNG -->
+  <section class="tab" id="effect">
+    <div class="card" style="margin-bottom:18px">
+      <h3>Wirkungs-Konstrukte — klicke einen Balken für die Einzelitems</h3>
+      <p class="hint">Skalenmittelwert 1–5 · jede Skala an die Theorie aus Kap. 2.3 angebunden</p>
+      <div class="cbox tall"><canvas id="effChart"></canvas></div>
+      <div class="detail" id="effDetail"></div>
+    </div>
+    <div class="grid g2">
+      <div class="card"><h3>Transparenz — wurde sie bemerkt?</h3>
+        <p class="hint">Vorhandensein ≠ Wahrnehmung</p>
+        <div class="cbox"><canvas id="transpChart"></canvas></div></div>
+      <div class="card"><h3>Kritische Reflexion</h3>
+        <p class="hint">1–5 · Awareness-Items (hoch = erwünscht) nicht umgepolt</p>
+        <div class="cbox"><canvas id="awareChart"></canvas></div></div>
+    </div>
+    <div class="lead" style="margin-top:18px"><b>Kompetenz (3.98)</b> und <b>Selbstbestimmung (3.81)</b> sind am höchsten —
+      Personalisierung <i>mit</i> Nutzerautonomie zeigt Wirkung. Am verhaltensten: Radio-Vergleich (3.28) und „danach
+      entspannter" (3.00) → spricht für den im Studienkonzept angelegten <b>Längsschnitt</b>. Transparenz gilt als
+      hilfreich, wird aber teils nicht bemerkt (v. a. die Themen-Begründung).</div>
+  </section>
+
+  <!-- QUALITATIV -->
+  <section class="tab" id="qual">
+    <div class="grid g3">
+      <div class="card qcol pos" id="q_gefallen"></div>
+      <div class="card qcol neg" id="q_gestoert"></div>
+      <div class="card qcol wish" id="q_wunsch"></div>
+    </div>
+    <div class="callout"><b>Hinweis für die Diskussion (Faktentreue):</b> Ein Teilnehmer meldete eine inhaltlich falsche
+      Moderationsaussage — <i>„<span id="faktQuote"></span>"</i>. Belegt konkret die Notwendigkeit des Halluzinations-/
+      Aktualitäts-Guards in der Moderations-Pipeline (Kap. 10).</div>
+  </section>
+
+  <!-- ZUSAMMENHÄNGE -->
+  <section class="tab" id="links">
+    <div class="callout" style="background:#fbeede;border-color:#f0d7b3;margin:0 0 18px">
+      <b>Explorativ lesen.</b> Bei n = 25 und teils kleinen Teilgruppen sind diese Unterschiede
+      <b>hypothesengenerierend, nicht statistisch gesichert</b>. Keine Signifikanztests — die Gruppengrößen (n)
+      stehen bewusst dabei. Faustregel: erst Unterschiede ab ~0.4 Skalenpunkten und mit ausreichend grossen Gruppen interpretieren.
+    </div>
+    <div class="card" style="margin-bottom:18px">
+      <h3>Gruppenvergleich — wähle ein Merkmal</h3>
+      <p class="hint">Mittelwerte der Outcomes je Teilgruppe · SUS &amp; Weiternutzung auf 0–100, übrige Skalen 1–5</p>
+      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
+        <select id="grpSel"></select>
+        <span id="grpLegend" class="legendk"></span>
+      </div>
+      <div class="cbox tall"><canvas id="grpChart"></canvas></div>
+    </div>
+    <div class="grid g2">
+      <div class="card">
+        <h3>Korrelations-Heatmap (Spearman ρ)</h3>
+        <p class="hint">Zusammenhang zwischen Merkmalen &amp; Outcomes · blau = positiv, sand = negativ · Hover für Wert</p>
+        <div id="heat"></div>
+      </div>
+      <div class="card">
+        <h3>Drei auffällige Muster</h3>
+        <div id="findings"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>Attune · Pilotstudie · n = 25 · deskriptiv + explorative Subgruppen. Diagramme interaktiv (Hover/Klick). Zahlen identisch zum Auswertungs-Notebook.</footer>
+</div>
+
+<script>
+const DATA = {"meta": {"raw_n": 27, "n": 25, "excluded": 2}, "fehlerfrei": {"Ja, vollständig": 22, "Teilweise – kleinere Probleme": 3}, "demo": {"alter": {"18–24": 17, "25–34": 8}, "geschlecht": {"männlich": 19, "weiblich": 6}, "zhaw": {"Ja": 24, "Nein": 1}}, "media": {"klass. Radio": [8, 10, 3, 2, 2], "Musik-Streaming": [0, 0, 1, 2, 22], "algo. Plattformen": [0, 0, 3, 6, 16]}, "media_order": ["nie", "selten", "gelegentlich", "oft", "täglich"], "tech": [{"label": "Audioqualität", "M": 4.48, "SD": 0.59, "n": 25}, {"label": "Verständlichkeit", "M": 4.56, "SD": 0.58, "n": 25}, {"label": "Natürlichkeit Stimme", "M": 3.72, "SD": 1.02, "n": 25}, {"label": "Übergänge", "M": 3.68, "SD": 0.95, "n": 25}, {"label": "Reaktionszeit", "M": 4.25, "SD": 0.74, "n": 24}], "sus_items": [{"label": "regelmässig nutzen", "M": 3.2, "SD": 1.19, "n": 25}, {"label": "unnötig komplex (R)", "M": 1.52, "SD": 0.87, "n": 25}, {"label": "einfach zu bedienen", "M": 4.56, "SD": 0.58, "n": 25}, {"label": "schnell zurechtfinden", "M": 4.44, "SD": 0.58, "n": 25}, {"label": "fühlte mich sicher", "M": 4.56, "SD": 0.51, "n": 25}, {"label": "musste viel lernen (R)", "M": 1.44, "SD": 0.82, "n": 25}], "sus_index": {"M": 82.5, "SD": 12.7}, "diff": [{"label": "unangenehm–angenehm", "M": 5.96, "SD": 0.89, "n": 25}, {"label": "unverständlich–verständlich", "M": 6.24, "SD": 0.66, "n": 25}, {"label": "ineffizient–effizient", "M": 5.96, "SD": 0.93, "n": 25}, {"label": "verwirrend–übersichtlich", "M": 5.92, "SD": 1.0, "n": 25}, {"label": "langweilig–spannend", "M": 4.92, "SD": 1.8, "n": 25}, {"label": "uninteressant–interessant", "M": 5.12, "SD": 1.67, "n": 25}, {"label": "konventionell–originell", "M": 4.92, "SD": 1.41, "n": 25}, {"label": "herkömmlich–neuartig", "M": 5.48, "SD": 1.45, "n": 25}], "settings": [{"label": "Themenwahl gefallen", "M": 3.8, "SD": 0.87, "n": 25}, {"label": "Themenwahl unnötig (neg)", "M": 2.28, "SD": 0.98, "n": 25}, {"label": "mehr Optionen gewünscht", "M": 3.28, "SD": 1.1, "n": 25}, {"label": "Länge selbst wählen gefallen", "M": 4.4, "SD": 0.71, "n": 25}, {"label": "klares Ende angenehm", "M": 3.92, "SD": 0.76, "n": 25}, {"label": "Autoplay vermisst (neg)", "M": 2.8, "SD": 1.29, "n": 25}], "wirkung": [{"name": "Selbstbestimmung", "theory": "SDT-Autonomie", "M": 3.81, "items": [{"label": "selbst bestimmen", "M": 3.56, "SD": 1.16, "n": 25}, {"label": "Wünsche respektiert", "M": 3.92, "SD": 0.81, "n": 25}, {"label": "anpassbar", "M": 3.96, "SD": 0.89, "n": 25}]}, {"name": "Kompetenz", "theory": "SDT", "M": 3.98, "items": [{"label": "effektiv nutzen", "M": 3.96, "SD": 0.89, "n": 25}, {"label": "verstehe Personalisierung", "M": 4.0, "SD": 0.76, "n": 25}]}, {"name": "Verbundenheit", "theory": "SDT", "M": 3.54, "items": [{"label": "wie für mich gemacht", "M": 3.56, "SD": 1.04, "n": 25}, {"label": "angesprochen", "M": 3.52, "SD": 1.05, "n": 25}]}, {"name": "Wohlbefinden", "theory": "Digital Wellbeing", "M": 3.37, "items": [{"label": "danach entspannter", "M": 3.0, "SD": 1.19, "n": 25}, {"label": "nicht ausbeuterisch", "M": 3.84, "SD": 1.03, "n": 25}, {"label": "gesünder als Spotify/TikTok", "M": 3.28, "SD": 1.31, "n": 25}]}, {"name": "Vergleich Radio", "theory": "Vergleich", "M": 3.28, "items": [{"label": "würde Attune bevorzugen", "M": 3.08, "SD": 1.32, "n": 25}, {"label": "deckt neue Bedürfnisse", "M": 3.48, "SD": 1.19, "n": 25}]}, {"name": "Kontrolle/Souveränität", "theory": "Algorithm. Souveränität", "M": 3.49, "items": [{"label": "verstand Vorschläge", "M": 3.68, "SD": 0.99, "n": 25}, {"label": "kontrollierbar", "M": 3.32, "SD": 1.11, "n": 25}, {"label": "nicht gelenkt", "M": 3.54, "SD": 1.06, "n": 24}]}, {"name": "Transparenz-Nutzen", "theory": "VSD", "M": 3.65, "items": [{"label": "Quellen", "M": 4.04, "SD": 0.98, "n": 25}, {"label": "Begründung", "M": 3.52, "SD": 0.87, "n": 25}, {"label": "Pipeline", "M": 3.6, "SD": 0.91, "n": 25}, {"label": "Grenzen-Hinweis", "M": 3.46, "SD": 0.98, "n": 24}]}], "transp_perc": {"Quellenangaben": {"Ja": 14, "Nein": 7, "Bin mir nicht sicher": 4}, "Begründung Themen": {"Nein": 12, "Ja": 8, "Bin mir nicht sicher": 5}, "KI-Pipeline": {"Ja": 16, "Nein": 7, "Bin mir nicht sicher": 2}}, "awareness": {"filterblase": [{"label": "Bewusstsein: Medien schränken ein", "M": 4.08, "SD": 0.64, "n": 25}, {"label": "Gefühl Themenblase (neg)", "M": 3.0, "SD": 0.96, "n": 25}, {"label": "wirkte ausgewogen", "M": 3.64, "SD": 0.76, "n": 25}, {"label": "Infos ausserhalb Bubble", "M": 3.4, "SD": 0.96, "n": 25}], "bias": [{"label": "voreingenommene Aussagen (neg)", "M": 2.6, "SD": 1.08, "n": 25}, {"label": "KI soll Grenzen zeigen (Norm)", "M": 3.84, "SD": 1.25, "n": 25}], "grenzen": [{"label": "klar was App leistet", "M": 3.84, "SD": 0.62, "n": 25}, {"label": "würde KI nicht blind vertrauen", "M": 4.2, "SD": 0.76, "n": 25}]}, "einzel": [{"label": "News-Wichtigkeit", "M": 2.88, "SD": 1.24, "n": 25}, {"label": "Algorithmen \"festgehalten\"", "M": 3.64, "SD": 0.81, "n": 25}, {"label": "Aufmerksamkeit beim Hören", "M": 4.04, "SD": 0.75, "n": 24}, {"label": "Wohlbefinden als App-Ziel spürbar", "M": 3.56, "SD": 1.04, "n": 25}], "weiternutzung": {"Ja, gelegentlich": 12, "Nein, eher nicht": 8, "Nein, sicher nicht": 3, "Ja, regelmässig": 2}, "qual": {"gefallen": {"total": 22, "clusters": [{"name": "Personalisierung / eigene Themen- & Längenwahl", "count": 10, "quote": "Die ganze Struktur (Themenauswahl und die Länge selber entscheiden können)"}, {"name": "Echtheit / Aktualität der Daten", "count": 4, "quote": "Die Echtheit der Daten (Wetter, News etc.)"}, {"name": "Innovation / Idee", "count": 3, "quote": "Sehr Innovativ!"}, {"name": "Einfache Bedienung & Design", "count": 3, "quote": "Einfache Bedienung und Navigation"}, {"name": "Transparenz (Sektionen, Quellen)", "count": 2, "quote": "… Erklärungen und Quellen geben mir ein sicheres Gefühl"}, {"name": "Moderationsstil / kompakt", "count": 2, "quote": "… der lockere Moderationsstil hat die Sendung natürlicher wirken lassen"}]}, "gestoert": {"total": 20, "clusters": [{"name": "Nichts / keine Störung", "count": 6, "quote": "ich hatte keine Störfaktoren"}, {"name": "Musik (Geschmack, Qualität, keine Genre-Wahl)", "count": 5, "quote": "die schlechte Musik … Musikrichtung noch selber entscheiden können"}, {"name": "Themen (Tiefe, Genauigkeit, Erwartung)", "count": 5, "quote": "Die News haben meine Erwartungen nicht erfüllt."}, {"name": "Technik (Übergänge, Lautstärke, Stimme)", "count": 3, "quote": "… ein plötzlich grosser Unterschied in der Lautstärke"}, {"name": "KI-/Radio-Skepsis grundsätzlich", "count": 2, "quote": "Ich höre nie Radio und Nachrichten …"}]}, "wunsch": {"total": 18, "clusters": [{"name": "Tiefere / mehr Themen-Optionen", "count": 7, "quote": "… dass man die Themen noch stärker personalisieren kann"}, {"name": "Musikgenre selbst wählen", "count": 3, "quote": "eigene Einstellung für seine Lieblings-Musikgenres"}, {"name": "Native App / Plattform / Dark Mode", "count": 3, "quote": "das es auch für iPhone verfügbar ist"}, {"name": "Preis / Monetarisierung", "count": 2, "quote": "zwischen 5–7 Franken im Monat wäre ich dafür bereit"}, {"name": "Mehr Transparenz (Quellen in-app)", "count": 2, "quote": "Bessere Transparenz, woher die KI die Informationen hat."}]}, "fakt": "Es stand, dass FC St. Gallen gestern Abend gewonnen hatte, dabei war es vor 2 Stunden …"}, "groups": {"Geschlecht": {"levels": [{"name": "weiblich", "n": 6}, {"name": "männlich", "n": 19}], "outcomes": [{"label": "SUS-Index", "a": 83.33, "b": 82.24, "delta": 1.1}, {"label": "Selbstbestimmung", "a": 4.06, "b": 3.74, "delta": 0.32}, {"label": "Kompetenz", "a": 4.25, "b": 3.89, "delta": 0.36}, {"label": "Verbundenheit", "a": 4.0, "b": 3.39, "delta": 0.61}, {"label": "Wohlbefinden", "a": 3.94, "b": 3.19, "delta": 0.75}, {"label": "Vergleich Radio", "a": 3.67, "b": 3.16, "delta": 0.51}, {"label": "Transparenz-Nutzen", "a": 3.25, "b": 3.78, "delta": -0.53}, {"label": "Weiternutzung %", "a": 100.0, "b": 42.11, "delta": 57.89}]}, "Radio-Nutzung": {"levels": [{"name": "gelegentlich+", "n": 7}, {"name": "nie/selten", "n": 18}], "outcomes": [{"label": "SUS-Index", "a": 91.07, "b": 79.17, "delta": 11.9}, {"label": "Selbstbestimmung", "a": 4.19, "b": 3.67, "delta": 0.52}, {"label": "Kompetenz", "a": 4.07, "b": 3.94, "delta": 0.13}, {"label": "Verbundenheit", "a": 3.57, "b": 3.53, "delta": 0.04}, {"label": "Wohlbefinden", "a": 3.33, "b": 3.39, "delta": -0.06}, {"label": "Vergleich Radio", "a": 3.21, "b": 3.31, "delta": -0.09}, {"label": "Transparenz-Nutzen", "a": 3.83, "b": 3.58, "delta": 0.25}, {"label": "Weiternutzung %", "a": 57.14, "b": 55.56, "delta": 1.59}]}, "Alter": {"levels": [{"name": "25–34", "n": 8}, {"name": "18–24", "n": 17}], "outcomes": [{"label": "SUS-Index", "a": 91.67, "b": 78.19, "delta": 13.48}, {"label": "Selbstbestimmung", "a": 4.17, "b": 3.65, "delta": 0.52}, {"label": "Kompetenz", "a": 3.94, "b": 4.0, "delta": -0.06}, {"label": "Verbundenheit", "a": 4.0, "b": 3.32, "delta": 0.68}, {"label": "Wohlbefinden", "a": 3.54, "b": 3.29, "delta": 0.25}, {"label": "Vergleich Radio", "a": 3.44, "b": 3.21, "delta": 0.23}, {"label": "Transparenz-Nutzen", "a": 3.72, "b": 3.62, "delta": 0.1}, {"label": "Weiternutzung %", "a": 62.5, "b": 52.94, "delta": 9.56}]}, "News-Wichtigkeit": {"levels": [{"name": "wichtig (≥3)", "n": 15}, {"name": "unwichtig (<3)", "n": 10}], "outcomes": [{"label": "SUS-Index", "a": 87.22, "b": 75.42, "delta": 11.81}, {"label": "Selbstbestimmung", "a": 4.04, "b": 3.47, "delta": 0.58}, {"label": "Kompetenz", "a": 4.17, "b": 3.7, "delta": 0.47}, {"label": "Verbundenheit", "a": 3.8, "b": 3.15, "delta": 0.65}, {"label": "Wohlbefinden", "a": 3.58, "b": 3.07, "delta": 0.51}, {"label": "Vergleich Radio", "a": 3.57, "b": 2.85, "delta": 0.72}, {"label": "Transparenz-Nutzen", "a": 3.72, "b": 3.56, "delta": 0.16}, {"label": "Weiternutzung %", "a": 73.33, "b": 30.0, "delta": 43.33}]}, "Algo-festgehalten": {"levels": [{"name": "hoch (≥4)", "n": 13}, {"name": "niedrig (<4)", "n": 12}], "outcomes": [{"label": "SUS-Index", "a": 84.94, "b": 79.86, "delta": 5.07}, {"label": "Selbstbestimmung", "a": 3.92, "b": 3.69, "delta": 0.23}, {"label": "Kompetenz", "a": 4.0, "b": 3.96, "delta": 0.04}, {"label": "Verbundenheit", "a": 3.65, "b": 3.42, "delta": 0.24}, {"label": "Wohlbefinden", "a": 3.77, "b": 2.94, "delta": 0.82}, {"label": "Vergleich Radio", "a": 3.38, "b": 3.17, "delta": 0.22}, {"label": "Transparenz-Nutzen", "a": 3.52, "b": 3.8, "delta": -0.28}, {"label": "Weiternutzung %", "a": 53.85, "b": 58.33, "delta": -4.49}]}, "Algo-Plattform-Nutzung": {"levels": [{"name": "täglich", "n": 16}, {"name": "nicht täglich", "n": 9}], "outcomes": [{"label": "SUS-Index", "a": 81.77, "b": 83.8, "delta": -2.03}, {"label": "Selbstbestimmung", "a": 3.81, "b": 3.81, "delta": -0.0}, {"label": "Kompetenz", "a": 4.0, "b": 3.94, "delta": 0.06}, {"label": "Verbundenheit", "a": 3.53, "b": 3.56, "delta": -0.02}, {"label": "Wohlbefinden", "a": 3.23, "b": 3.63, "delta": -0.4}, {"label": "Vergleich Radio", "a": 3.34, "b": 3.17, "delta": 0.18}, {"label": "Transparenz-Nutzen", "a": 3.55, "b": 3.84, "delta": -0.3}, {"label": "Weiternutzung %", "a": 56.25, "b": 55.56, "delta": 0.69}]}}, "group_outcomes": ["SUS-Index", "Selbstbestimmung", "Kompetenz", "Verbundenheit", "Wohlbefinden", "Vergleich Radio", "Transparenz-Nutzen", "Weiternutzung %"], "corr": {"labels": ["Alter", "Radio-Nutzung", "Algo-Plattform", "Algo-festgehalten", "News-Wichtigkeit", "Selbstbestimmung", "Wohlbefinden", "gesünder-Spotify", "Vergleich-Radio", "SUS", "Weiternutzung"], "matrix": [[1.0, 0.38, -0.02, 0.11, 0.2, 0.34, 0.14, 0.09, 0.11, 0.52, 0.09], [0.38, 1.0, -0.08, 0.41, 0.34, 0.54, 0.36, 0.26, 0.2, 0.47, -0.01], [-0.02, -0.08, 1.0, 0.05, 0.29, 0.04, -0.18, -0.06, 0.13, -0.09, -0.01], [0.11, 0.41, 0.05, 1.0, 0.32, 0.23, 0.55, 0.47, 0.16, 0.18, 0.07], [0.2, 0.34, 0.29, 0.32, 1.0, 0.2, 0.22, 0.16, 0.11, 0.45, 0.37], [0.34, 0.54, 0.04, 0.23, 0.2, 1.0, 0.6, 0.43, 0.79, 0.37, 0.38], [0.14, 0.36, -0.18, 0.55, 0.22, 0.6, 1.0, 0.84, 0.6, 0.3, 0.44], [0.09, 0.26, -0.06, 0.47, 0.16, 0.43, 0.84, 1.0, 0.42, 0.11, 0.21], [0.11, 0.2, 0.13, 0.16, 0.11, 0.79, 0.6, 0.42, 1.0, 0.23, 0.46], [0.52, 0.47, -0.09, 0.18, 0.45, 0.37, 0.3, 0.11, 0.23, 1.0, 0.46], [0.09, -0.01, -0.01, 0.07, 0.37, 0.38, 0.44, 0.21, 0.46, 0.46, 1.0]]}};
+const C={teal:'#2f6f6d',tealL:'#5a9b98',tealD:'#21504e',sand:'#c9a66b',amber:'#d98a3d',good:'#3a8f6f',line:'#e4ebea',muted:'#6b7a78'};
+Chart.defaults.font.family="'Segoe UI',system-ui,sans-serif";
+Chart.defaults.font.size=12; Chart.defaults.color='#33403e';
+const colorFor=(v,max)=> v>=0.8*max?C.good : v>=0.6*max?C.teal : C.sand;
+
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#tabs button').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('section.tab').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active'); document.getElementById(b.dataset.t).classList.add('active');
+});
+
+const midLine={id:'mid',afterDraw(ch,a,o){if(!o.x)return;const{ctx,scales}=ch;const x=scales.x.getPixelForValue(o.x);
+  ctx.save();ctx.strokeStyle=C.muted;ctx.setLineDash([4,4]);ctx.beginPath();
+  ctx.moveTo(x,ch.chartArea.top);ctx.lineTo(x,ch.chartArea.bottom);ctx.stroke();ctx.restore();}};
+Chart.register(midLine);
+
+function hbar(id,labels,vals,metas,max,mid,colors){
+  return new Chart(document.getElementById(id),{type:'bar',
+    data:{labels,datasets:[{data:vals,meta:metas,backgroundColor:colors||vals.map(v=>colorFor(v,max)),
+      borderRadius:6,maxBarThickness:26}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},mid:{x:mid},
+        tooltip:{callbacks:{label:c=>{const d=c.dataset.meta&&c.dataset.meta[c.dataIndex];
+          return ' M = '+c.raw+(d&&d.SD!=null?'  · SD = '+d.SD:'');}}}},
+      scales:{x:{min:1,max:max,grid:{color:C.line}},y:{grid:{display:false}}}}});
+}
+
+// Übersicht + Wirkung overview
+const w=DATA.wirkung;
+const ovLabels=w.map(x=>x.name), ovVals=w.map(x=>x.M);
+hbar('ovChart',ovLabels,ovVals,w.map(()=>({SD:null})),5,3);
+
+// Stichprobe
+const dough=(id,obj,palette)=>new Chart(document.getElementById(id),{type:'doughnut',
+  data:{labels:Object.keys(obj),datasets:[{data:Object.values(obj),backgroundColor:palette,borderWidth:2,borderColor:'#fff'}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom',labels:{boxWidth:12,padding:12}}}}});
+dough('ageChart',DATA.demo.alter,[C.teal,C.sand,C.tealL]);
+dough('sexChart',DATA.demo.geschlecht,[C.teal,C.sand,C.tealL]);
+new Chart(document.getElementById('mediaChart'),{type:'bar',
+  data:{labels:Object.keys(DATA.media),datasets:DATA.media_order.map((o,k)=>({label:o,
+    data:Object.values(DATA.media).map(arr=>arr[k]),
+    backgroundColor:['#dfe7e6','#b9cecc','#7fb0ad',C.teal,C.tealD][k]}))},
+  options:{responsive:true,maintainAspectRatio:false,scales:{x:{stacked:true,grid:{display:false}},
+    y:{stacked:true,grid:{color:C.line}}},plugins:{legend:{position:'bottom',labels:{boxWidth:12,padding:10}}}}});
+
+// Machbarkeit
+dough('runChart',DATA.fehlerfrei,[C.good,C.amber,'#c0392b']);
+const t=DATA.tech;
+hbar('techChart',t.map(x=>x.label),t.map(x=>x.M),t.map(x=>({SD:x.SD})),5,3);
+
+// Usability
+const su=DATA.sus_items;
+hbar('susChart',su.map(x=>x.label),su.map(x=>x.M),su.map(x=>({SD:x.SD})),5,3,
+  su.map(x=>x.label.indexOf('(R)')>=0?C.sand:colorFor(x.M,5)));
+const dff=DATA.diff;
+hbar('diffChart',dff.map(x=>x.label),dff.map(x=>x.M),dff.map(x=>({SD:x.SD})),7,4,
+  dff.map(x=>x.M>=5.5?C.good:x.M>=4.5?C.teal:C.sand));
+const st=DATA.settings;
+hbar('setChart',st.map(x=>x.label),st.map(x=>x.M),st.map(x=>({SD:x.SD})),5,3,
+  st.map(x=>x.label.indexOf('(neg)')>=0?C.sand:colorFor(x.M,5)));
+
+// Wirkung (clickable)
+const effChart=hbar('effChart',ovLabels,ovVals,w.map(()=>({SD:null})),5,3);
+const det=document.getElementById('effDetail');
+document.getElementById('effChart').onclick=(e)=>{
+  const pts=effChart.getElementsAtEventForMode(e,'nearest',{intersect:true},true);
+  if(!pts.length)return; const sc=w[pts[0].index];
+  det.innerHTML='<h4 style="margin:0 0 8px">'+sc.name+' <span class="tiny muted">· '+sc.theory+' · Skala M = '+sc.M+'</span></h4>'+
+    sc.items.map(it=>'<div class="itemrow"><span class="nm">'+it.label+'</span><span class="track"><i style="width:'+
+      ((it.M-1)/4*100)+'%"></i></span><span class="v">'+it.M+'</span><span class="tiny muted">±'+it.SD+'</span></div>').join('');
+  det.classList.add('show');
+};
+
+// Transparenz Wahrnehmung
+const tp=DATA.transp_perc, tpKeys=Object.keys(tp), cats=['Ja','Nein','Bin mir nicht sicher'];
+new Chart(document.getElementById('transpChart'),{type:'bar',
+  data:{labels:tpKeys,datasets:cats.map((c,k)=>({label:c,
+    data:tpKeys.map(key=>tp[key][c]||0),backgroundColor:[C.good,C.sand,'#d8dedd'][k]}))},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    scales:{x:{stacked:true,grid:{color:C.line}},y:{stacked:true,grid:{display:false}}},
+    plugins:{legend:{position:'bottom',labels:{boxWidth:12,padding:10}}}}});
+
+// Awareness
+const aw=DATA.awareness.filterblase.concat(DATA.awareness.bias,DATA.awareness.grenzen);
+hbar('awareChart',aw.map(x=>x.label),aw.map(x=>x.M),aw.map(x=>({SD:x.SD})),5,3,
+  aw.map(x=>x.label.indexOf('(neg)')>=0?C.sand:colorFor(x.M,5)));
+
+// Qualitativ
+function qcol(elId,title,emoji,block){
+  let h='<h4>'+emoji+' '+title+' <span class="tiny muted" style="margin-left:auto">'+block.total+' Nennungen</span></h4>';
+  const mx=Math.max.apply(null,block.clusters.map(c=>c.count));
+  block.clusters.forEach(c=>{ h+='<div class="qbar"><div class="top"><span>'+c.name+'</span><span class="c">'+c.count+'×</span></div>'+
+    '<div class="track"><i style="width:'+(c.count/mx*100)+'%"></i></div><p class="quote">„'+c.quote+'"</p></div>';});
+  document.getElementById(elId).innerHTML=h;
+}
+qcol('q_gefallen','Was gefallen hat','✓',DATA.qual.gefallen);
+qcol('q_gestoert','Was gestört hat','!',DATA.qual.gestoert);
+qcol('q_wunsch','Wünsche','★',DATA.qual.wunsch);
+document.getElementById('faktQuote').textContent=DATA.qual.fakt;
+
+// Zusammenhänge: Gruppenvergleich
+const G=DATA.groups, gnames=Object.keys(G);
+const sel=document.getElementById('grpSel');
+gnames.forEach(n=>{const o=document.createElement('option');o.value=n;o.textContent=n;sel.appendChild(o);});
+let grpChart=null;
+function scaleVal(lbl,v){return (lbl==='SUS-Index'||lbl==='Weiternutzung %')?1+v/100*4:v;}
+function renderGroup(name){
+  const g=G[name], labels=g.outcomes.map(o=>o.label), la=g.levels[0], lb=g.levels[1];
+  const dsA=g.outcomes.map(o=>scaleVal(o.label,o.a)), dsB=g.outcomes.map(o=>scaleVal(o.label,o.b));
+  const rawA=g.outcomes.map(o=>o.a), rawB=g.outcomes.map(o=>o.b);
+  document.getElementById('grpLegend').innerHTML=
+    '<span><i style="background:'+C.teal+'"></i>'+la.name+' (n='+la.n+')</span>'+
+    '<span><i style="background:'+C.sand+'"></i>'+lb.name+' (n='+lb.n+')</span>'+
+    '<span class="tiny">SUS &amp; Weiternutzung skaliert auf 1–5-Achse</span>';
+  if(grpChart) grpChart.destroy();
+  grpChart=new Chart(document.getElementById('grpChart'),{type:'bar',
+    data:{labels,datasets:[
+      {label:la.name,data:dsA,raw:rawA,backgroundColor:C.teal,borderRadius:5,maxBarThickness:15},
+      {label:lb.name,data:dsB,raw:rawB,backgroundColor:C.sand,borderRadius:5,maxBarThickness:15}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>{
+        const lbl=labels[c.dataIndex], raw=c.dataset.raw[c.dataIndex];
+        const unit=(lbl==='SUS-Index'||lbl==='Weiternutzung %')?' /100':' /5';
+        return ' '+c.dataset.label+': '+raw+unit;}}}},
+      scales:{x:{min:1,max:5,grid:{color:C.line},title:{display:true,text:'Skala 1–5 (SUS & Weiternutzung skaliert)'}},
+              y:{grid:{display:false}}}}});
+}
+sel.onchange=()=>renderGroup(sel.value);
+renderGroup(gnames[0]);
+
+// Korrelations-Heatmap
+(function(){
+  const L=DATA.corr.labels, M=DATA.corr.matrix;
+  function cell(v){ if(v===null) return ['#f0f3f2',''];
+    const a=Math.min(Math.abs(v),1);
+    const c = v>=0 ? 'rgba(47,111,109,'+(0.12+a*0.78)+')' : 'rgba(201,166,107,'+(0.12+a*0.85)+')';
+    return [c, v.toFixed(2).replace('0.','.').replace('-0.','-.')];
+  }
+  let h='<div class="heatwrap"><table class="heat"><tr><th></th>';
+  L.forEach(l=>h+='<th class="col">'+l+'</th>'); h+='</tr>';
+  M.forEach((row,i)=>{ h+='<tr><th>'+L[i]+'</th>';
+    row.forEach((v,j)=>{ const r=cell(v); const col=(v!==null&&Math.abs(v)>0.55)?'#fff':'#1d2b2a';
+      h+='<td title="'+L[i]+' ~ '+L[j]+': ρ='+v+'" style="background:'+r[0]+';color:'+col+'">'+(i===j?'–':r[1])+'</td>';});
+    h+='</tr>';});
+  h+='</table></div>'; document.getElementById('heat').innerHTML=h;
+})();
+
+// Befund-Karten
+const findings=[
+ {amber:false,d:'+0.82',h:'Wer sich von Algorithmen „festgehalten" fühlt, erlebt Attune als wohltuender',
+  p:'Wohlbefinden 3.77 vs. 2.94 · „gesünder als Spotify/TikTok" sogar Δ≈1.0 (ρ=0.55). Genau die Zielgruppe des Gegenmodells spricht am stärksten an — stützt die These direkt.'},
+ {amber:false,d:'+0.72',h:'News-Affinität treibt Akzeptanz',
+  p:'Wer Nachrichten wichtig findet, bewertet Radio-Vergleich (3.57 vs. 2.85), SUS und Weiternutzung (73% vs. 30%) höher. Attune ist im Kern ein News-Radio.'},
+ {amber:true,d:'+12',h:'Ältere & Gelegentlich-Radiohörer finden die Bedienung leichter',
+  p:'SUS 25–34 = 92 vs. 18–24 = 78; Gelegentlich-Hörer = 91 vs. nie/selten = 79. Kleine, ungleiche Gruppen — vorsichtig interpretieren.'}
+];
+document.getElementById('findings').innerHTML=findings.map(f=>
+  '<div class="finding '+(f.amber?'amber':'')+'"><span class="d">'+f.d+'</span><h5>'+f.h+'</h5><p>'+f.p+'</p></div>').join('');
+</script>
+</body>
+</html>
