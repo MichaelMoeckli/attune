@@ -1,7 +1,39 @@
-<<<<<<< HEAD
 # Meetingprotokoll – Attune
-=======
-# Meetingprotokoll – Radio25
+
+
+**Datum:** 28. Mai 2026 
+
+---
+
+- Experiment vollendet
+- Noch weitere Credit vorhanden in Elevenlabs, Alex könnte theoretisch noch weitere Studenten zu verfügung stellen
+- Jetzt gilt es die Daten auszuwerten. Die Thesen sind vorallem zu beachten
+
+---
+
+
+**Datum:** 20. Mai 2026 
+
+---
+
+- Expermient ist am luafen und sie haben bis 24. Zeit 
+- 25 Teilnehmer
+- Link vom Google form wird am Ende zu verfügung gestellt mit ID automatisch eingefügt
+- Nächste Schritte: Daten nach Umfrage auswerten, Doku weiterführen
+
+---
+
+
+**Datum:** 13. Mai 2026
+
+---
+
+- Alex stellt ca. 20 Studierende als Teilnehmende bereit.
+- Design: Nutzung mit anschliessender Befragung (bzw. Befragung → Nutzung → weiterführende Befragung).
+- Michael liefert zwei URLs: Befragungs-URL (Start mit Eingabe einer 4-stelligen PID, von Alex verteilt) und Nutzungs-URL auf sein Online-Deployment.
+- Teilnahmefrist: Sonntag, 17. Mai 2026, Mitternacht.
+- Michael kann das Experiment über das Auffahrtswochenende bereitstellen.
+
 ---
 
 **Datum:** 07. Mai 2026
@@ -15,7 +47,6 @@
 - Elevenlabs kosten überprüfen für experiment
 - Erkenntins, dass eher weg von Radio und mehr Richtung on demand new service (von ersten test)
 - Zukünfitg könnte man evt. Spotify einbauen
->>>>>>> 5d5a7b21ba358f1a9a6301baf44e191e26e96368
 
 ---
 
