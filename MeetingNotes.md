@@ -1,6 +1,17 @@
 # Meetingprotokoll – Attune
 
 
+**Datum:** 04. Juni 2026 
+
+---
+
+- mit Diagramme um für Forschungsfrage zu beantworten 
+- Doku nach 3 Kategorien aufteilen
+- in Doku auf Github verliken
+- read me für erklärung wie das html erstellt wurde und notebook etcf
+
+---
+
 **Datum:** 28. Mai 2026 
 
 ---
