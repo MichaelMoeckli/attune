@@ -14,18 +14,19 @@ Attune ist ein vollautomatisiertes, KI-gestütztes Radio, das denselben Technolo
 | `Attune – Pilotstudie.csv` | Rohdaten der Pilotbefragung (Google Forms, Juni 2026, n = 25 nach Einwilligungsfilter) |
 | `Attune_Pilotstudie_Auswertung.ipynb` | Kommentiertes Auswertungs-Notebook (deskriptiv) |
 | `Attune_Pilotstudie_Auswertung.html` | HTML-Export des Notebooks (lesbar ohne Python) |
+| `Attune_Pilotstudie_Dashboard.html` | Interaktives Befund-Dashboard (Standalone-HTML) |
 | `figures/` | Vom Notebook erzeugte Diagramme (PNG, für Thesis-Anhang) |
 | `Attune_Pilotstudie_Anhang.docx` | Ausformulierter Ergebnis-Anhang für die Thesis |
 | `Hauptdokument.docx` | Thesis-Hauptdokument |
 
 ## Prototyp (`attune-app/`)
 
-Next.js 15 / React 19 / TypeScript. Pipeline: RSS-News (SRF, NZZ) + OpenWeatherMap → Claude (Moderationstext) → ElevenLabs (TTS) → MP3-Sendung. Profile lokal (localStorage), kein Login. Für jeden externen Dienst existiert ein Mock-Modus.
+Next.js 15 / React 19 / TypeScript. Pipeline: RSS-News (SRF, NZZ, Tages-Anzeiger) + OpenWeatherMap → Claude (Moderationstext) → ElevenLabs (TTS) → MP3-Sendung; optionale Musik via Jamendo oder Spotify. Profile lokal (localStorage), kein Nutzerkonto; in der Produktion schützt ein Invite-Gate (`/unlock`, passwortbasiert) den Zugang. Für jeden externen Dienst existiert ein Mock-Modus.
 
 ```bash
 cd attune-app
 npm install
-cp .env.example .env.local   # API-Keys eintragen (Anthropic, ElevenLabs, OpenWeatherMap)
+cp .env.example .env.local   # API-Keys eintragen (Anthropic + ElevenLabs erforderlich; OpenWeatherMap, Jamendo, Spotify optional)
 npm run dev
 ```
 
@@ -64,4 +65,4 @@ jupyter nbconvert --to html Attune_Pilotstudie_Auswertung.html
 
 ## Zentrale Befunde (Kurzfassung)
 
-Adaptierter SUS-Index 82.5/100 (Usability stärkster Bereich); alle vier Teilfragen der Forschungsfrage über der Skalenmitte (T1 Autonomie 3.94, T3 Session 3.67, T2 Diversität und T4 Transparenz je 3.62); Transparenz-Elemente hilfreich, aber nicht durchgängig bemerkt; Weiternutzungsabsicht gespalten (14 ja / 11 nein). Details: `Attune_Pilotstudie_Auswertung.html` und Anhang B der Thesis.
+Adaptierter SUS-Index 82.5/100 (Usability stärkster Bereich); alle vier Teilfragen der Forschungsfrage über der S
