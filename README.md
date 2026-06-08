@@ -65,4 +65,4 @@ jupyter nbconvert --to html Attune_Pilotstudie_Auswertung.html
 
 ## Zentrale Befunde (Kurzfassung)
 
-Adaptierter SUS-Index 82.5/100 (Usability stärkster Bereich); alle vier Teilfragen der Forschungsfrage über der S
+Adaptierter SUS-Index 82.5/100 (Usability stärkster Bereich); alle vier Teilfragen der Forschungsfrage über der Skalenmitte (T1 Autonomie 3.94, T3 Session 3.67, T2 Diversität und T4 Transparenz je 3.62); Transparenz-Elemente hilfreich, aber nicht durchgängig bemerkt; Weiternutzungsabsicht gespalten (14 ja / 11 nein). Details: `Attune_Pilotstudie_Auswertung.html` und Anhang B der Thesis.
