@@ -6,6 +6,14 @@ Autor: Michael Möckli · Betreuer: Alexandre de Spindler
 
 Attune ist ein vollautomatisiertes, KI-gestütztes Radio, das denselben Technologie-Stack wie engagement-optimierte Plattformen nutzt (LLM, TTS, Recommender), das Optimierungsziel aber invertiert: statt Verweildauer wird das Wohlbefinden der Nutzenden optimiert (explizite Präferenzangabe, diversitätsorientierte Kuratierung, definiertes Sessionende, Transparenz).
 
+## Wissenschaftlicher Beitrag
+
+Die Arbeit liefert einen Beitrag auf drei Ebenen:
+
+- **Konzeptionell** – ein theoretisch verankertes Fünf-Bausteine-Modell wellbeing-orientierter Personalisierung mit explizitem Mapping von Werten (Self-Determination Theory, Value-Sensitive Design, algorithmische Souveränität) auf Designentscheidungen, verdichtet zu vier übertragbaren Designprinzipien.
+- **Technisch** – ein lauffähiges End-to-End-Artefakt, das denselben Technologie-Stack wie engagement-optimierte Plattformen mit *invertierter* Zielfunktion betreibt und Personalisierung **ohne jede Erhebung von Verhaltensdaten** allein aus expliziten Präferenzangaben erzeugt (Profile lokal im Browser, kein Tracking, kein Nutzerkonto).
+- **Empirisch** – erste, vollständig reproduzierbare deskriptive Evidenz (offenes Notebook) für die These, dass die bekannten Plattformprobleme an der *Zielfunktion* liegen und nicht an der Technologie.
+
 ## Repository-Struktur
 
 | Pfad | Inhalt |
@@ -13,10 +21,10 @@ Attune ist ein vollautomatisiertes, KI-gestütztes Radio, das denselben Technolo
 | `attune-app/` | Next.js-Prototyp (Details unten) |
 | `Attune – Pilotstudie.csv` | Rohdaten der Pilotbefragung (Google Forms, Juni 2026, n = 25 nach Einwilligungsfilter) |
 | `Attune_Pilotstudie_Auswertung.ipynb` | Kommentiertes Auswertungs-Notebook (deskriptiv) |
-| `Attune_Pilotstudie_Auswertung.html` | HTML-Export des Notebooks (lesbar ohne Python) |
-| `Attune_Pilotstudie_Dashboard.html` | Interaktives Befund-Dashboard (Standalone-HTML) |
-| `figures/` | Vom Notebook erzeugte Diagramme (PNG, für Thesis-Anhang) |
-| `Attune_Pilotstudie_Anhang.docx` | Ausformulierter Ergebnis-Anhang für die Thesis |
+| `Attune_Pilotstudie_Auswertung.html` | HTML-Export des Notebooks (vollständig, reproduzierbar) |
+| `Attune_Pilotstudie_Dashboard.html` | Kuratiertes, interaktives Befund-Dashboard (Standalone-HTML, Präsentationssicht) |
+| `Attune – Pilotstudie - Google Formulare.pdf` | Eingesetzter Fragebogen (Google-Forms-Export) |
+| `figures/` | Vom Notebook erzeugte Diagramme (PNG, 200 dpi) |
 | `Hauptdokument.docx` | Thesis-Hauptdokument |
 
 ## Prototyp (`attune-app/`)
@@ -32,9 +40,15 @@ npm run dev
 
 Kernstück der Forschungsidee ist die Kuratierungslogik in `src/services/news.ts` (`selectNews()`): vier Auswahl-Pässe **Coverage → Serendipity → Depth → Fallback** operationalisieren Vielfalt und Tageszeit-Passung als Zielwerte – nicht Engagement.
 
+Die forschungskritische Auswahllogik ist durch Unit-Tests abgesichert (`src/services/news.test.ts`, 11 Tests):
+
+```bash
+cd attune-app && npm install && npm test
+```
+
 ## Pilotstudie: Validierung in drei Kategorien
 
-Die Validierung folgt der Dreiteilung aus Kap. 8 der Thesis; Notebook, HTML und Anhang sind entlang derselben Kategorien gegliedert:
+Die Validierung folgt der Dreiteilung aus Kap. 8 der Thesis; Notebook und HTML-Export sind entlang derselben Kategorien gegliedert:
 
 1. **Machbarkeit** – Lief die Pipeline fehlerfrei? Technische Qualität (Audio, Verständlichkeit, Stimme, Übergänge, Reaktionszeit). → Notebook Abschnitt 2
 2. **Usability / Akzeptanz** – SUS-angelehnter Bedienbarkeits-Index (adaptiert nach Brooke 1996), semantisches Differential, Einstellungs-Items. → Notebook Abschnitt 3
@@ -50,8 +64,10 @@ Die gesamte Auswertung ist deterministisch aus der Rohdatendatei reproduzierbar 
 
 1. Rohdaten-Export aus Google Forms als CSV (`Attune – Pilotstudie.csv`, 96 Spalten). Der Fragebogen liegt als PDF bei (`Attune – Pilotstudie - Google Formulare.pdf`).
 2. Das Notebook lädt die CSV, filtert auf erteilte Einwilligung (n = 25), kodiert konstruktspezifisch um (negativ formulierte Items werden umgepolt, Awareness-Items bewusst nicht – Begründung in Notebook-Abschnitt 0.1) und berechnet ausschliesslich deskriptive Statistiken (M, SD, Min, Max; bei n = 25 keine Inferenzstatistik).
-3. Alle Diagramme entstehen mit matplotlib direkt im Notebook; die Forschungsfrage- und Übersichts-Diagramme werden zusätzlich als PNG (200 dpi) nach `figures/` exportiert und von dort in den Thesis-Anhang eingebunden.
+3. Alle Diagramme entstehen mit matplotlib direkt im Notebook; die Forschungsfrage- und Übersichts-Diagramme werden zusätzlich als PNG (200 dpi) nach `figures/` exportiert und von dort in die Thesis eingebunden.
 4. Der HTML-Export ist eine 1:1-Abbildung des ausgeführten Notebooks.
+
+Das interaktive `Attune_Pilotstudie_Dashboard.html` ist eine handgestaltete Präsentationsschicht (Chart.js, Standalone). Alle dort gezeigten Werte – inklusive der explorativen Subgruppen-Vergleiche und der Spearman-Korrelationsmatrix – sind aus dem Notebook reproduzierbar (Abschnitt 10); das Notebook bleibt die massgebliche Quelle.
 
 **Selbst ausführen:**
 
@@ -65,4 +81,4 @@ jupyter nbconvert --to html Attune_Pilotstudie_Auswertung.html
 
 ## Zentrale Befunde (Kurzfassung)
 
-Adaptierter SUS-Index 82.5/100 (Usability stärkster Bereich); alle vier Teilfragen der Forschungsfrage über der Skalenmitte (T1 Autonomie 3.94, T3 Session 3.67, T2 Diversität und T4 Transparenz je 3.62); Transparenz-Elemente hilfreich, aber nicht durchgängig bemerkt; Weiternutzungsabsicht gespalten (14 ja / 11 nein). Details: `Attune_Pilotstudie_Auswertung.html` und Anhang B der Thesis.
+Adaptierter SUS-Index 82.5/100 (Usability stärkster Bereich); alle vier Teilfragen der Forschungsfrage über der Skalenmitte (T1 Autonomie 3.94, T3 Session 3.67, T2 Diversität und T4 Transparenz je 3.62); Transparenz-Elemente hilfreich, aber nicht durchgängig bemerkt; Weiternutzungsabsicht gespalten (14 ja / 11 nein). Details: `Attune_Pilotstudie_Auswertung.html` und Kap. 9 der Thesis.
