@@ -1,7 +1,7 @@
 import type { NewsArticle, SegmentType, ShowConfig, WeatherData } from '@/lib/types';
 import { RADIO_SYSTEM_PROMPT, buildSegmentPrompt } from '@/lib/prompts';
 
-export const LLM_MODEL = 'claude-sonnet-4-20250514';
+export const LLM_MODEL = 'claude-sonnet-4-6';
 
 const MOCK_TEXTS: Record<string, string> = {
   greeting:
