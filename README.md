@@ -29,12 +29,12 @@ The work contributes on three levels:
 
 ## Prototype (`attune-app/`)
 
-Next.js 15 / React 19 / TypeScript. Pipeline: RSS news (SRF, NZZ, Tages-Anzeiger) + OpenWeatherMap → Claude (presenter script) → ElevenLabs (TTS) → MP3 broadcast; optional music via Jamendo or Spotify. Profiles stored locally (localStorage), no user account; in production an invite gate (`/unlock`, password-based) protects access. Every external service has a mock mode.
+Next.js 15 / React 19 / TypeScript. Pipeline: RSS news (SRF, NZZ, Tages-Anzeiger) + OpenWeatherMap → Claude (presenter script) → ElevenLabs (TTS) → MP3 broadcast; optional music via Jamendo. Profiles stored locally (localStorage), no user account; in production an invite gate (`/unlock`, password-based) protects access. Every external service has a mock mode.
 
 ```bash
 cd attune-app
 npm install
-cp .env.example .env.local   # enter API keys (Anthropic + ElevenLabs required; OpenWeatherMap, Jamendo, Spotify optional)
+cp .env.example .env.local   # enter API keys (Anthropic + ElevenLabs required; OpenWeatherMap, Jamendo optional)
 npm run dev
 ```
 
