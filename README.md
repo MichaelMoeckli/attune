@@ -72,6 +72,8 @@ The entire analysis is deterministically reproducible from the raw data file —
 
 The interactive `Attune_Pilotstudie_Dashboard.html` is a hand-designed presentation layer (Chart.js, standalone). All values shown there — including the exploratory subgroup comparisons and the Spearman correlation matrix — are reproducible from the notebook (Section 10); the notebook remains the authoritative source.
 
+For a step-by-step guide to rebuilding **every** artefact from source — including how the Google Form was generated (Apps Script) and how the interactive dashboard is kept in sync with the notebook — see [`REPRODUCTION.md`](REPRODUCTION.md).
+
 **Run it yourself:**
 
 ```bash
