@@ -1,0 +1,198 @@
+# Meetingprotokoll – Attune
+
+
+**Datum:** 04. Juni 2026 
+
+---
+
+- mit Diagramme um für Forschungsfrage zu beantworten 
+- Doku nach 3 Kategorien aufteilen
+- in Doku auf Github verliken
+- read me für erklärung wie das html erstellt wurde und notebook etcf
+
+---
+
+**Datum:** 28. Mai 2026 
+
+---
+
+- Experiment vollendet
+- Noch weitere Credit vorhanden in Elevenlabs, Alex könnte theoretisch noch weitere Studenten zu verfügung stellen
+- Jetzt gilt es die Daten auszuwerten. Die Thesen sind vorallem zu beachten
+
+---
+
+
+**Datum:** 20. Mai 2026 
+
+---
+
+- Expermient ist am luafen und sie haben bis 24. Zeit 
+- 25 Teilnehmer
+- Link vom Google form wird am Ende zu verfügung gestellt mit ID automatisch eingefügt
+- Nächste Schritte: Daten nach Umfrage auswerten, Doku weiterführen
+
+---
+
+
+**Datum:** 13. Mai 2026
+
+---
+
+- Alex stellt ca. 20 Studierende als Teilnehmende bereit.
+- Design: Nutzung mit anschliessender Befragung (bzw. Befragung → Nutzung → weiterführende Befragung).
+- Michael liefert zwei URLs: Befragungs-URL (Start mit Eingabe einer 4-stelligen PID, von Alex verteilt) und Nutzungs-URL auf sein Online-Deployment.
+- Teilnahmefrist: Sonntag, 17. Mai 2026, Mitternacht.
+- Michael kann das Experiment über das Auffahrtswochenende bereitstellen.
+
+---
+
+**Datum:** 07. Mai 2026
+
+---
+
+- SuS evt. mit komponoenten von ueq erweitern oder umgekehrt.
+- Fragebogen eininden: Fehlende unterhaltung?; Zuviele infos; Habe ich das gefühl mich jz auch ausserhalb meiner Bubble infos zu bekommen; würde ich dieses regemässig benutzen? 
+- Experiment mit Studenten durchführen ~ 30 pers; bis experiment 25. ready sein
+- Studenten müssen sich mich ID anmleden können
+- Elevenlabs kosten überprüfen für experiment
+- Erkenntins, dass eher weg von Radio und mehr Richtung on demand new service (von ersten test)
+- Zukünfitg könnte man evt. Spotify einbauen
+
+---
+
+**Datum:** 30. April 2026
+
+---
+Validierung
+ 
+1) Machbarkeitsnachweis
+Prototyp, evtl. Unit Tests die Funktionsfähigkeit belegen
+ 
+2) Usability/Akzeptanz
+Instrument suchen (wir haben keine "nützliche" Software), selbst mit GPT oder äquivalent frage-items erzeugen, die an SUS/TAM/UTAUT angelehnt sind (pro Einstellungsmöglichkeit: was gefällt, was unnötig empfunden, .... was würdest Du dich sonst noch wünschen?)
+ 
+3) Wirkung
+Kriterien aus Literaturrecherche (Background/Related Work) hervornehmen und zusätzliche Frageitems daraus machen
+ 
+4) Fragebogen allgemein; Demographische Daten (Alter, höchst abgeschl. Ausb., ...) 
+-> Wie informieren, unterhalten, awareness von Bubble, bias, grenzen, ...
+ 
+Format:
+1-mal-Nutzung durch Users (3 wäre schön, je mehr desto bessser) und Befragung im Anschluss
+Nutzung während Zeitraum (z.B. 1 Woche, oder minimum 1 Wochenende) und dann Befragung
+Falls Menschen beides machen, 2 mal fragebogen, unterschiedliche Antworten?
+
+Diskussion
+ 
+übetragen von VCalidierungserkenntnissen auf Forschungsfrage und related work: Handlungsempfehlungen
+
+---
+
+**Datum:** 23. April 2026
+
+---
+- ftp zuganag zu informaniak
+- erggäzugn hintergurnd und storyline: fazit finden zu Attune und was man alle verbessern könnte
+- features hinzufügen basierend auf konzepte
+- experimient 3 personen für den moment -> verbesserung finden
+- nacher längeres experiment
+- metrix für experiment: - usability (iso norm finden) - akzeptanz (wie könnte man sich vorellen das zu benutzen) - wirkung (zusammenhang mit background kapitel, mit features die ich mache, hat es die wirkugn die ich erhoffe)
+  
+---
+
+**Datum:** 16. April 2026
+
+---
+
+## Feedback zur Storyline
+
+### WHY
+Der Konsum von Medien hängt von verschiedenen Faktoren ab:
+
+- Eigenschaften/Motivationen der User
+- Eigenschaften/Motivationen der Anbieter
+- ...?
+
+Zur Zeit scheint es ein allgemeines Thema zu sein, dass insbesondere soziale Medien in ein Ungleichgewicht geraten sind, und die Motivationen der Anbieter stärker erfüllt werden, als die Bedürfnisse der User berücksichtigt werden. *(Quellen?)*
+
+### BACKGROUND
+Allgemein gibt es folgende Eigenschaften/Bedürfnisse auf beiden Seiten:
+
+**Anbieter:**
+- Business-Modelle
+- Werbung, Revenue
+- ...
+
+**User:**
+- Interessen (Ontologien)
+- Suchen
+- Empfehlungen
+- ...
+
+Diese manifestieren/zeigen sich in folgenden Mechanismen: Klassifizierungen, Suchmechanismen, Empfehlungen, Sharing, ...
+
+**Beurteilungsgrundlagen:**
+- Value-Sensitive Design
+- Self-Determination Theory
+- ...
+
+→ Gegenüberstellung von Angeboten (Mechanismen) und Beurteilungsgrundlagen → Was ist gut/schlecht/Chancen/Gefahren?
+
+---
+
+## Feedback zur Recherche
+
+### Literature Review
+
+- Digital Wellbeing in Social Media in Swisscovery/Google Scholar
+- Digital Wellbeing in Social Media in Claude → Query Expansion, Theorien → Weitere Suchen
+- Prompt → 2 Quellen gefunden
+
+### Vorgehensweise für Einführung Background/Related Work
+
+> „Wir haben einen Literaturreview gemacht, folgende Tools eingesetzt, diese Tools wie folgt benutzt (Eingaben) und dabei folgendes erhalten (Anzahl Quellen/Textantworten/...)"
+
+- **NotebookLM** benutzen mit allen Quellen, Text validieren
+
+---
+
+## Forschungsfrage
+
+Fokus auf Präferenzangaben seitens User, was Bedürfnisse der User optimiert:
+
+- Was wäre gut für den Benutzer?
+- Wie kann der Benutzer seine Bedürfnisse angeben?
+
+**Vorgehensweise:** Am Beispiel einer digitalen Radiostation (Vorteil: vereinigt unterschiedliche Medienarten) gestalten wir Antworten auf diese Frage, entwickeln diese prototypisch und lassen diese beurteilen.
+
+---
+
+**Datum:** 9. April 2026
+
+---
+
+## Themen
+
+- versuchen neue und legacy zusammenzufügen
+- **Personalisierung** – Inhalte individuell zuschneiden, ohne in Manipulation abzudriften
+- **Social-Media-Targeting (Negatives)** – Filterblasen, Suchtverhalten, Grenze zwischen nützlich und schädlich
+- **Unterhaltungsmedien mit Mehrwert** – Unterschied zwischen Engagement-Optimierung und echtem Nutzen für den User
+- **Modelle Info-/Unterhaltungsmedien** – Bestehende Modelle (redaktionell, algorithmisch, hybrid), mögliche Modifikationen für das neuartige Radio
+- **Ethik** – Rein geldgetriebene Medien wirken oft gegen das Wohlbefinden der Menschen; ethische Verantwortung muss eingebunden werden
+- **Nutzerautonomie (TikTok/Insta)** – User braucht aktive Kontrolle über Interessen, Filter und Transparenz über Algorithmus-Entscheidungen
+- **Digital Wellbeing** – Bewusster Medienkonsum, inhaltliche Balance, Awareness über Nutzungszeit
+- **Optimale Persönlichkeiten** – Wer definiert „optimal"? Medien sollen zur persönlichen Entfaltung beitragen, nicht normieren
+- **Umsetzung am neuartigen Radio** – Konkretes Demonstrationsbeispiel für alle Prinzipien
+- **Pilottest** – Einmalig ~5 Personen aus dem Bekanntenkreis
+- **1-Wochen-Test** – Nutzungsverhalten & Feedback beobachten
+- **Consensus** – Literatur Suche
+
+---
+
+## Aufgaben nächste Woche
+
+- Literatur: Traditionelle & neuartige Medien – Vor-/Nachteile
+- Digital Wellbeing: Theorien & Modelle für bessere Systeme§
+- Protokolle in Molena
+---
